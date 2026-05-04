@@ -221,7 +221,7 @@
         const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dsxrjmcxs/image/upload";
         const CLOUDINARY_PRESET = "My_public_preset";
 
-        window.products =[];
+        window.ghosn_products =[];
         window.editingId = null;
         window.currentEditProductData = null; // للاحتفاظ ببيانات المنتج أثناء التعديل
 
@@ -387,7 +387,7 @@
                 if(user.uid === "XIarwijEVRSX7S8HY3qZIedH5qW2") {
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('admin-content').style.display = 'block';
-                    fetchProducts();
+                    fetchghosn_products();
                 } else {
                     document.getElementById('login-error').innerText = "هذا الحساب ليس له صلاحيات الإدارة!";
                     document.getElementById('login-error').style.display = 'block';
@@ -407,17 +407,17 @@
             });
         }
 
-        async function fetchProducts() {
-            const querySnapshot = await getDocs(collection(db, "products"));
-            window.products = querySnapshot.docs.map(doc => ({ firebaseId: doc.id, ...doc.data() }));
+        async function fetchghosn_products() {
+            const querySnapshot = await getDocs(collection(db, "ghosn_products"));
+            window.ghosn_products = querySnapshot.docs.map(doc => ({ firebaseId: doc.id, ...doc.data() }));
 
-            window.products.sort((a, b) => {
+            window.ghosn_products.sort((a, b) => {
                 let dateA = a.createdAt || a.id || 0;
                 let dateB = b.createdAt || b.id || 0;
                 return dateB - dateA;
             });
 
-            window.renderAdminProducts();
+            window.renderAdminghosn_products();
         }
 
         function generateShortCode() { return String(Math.floor(Math.random() * 1000) + 1).padStart(4, '0'); }
@@ -498,7 +498,7 @@
                 loadingMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري حفظ البيانات...';
 
                 if (window.editingId) {
-                    const productRef = doc(db, "products", window.editingId);
+                    const productRef = doc(db, "ghosn_products", window.editingId);
                     let updateData = { name, description: desc, price: parseFloat(price), category, subType, targetGender, qty: parseInt(qty), isOffer, discount, sizes, colors, delivery };
                     
                     if(newImageUrls.length > 0) {
@@ -521,11 +521,11 @@
                         name, description: desc, price: parseFloat(price), category, subType, targetGender, qty: parseInt(qty), isOffer, discount, sizes, colors, delivery,
                         images: newImageUrls, img: newImageUrls[0], imageColorsMapping: finalImageColorsMapping, hidden: false
                     };
-                    await addDoc(collection(db, "products"), newProduct);
+                    await addDoc(collection(db, "ghosn_products"), newProduct);
                     alert("تم الرفع بنجاح!");
                     window.clearForm();
                 }
-                fetchProducts(); 
+                fetchghosn_products(); 
             } catch (e) {
                 alert("حدث خطأ أثناء الحفظ أو الرفع: " + e.message);
                 console.error(e);
@@ -536,7 +536,7 @@
         }
 
         window.editProduct = function(firebaseId) {
-            const p = window.products.find(x => x.firebaseId === firebaseId);
+            const p = window.ghosn_products.find(x => x.firebaseId === firebaseId);
             window.editingId = p.firebaseId;
             window.currentEditProductData = p; // حفظ البيانات لعرض الصور القديمة
 
@@ -602,9 +602,9 @@
         }
 
         // تصميم الشريط الأفقي لبطاقات المنتجات
-        window.renderAdminProducts = function() {
+        window.renderAdminghosn_products = function() {
             const list = document.getElementById('admin-product-list');
-            list.innerHTML = window.products.map((p) => `
+            list.innerHTML = window.ghosn_products.map((p) => `
                 <div class="product-item ${p.hidden ? 'is-hidden' : ''}">
                     <div class="product-info-row">
                         <!-- طلب الصورة بحجم w100 من سيرفر الصور وعرضها بـ 50px -->
@@ -629,9 +629,9 @@
         }
 
         window.toggleHide = async function(firebaseId, currentStatus) {
-            const productRef = doc(db, "products", firebaseId);
+            const productRef = doc(db, "ghosn_products", firebaseId);
             await updateDoc(productRef, { hidden: !currentStatus });
-            fetchProducts();
+            fetchghosn_products();
         }
 
         // زر الحذف المدمج (Inline Delete Confirmation)
@@ -640,13 +640,13 @@
             actionsContainer.innerHTML = `
                 <span style="font-size:0.75rem; font-weight:bold; color:var(--text-dark); margin-left:5px;">تأكيد الحذف؟</span>
                 <button class="btn-action btn-delete" onclick="confirmDelete('${firebaseId}')"><i class="fa-solid fa-check"></i> نعم</button>
-                <button class="btn-action" style="background:var(--silver); color:var(--text-dark);" onclick="renderAdminProducts()"><i class="fa-solid fa-times"></i> لا</button>
+                <button class="btn-action" style="background:var(--silver); color:var(--text-dark);" onclick="renderAdminghosn_products()"><i class="fa-solid fa-times"></i> لا</button>
             `;
         }
 
         window.confirmDelete = async function(firebaseId) {
-            await deleteDoc(doc(db, "products", firebaseId));
-            fetchProducts();
+            await deleteDoc(doc(db, "ghosn_products", firebaseId));
+            fetchghosn_products();
         }
     </script>
 </body>
