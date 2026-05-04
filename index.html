@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ghosn STORE</title>
-    <meta name="description" content="تسوق أحدث الملابس بأفضل الأسعار.">
-    <meta property="og:title" content="Ghosn STORE | متجر الأزياء الأول">
+    <meta name="description" content="تسوق أحدث المنتجات بأفضل الأسعار.">
+    <meta property="og:title" content="Ghosn STORE | متجر الجامعة الأول">
     <meta property="og:description" content="تشكيلة رائعة من أحدث الموديلات، اطلب الآن بأفضل الأسعار.">
     <meta property="og:image" content="https://res.cloudinary.com/dsxrjmcxs/image/upload/w_600,h_600,c_fill,q_80,f_jpg/v1777061113/t2f9uqoiwgt2iukgsuih.jpg">
 
@@ -57,15 +57,22 @@
         .inner-product-card .img-container { position: relative; width: 100%; height: 130px; }
         .inner-product-card img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; border-bottom: 1px solid var(--border-light);}
 
-        .card-info { padding: 8px; text-align: right; }
-        .title-price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        .title-price-row h3 { font-size: 0.85rem; color: var(--text-dark); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 65%; }
-        .product-price-badge { font-size: 0.9rem; font-weight: bold; color: var(--accent); margin: 0; }
+        /* التنسيقات الجديدة للبطاقة من الخارج */
+        .card-info { padding: 10px; text-align: right; }
+        .title-price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .title-price-row h3 { font-size: 0.9rem; color: var(--text-dark); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 65%; font-weight: bold; }
+        .product-price-badge { font-size: 0.95rem; font-weight: bold; color: var(--accent); margin: 0; }
         
-        .card-color-circles { display: flex; align-items: center; gap: 3px; margin-bottom: 6px; flex-wrap: nowrap; overflow: hidden; width: 100%; }
+        .card-type-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .card-type-text { font-size: 0.7rem; color: var(--text-muted); font-weight: bold; }
+        .card-gender-badge { background: var(--bg-main); color: var(--text-dark); padding: 2px 8px; border-radius: 10px; font-size: 0.65rem; font-weight: bold; border: 1px solid var(--border-light); }
+
+        .card-color-circles { display: flex; align-items: center; gap: 3px; margin-bottom: 8px; flex-wrap: nowrap; overflow: hidden; width: 100%; }
         .color-label { font-size: 0.65rem; color: var(--text-muted); margin-left: 4px; font-weight: bold; flex-shrink: 0; }
-        .card-color-circle { width: 9px; height: 9px; border-radius: 50%; border: 1px solid var(--border-light); box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-shrink: 0; }
+        .card-color-circle { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--border-light); box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-shrink: 0; }
         
+        .card-desc-snippet { font-size: 0.7rem; color: var(--text-muted); margin: 0; text-align: right; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; border-top: 1px dashed var(--border-light); padding-top: 8px; }
+
         .badge-discount { position: absolute; top: 8px; left: 8px; background-color: #e74c3c; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; z-index: 5;}
         .badge-outofstock { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.75); color: white; padding: 6px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; z-index: 5; white-space: nowrap; }
         .img-outofstock { opacity: 0.4; filter: grayscale(50%); }
@@ -336,7 +343,6 @@
 
         async function fetchProducts() {
             try {
-                // الاتصال بقاعدة البيانات الجديدة المستقلة
                 const querySnapshot = await getDocs(collection(db, "ghosn_products"));
                 window.products = querySnapshot.docs.map(doc => ({ id: doc.id, firebaseId: doc.id, ...doc.data() }));
             } catch (error) {
@@ -460,6 +466,26 @@
             if(badge) badge.innerText = window.cart.length; 
         }
 
+        window.getOrderedColors = function(p) {
+            let orderedColors =[];
+            if (p.images && p.imageColorsMapping) {
+                p.images.forEach(imgUrl => {
+                    let color = p.imageColorsMapping[imgUrl];
+                    if (color && p.colors.includes(color) && !orderedColors.includes(color)) {
+                        orderedColors.push(color);
+                    }
+                });
+            }
+            if (p.colors) {
+                p.colors.forEach(c => {
+                    if (!orderedColors.includes(c)) {
+                        orderedColors.push(c);
+                    }
+                });
+            }
+            return orderedColors;
+        }
+
         window.generateProductCardHTML = function(p) {
             let displayImg = window.optimizeImage(p.images ? p.images[0] : p.img, 400);
             let discountBadge = (p.isOffer && p.discount) ? `<div class="badge-discount">خصم ${p.discount}</div>` : '';
@@ -468,19 +494,13 @@
 
             let colorCirclesHTML = '';
             if (p.colors && p.colors.length > 0) {
-                let sortedColors =[...p.colors].sort((a, b) => {
-                    let aWhite =['أبيض', 'ابيض', 'white'].includes(a.trim().toLowerCase());
-                    let bWhite =['أبيض', 'ابيض', 'white'].includes(b.trim().toLowerCase());
-                    return aWhite ? -1 : bWhite ? 1 : 0;
-                });
-                
+                let sortedColors = window.getOrderedColors(p);
                 let circles = sortedColors.map(c => `<div class="card-color-circle" style="background-color: ${window.getColorCode(c)};" title="${c}"></div>`).join('');
                 colorCirclesHTML = `<div class="card-color-circles"><span class="color-label">الألوان:</span>${circles}</div>`;
             }
 
-            // شريط الفئة المستهدفة ونوع المنتج في البطاقة من الخارج
-            let genderBadge = p.targetGender ? `<span style="background: var(--bg-dark-blue); color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.65rem; font-weight: bold;">${p.targetGender}</span>` : '';
-            let typeText = `<span style="font-size: 0.7rem; color: var(--text-muted); font-weight: bold;">${p.subType ? p.subType : p.category}</span>`;
+            let genderBadge = p.targetGender ? `<span class="card-gender-badge">${p.targetGender}</span>` : '';
+            let typeText = `<span class="card-type-text">${p.subType ? p.subType : p.category}</span>`;
 
             return `
                 <div class="inner-product-card" onclick="openProduct('${p.id}')">
@@ -492,11 +512,12 @@
                             <h3>${p.name}</h3>
                             <span class="product-price-badge">${p.price} ج.م</span>
                         </div>
-                        ${colorCirclesHTML}
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+                        <div class="card-type-row">
                             <div>${typeText}</div>
                             <div>${genderBadge}</div>
                         </div>
+                        ${colorCirclesHTML}
+                        <p class="card-desc-snippet">${p.description}</p>
                     </div>
                 </div>
             `;
@@ -670,11 +691,7 @@
 
             let detailsColorCirclesHTML = '';
             if (p.colors && p.colors.length > 0) {
-                let sortedColors =[...p.colors].sort((a, b) => {
-                    let aWhite =['أبيض', 'ابيض', 'white'].includes(a.trim().toLowerCase());
-                    let bWhite =['أبيض', 'ابيض', 'white'].includes(b.trim().toLowerCase());
-                    return aWhite ? -1 : bWhite ? 1 : 0;
-                });
+                let sortedColors = window.getOrderedColors(p);
                 
                 let detailsCircles = sortedColors.map(c => `
                     <div id="color-pill-${c}" class="color-pill ${c === defaultColor ? 'active' : ''}" onclick="selectColor('${c}', '${p.id}')">
@@ -687,6 +704,22 @@
                     <div style="font-weight:bold; font-size:0.85rem; color:var(--text-dark); margin-bottom: 8px;"><i class="fa-solid fa-palette" style="color:var(--accent);"></i> الألوان المتاحة:</div>
                     <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                         ${detailsCircles}
+                    </div>
+                </div>`;
+            }
+
+            let detailsSizesHTML = '';
+            if (p.sizes && p.sizes.length > 0) {
+                let detailsSizes = p.sizes.map(s => `
+                    <div style="background:var(--bg-main); padding:4px 10px; border-radius:8px; border:1px solid var(--border-light); font-size:0.75rem; color:var(--text-dark); font-weight:bold;">
+                        ${s}
+                    </div>`).join('');
+                
+                detailsSizesHTML = `
+                <div class="options-section" style="padding: 10px 15px;">
+                    <div style="font-weight:bold; font-size:0.85rem; color:var(--text-dark); margin-bottom: 8px;"><i class="fa-solid fa-ruler" style="color:var(--accent);"></i> المقاسات المتاحة:</div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                        ${detailsSizes}
                     </div>
                 </div>`;
             }
@@ -758,10 +791,11 @@
                     </div>
 
                     ${detailsColorCirclesHTML}
+                    ${detailsSizesHTML}
 
                     <div class="options-section">
                         <div style="font-weight:bold; font-size:0.9rem; color:var(--text-dark); margin-bottom: 8px;"><i class="fa-solid fa-file-lines" style="color:var(--accent);"></i> تفاصيل المنتج:</div>
-                        <p style="font-size:0.85rem; color:var(--text-muted); line-height: 1.6; margin: 0;">${p.description}</p>
+                        <p style="font-size:0.85rem; color:var(--text-muted); line-height: 1.6; margin: 0; white-space: pre-wrap;">${p.description}</p>
                     </div>
 
                     <div class="options-section" style="font-size:0.85rem; color:var(--text-dark)">
