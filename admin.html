@@ -47,10 +47,7 @@
         .admin-checkbox-label { display: flex; align-items: center; gap: 5px; font-size: 0.8rem; cursor: pointer; color: var(--text-dark); user-select: none; width: 30%; min-width: 80px;}
         .admin-checkbox-label input[type="checkbox"] { width: 14px; height: 14px; accent-color: var(--accent); cursor: pointer; }
 
-        /* تنسيقات معاينة الصور واختيار الألوان لكل صورة */
-        .image-preview-grid { display: flex; gap: 10px; overflow-x: auto; margin-top: 10px; padding-bottom: 5px; }
-        .image-preview-grid::-webkit-scrollbar { height: 6px; }
-        .image-preview-grid::-webkit-scrollbar-thumb { background: var(--silver); border-radius: 10px; }
+        .image-preview-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; padding-bottom: 5px; justify-content: flex-start; }
         .preview-item { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 90px; flex-shrink: 0; background: var(--bg-main); padding: 5px; border-radius: 8px; border: 1px solid var(--border-light);}
         .preview-img { width: 100%; height: 80px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-light); }
         .color-select-mini { width: 100%; padding: 4px; font-size: 0.7rem; border-radius: 4px; border: 1px solid var(--border-light); background: var(--bg-surface); outline: none; cursor: pointer;}
@@ -59,25 +56,23 @@
         .btn-submit:hover { background: #000; }
         .btn-cancel { background: #e74c3c; display: none; padding: 5px 10px; border:none; border-radius:6px; color:white; cursor:pointer; font-size: 0.8rem;}
 
-        /* تنسيق إدارة المنتجات (الشريط الأفقي المتناسق) */
         .product-list { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
         .product-item { background: var(--bg-main); border: 1px solid var(--border-light); padding: 8px 12px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; gap: 15px; transition: 0.3s;}
         .product-item.is-hidden { opacity: 0.6; filter: grayscale(80%); border-style: dashed; }
-        
+
         .product-info-row { display: flex; align-items: center; gap: 15px; flex: 1; overflow: hidden;}
         .product-info-row img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-light); flex-shrink: 0;}
         .product-details { display: flex; align-items: center; gap: 15px; flex: 1; overflow: hidden;}
         .product-details h4 { margin: 0; font-size: 0.95rem; color: var(--bg-dark-blue); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;}
         .product-details .p-code { font-size: 0.8rem; color: var(--text-muted); background: var(--bg-surface); padding: 2px 8px; border-radius: 12px; border: 1px solid var(--border-light); white-space: nowrap;}
-        
+
         .product-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0;}
         .btn-action { border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; color: white; font-size: 0.8rem; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 5px;}
         .btn-edit { background: var(--accent); }
         .btn-hide { background: #f39c12; }
         .btn-show { background: #27ae60; }
         .btn-delete { background: #e74c3c; }
-        
-        /* استجابة الشاشات الصغيرة للشريط */
+
         @media (max-width: 650px) {
             .product-item { flex-direction: column; align-items: stretch; }
             .product-actions { justify-content: flex-end; }
@@ -178,14 +173,12 @@
                 </div>
                 <div class="form-group"><label>نسبة الخصم</label><input type="text" id="p-discount" class="form-control" disabled></div>
 
-                <!-- حاويات المقاسات والألوان الديناميكية -->
                 <div class="form-group full-width dynamic-field" id="sizes-group"></div>
                 <div class="form-group full-width dynamic-field" id="colors-group"></div>
 
                 <div class="form-group full-width">
                     <label>صور المنتج (حتى 7 صور)</label>
                     <input type="file" id="p-image" class="form-control" accept="image/*" multiple onchange="renderImagePreviews()">
-                    <!-- حاوية معاينة الصور واختيار ألوانها -->
                     <div id="image-preview-container" class="image-preview-grid"></div>
                 </div>
 
@@ -221,9 +214,9 @@
         const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dsxrjmcxs/image/upload";
         const CLOUDINARY_PRESET = "My_public_preset";
 
-        window.ghosn_products =[];
+        window.products =[];
         window.editingId = null;
-        window.currentEditProductData = null; // للاحتفاظ ببيانات المنتج أثناء التعديل
+        window.currentEditProductData = null; 
 
         window.optimizeImage = function(url, width) {
             if (!url) return '';
@@ -255,11 +248,13 @@
             document.querySelectorAll('.custom-select-list').forEach(el => el.classList.remove('show'));
             if(isCategory) {
                 window.updateDynamicFields();
-                window.renderImagePreviews(); // إعادة رسم المعاينة لإظهار/إخفاء حقل الألوان
+                window.renderImagePreviews();
             }
         }
 
         const categorySubTypes = {
+            "ملابس رجالي":["تيشرت", "قميص", "بولو", "سويت شيرت", "هودي", "جاكيت", "بلوفر", "بنطلون جينز", "بنطلون جابردين", "سويت بانتس", "شورت", "طقم كامل", "ملابس داخلية", "ملابس سباحة"],
+            "ملابس حريمي":["تيشرت", "بلوزة", "قميص", "فستان", "عباية", "جيبة", "سويت شيرت", "هودي", "جاكيت", "كارديجان", "بنطلون جينز", "بنطلون قماش", "ليجن", "طقم كامل", "ملابس داخلية", "ملابس سباحة"],
             "مستحضرات التجميل":["مكياج", "عناية بالبشرة", "أدوات التجميل"],
             "العناية الشخصية للرجال":["العناية بالوجه", "العناية بالشعر", "العناية بالجسم", "العناية باللحية", "الحلاقة وإزالة الشعر", "مزيلات العرق والعطور الشخصية"],
             "العناية الشخصية للحريم":["العناية بالوجه", "العناية بالشعر", "العناية بالجسم", "العناية بالبشرة", "العناية بالأظافر", "إزالة الشعر", "مزيلات العرق والعطور الشخصية"],
@@ -337,18 +332,16 @@
             }
         }
 
-        // نظام معاينة الصور وربط الألوان بكل صورة
         window.renderImagePreviews = function() {
             const container = document.getElementById('image-preview-container');
             const fileInput = document.getElementById('p-image');
             const cat = document.getElementById('p-category').value;
-            
+
             container.innerHTML = '';
-            
-            const needsColorMapping = ['ملابس رجالي', 'ملابس حريمي', 'أحذية'].includes(cat);
+
+            const needsColorMapping =['ملابس رجالي', 'ملابس حريمي', 'أحذية'].includes(cat);
             let colorOptions = `<option value="">بدون لون</option>` + availableColors.map(c => `<option value="${c}">${c}</option>`).join('');
 
-            // إذا كان هناك ملفات جديدة مختارة
             if (fileInput.files && fileInput.files.length > 0) {
                 Array.from(fileInput.files).slice(0, 7).forEach((file, index) => {
                     const url = URL.createObjectURL(file);
@@ -360,9 +353,7 @@
                         </div>
                     `;
                 });
-            } 
-            // إذا كنا في وضع التعديل ولم يتم اختيار ملفات جديدة، نعرض الصور القديمة
-            else if (window.editingId && window.currentEditProductData && window.currentEditProductData.images) {
+            } else if (window.editingId && window.currentEditProductData && window.currentEditProductData.images) {
                 window.currentEditProductData.images.forEach((imgUrl) => {
                     let selectedColor = (window.currentEditProductData.imageColorsMapping && window.currentEditProductData.imageColorsMapping[imgUrl]) ? window.currentEditProductData.imageColorsMapping[imgUrl] : '';
                     let selectHtml = '';
@@ -387,7 +378,7 @@
                 if(user.uid === "XIarwijEVRSX7S8HY3qZIedH5qW2") {
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('admin-content').style.display = 'block';
-                    fetchghosn_products();
+                    fetchProducts();
                 } else {
                     document.getElementById('login-error').innerText = "هذا الحساب ليس له صلاحيات الإدارة!";
                     document.getElementById('login-error').style.display = 'block';
@@ -407,17 +398,21 @@
             });
         }
 
-        async function fetchghosn_products() {
-            const querySnapshot = await getDocs(collection(db, "ghosn_products"));
-            window.ghosn_products = querySnapshot.docs.map(doc => ({ firebaseId: doc.id, ...doc.data() }));
+        async function fetchProducts() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "ghosn_products"));
+                window.products = querySnapshot.docs.map(doc => ({ firebaseId: doc.id, ...doc.data() }));
 
-            window.ghosn_products.sort((a, b) => {
-                let dateA = a.createdAt || a.id || 0;
-                let dateB = b.createdAt || b.id || 0;
-                return dateB - dateA;
-            });
+                window.products.sort((a, b) => {
+                    let dateA = a.createdAt || a.id || 0;
+                    let dateB = b.createdAt || b.id || 0;
+                    return dateB - dateA;
+                });
 
-            window.renderAdminghosn_products();
+                window.renderAdminProducts();
+            } catch (error) {
+                console.error("خطأ في جلب البيانات:", error);
+            }
         }
 
         function generateShortCode() { return String(Math.floor(Math.random() * 1000) + 1).padStart(4, '0'); }
@@ -433,10 +428,19 @@
             formData.append("file", file);
             formData.append("upload_preset", CLOUDINARY_PRESET);
 
-            const response = await fetch(CLOUDINARY_URL, { method: "POST", body: formData });
-            const data = await response.json();
-            let optimizedUrl = data.secure_url.replace('/upload/', '/upload/c_limit,w_800,q_auto,f_auto/');
-            return optimizedUrl;
+            try {
+                const response = await fetch(CLOUDINARY_URL, { method: "POST", body: formData });
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error("Cloudinary Error: " + data.error.message);
+                }
+                
+                let optimizedUrl = data.secure_url.replace('/upload/', '/upload/c_limit,w_800,q_auto,f_auto/');
+                return optimizedUrl;
+            } catch (err) {
+                throw err;
+            }
         }
 
         window.saveProduct = async function() {
@@ -455,13 +459,13 @@
             const sizes = Array.from(document.querySelectorAll('.size-checkbox:checked')).map(cb => cb.value);
             const colors = Array.from(document.querySelectorAll('.color-checkbox:checked')).map(cb => cb.value);
 
-            if(!name || !price || !qty || !category || !desc) {
-                alert("يرجى ملء جميع البيانات الأساسية (الاسم، السعر، الوصف، القسم، الكمية)!"); return;
-            }
-
-            if(!window.editingId && fileInput.files.length === 0) {
-                alert("إرفاق صورة واحدة على الأقل ضروري!"); return;
-            }
+            // نظام التنبيهات المخصص للحقول الفارغة
+            if (!name) { alert("قم بملئ حقل 'اسم المنتج' للنشر"); return; }
+            if (!desc) { alert("قم بملئ حقل 'وصف المنتج' للنشر"); return; }
+            if (!price) { alert("قم بملئ حقل 'السعر' للنشر"); return; }
+            if (!category) { alert("قم باختيار 'القسم' للنشر"); return; }
+            if (!qty) { alert("قم بملئ حقل 'الكمية المتاحة بالمخزن' للنشر"); return; }
+            if (!window.editingId && fileInput.files.length === 0) { alert("قم بإرفاق 'صورة واحدة على الأقل' للنشر"); return; }
 
             document.getElementById('btn-submit').style.display = 'none';
             const loadingMsg = document.getElementById('loading-msg');
@@ -475,8 +479,7 @@
                     loadingMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري رفع الصور...';
                     const filesArray = Array.from(fileInput.files).slice(0, 7); 
                     newImageUrls = await Promise.all(filesArray.map(file => uploadToCloudinary(file)));
-                    
-                    // ربط الألوان بالصور الجديدة المرفوعة
+
                     const selects = document.querySelectorAll('.new-image-color');
                     selects.forEach(select => {
                         let idx = select.getAttribute('data-index');
@@ -485,7 +488,6 @@
                         }
                     });
                 } else if (window.editingId && window.currentEditProductData) {
-                    // إذا لم يتم رفع صور جديدة، نقوم بتحديث ربط الألوان للصور القديمة
                     const selects = document.querySelectorAll('.old-image-color');
                     selects.forEach(select => {
                         let url = select.getAttribute('data-url');
@@ -500,13 +502,12 @@
                 if (window.editingId) {
                     const productRef = doc(db, "ghosn_products", window.editingId);
                     let updateData = { name, description: desc, price: parseFloat(price), category, subType, targetGender, qty: parseInt(qty), isOffer, discount, sizes, colors, delivery };
-                    
+
                     if(newImageUrls.length > 0) {
                         updateData.images = newImageUrls;
                         updateData.img = newImageUrls[0];
                         updateData.imageColorsMapping = finalImageColorsMapping;
                     } else {
-                        // تحديث الماب للصور القديمة
                         updateData.imageColorsMapping = finalImageColorsMapping;
                     }
 
@@ -525,10 +526,14 @@
                     alert("تم الرفع بنجاح!");
                     window.clearForm();
                 }
-                fetchghosn_products(); 
+                fetchProducts(); 
             } catch (e) {
-                alert("حدث خطأ أثناء الحفظ أو الرفع: " + e.message);
                 console.error(e);
+                if (e.message.includes("Missing or insufficient permissions")) {
+                    alert("❌ خطأ: ليس لديك صلاحية الكتابة في قاعدة البيانات.\nيرجى تحديث قواعد Firebase (Rules).");
+                } else {
+                    alert("❌ حدث خطأ أثناء الحفظ: " + e.message);
+                }
             }
 
             document.getElementById('btn-submit').style.display = 'block';
@@ -536,9 +541,9 @@
         }
 
         window.editProduct = function(firebaseId) {
-            const p = window.ghosn_products.find(x => x.firebaseId === firebaseId);
+            const p = window.products.find(x => x.firebaseId === firebaseId);
             window.editingId = p.firebaseId;
-            window.currentEditProductData = p; // حفظ البيانات لعرض الصور القديمة
+            window.currentEditProductData = p; 
 
             document.getElementById('form-title').innerText = "تعديل: " + p.name;
             document.getElementById('btn-submit').innerHTML = '<i class="fa-solid fa-save"></i> حفظ التعديلات';
@@ -547,10 +552,10 @@
             document.getElementById('p-name').value = p.name;
             document.getElementById('p-desc').value = p.description || "";
             document.getElementById('p-price').value = p.price || 0; 
-            
+
             document.getElementById('p-category').value = p.category;
             document.getElementById('cat-display').innerText = p.category || "-- اختر القسم --";
-            
+
             window.updateDynamicFields();
 
             setTimeout(() => {
@@ -562,11 +567,10 @@
                     document.getElementById('p-gender').value = p.targetGender || "";
                     document.getElementById('gender-display').innerText = p.targetGender || "-- اختر --";
                 }
-                
+
                 if(p.sizes) document.querySelectorAll('.size-checkbox').forEach(cb => cb.checked = p.sizes.includes(cb.value));
                 if(p.colors) document.querySelectorAll('.color-checkbox').forEach(cb => cb.checked = p.colors.includes(cb.value));
-                
-                // عرض الصور القديمة للتحكم بألوانها
+
                 window.renderImagePreviews();
 
             }, 50);
@@ -596,18 +600,16 @@
             document.getElementById('p-qty').value = ''; document.getElementById('p-image').value = '';
             document.getElementById('p-isOffer').checked = false; document.getElementById('p-discount').value = '';
             document.getElementById('image-preview-container').innerHTML = '';
-            
+
             window.updateDynamicFields(); 
             window.toggleDiscount();
         }
 
-        // تصميم الشريط الأفقي لبطاقات المنتجات
-        window.renderAdminghosn_products = function() {
+        window.renderAdminProducts = function() {
             const list = document.getElementById('admin-product-list');
-            list.innerHTML = window.ghosn_products.map((p) => `
+            list.innerHTML = window.products.map((p) => `
                 <div class="product-item ${p.hidden ? 'is-hidden' : ''}">
                     <div class="product-info-row">
-                        <!-- طلب الصورة بحجم w100 من سيرفر الصور وعرضها بـ 50px -->
                         <img src="${window.optimizeImage(p.images && p.images.length > 0 ? p.images[0] : p.img, 100)}" loading="lazy">
                         <div class="product-details">
                             <h4>${p.name}</h4>
@@ -631,22 +633,21 @@
         window.toggleHide = async function(firebaseId, currentStatus) {
             const productRef = doc(db, "ghosn_products", firebaseId);
             await updateDoc(productRef, { hidden: !currentStatus });
-            fetchghosn_products();
+            fetchProducts();
         }
 
-        // زر الحذف المدمج (Inline Delete Confirmation)
         window.showDeleteConfirm = function(firebaseId) {
             const actionsContainer = document.getElementById(`actions-${firebaseId}`);
             actionsContainer.innerHTML = `
                 <span style="font-size:0.75rem; font-weight:bold; color:var(--text-dark); margin-left:5px;">تأكيد الحذف؟</span>
                 <button class="btn-action btn-delete" onclick="confirmDelete('${firebaseId}')"><i class="fa-solid fa-check"></i> نعم</button>
-                <button class="btn-action" style="background:var(--silver); color:var(--text-dark);" onclick="renderAdminghosn_products()"><i class="fa-solid fa-times"></i> لا</button>
+                <button class="btn-action" style="background:var(--silver); color:var(--text-dark);" onclick="renderAdminProducts()"><i class="fa-solid fa-times"></i> لا</button>
             `;
         }
 
         window.confirmDelete = async function(firebaseId) {
             await deleteDoc(doc(db, "ghosn_products", firebaseId));
-            fetchghosn_products();
+            fetchProducts();
         }
     </script>
 </body>
