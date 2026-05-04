@@ -30,7 +30,6 @@
         .cart-icon { font-size: 1.3rem; color: var(--text-light); cursor: pointer; position: relative; transition: 0.1s; margin-left: 5px;}
         .cart-count { position: absolute; top: -6px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; font-size: 0.7rem; padding: 2px 6px; font-weight: bold;}
 
-        /* إزالة الأنيميشن لتسريع الأداء ومنع التقطيع */
         main { padding: 20px 15px; width: 100%; max-width: 800px; flex: 1; }
         .hidden { display: none !important; }
 
@@ -43,15 +42,17 @@
 
         .share-btn-top { background: var(--bg-surface); color: var(--bg-dark-blue); width: 34px; height: 34px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: var(--shadow); cursor: pointer; border: 1px solid var(--border-light); font-size: 0.9rem; transition: 0.1s; }
 
-        .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 30px; }
-        .category-card { position: relative; background-color: var(--bg-surface); border-radius: var(--radius); overflow: hidden; text-align: center; box-shadow: 0 6px 15px rgba(0,0,0,0.12); cursor: pointer; border: 2px solid var(--silver); }
+        .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px; }
+        
+        /* تقليل الاطار الى 1px */
+        .category-card { position: relative; background-color: var(--bg-surface); border-radius: var(--radius); overflow: hidden; text-align: center; box-shadow: 0 6px 15px rgba(0,0,0,0.12); cursor: pointer; border: 1px solid var(--silver); }
         .category-card img { width: 100%; height: 130px; object-fit: cover; object-position: top center; display: block;}
         .category-card h3 { background-color: var(--bg-dark-blue); color: var(--text-light); padding: 10px; font-size: 0.95rem; margin: 0;}
 
-        /* التعديل الجديد لعلامة رجالي/حريمي */
         .gender-ribbon { position: absolute; top: 10px; right: 10px; background: rgba(255, 255, 255, 0.95); border-radius: 8px; padding: 4px 8px; font-size: 0.55rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 5; border: 1px solid var(--border-light); color: var(--text-dark); line-height: 1.2; }
 
-        .inner-product-card { position: relative; background: var(--bg-surface); border-radius: var(--radius); overflow: hidden; box-shadow: 0 6px 15px rgba(0,0,0,0.12); cursor: pointer; border: 2px solid var(--silver); flex-shrink: 0; scroll-snap-align: start; }
+        /* تقليل الاطار الى 1px */
+        .inner-product-card { position: relative; background: var(--bg-surface); border-radius: var(--radius); overflow: hidden; box-shadow: 0 6px 15px rgba(0,0,0,0.12); cursor: pointer; border: 1px solid var(--silver); flex-shrink: 0; scroll-snap-align: start; }
         .inner-product-card .img-container { position: relative; width: 100%; height: 130px; }
         .inner-product-card img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; border-bottom: 1px solid var(--border-light);}
 
@@ -83,7 +84,8 @@
         .slider-container::-webkit-scrollbar { display: none; } 
         .slider-container .inner-product-card { width: calc(50% - 6px); }
 
-        .share-icon { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.95); color: var(--bg-dark-blue); width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10; font-size: 0.8rem;}
+        /* زر المشاركة الجديد: شفاف، بدون ظل زجاجي، حجم أصغر */
+        .share-icon { position: absolute; top: 6px; right: 6px; background: transparent; color: var(--bg-dark-blue); width: 22px; height: 22px; display: flex; justify-content: center; align-items: center; box-shadow: none; z-index: 10; font-size: 1rem; text-shadow: 0 0 5px rgba(255,255,255,0.9); }
 
         footer { background-color: var(--bg-dark-blue); color: var(--text-light); border-radius: 25px; padding: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.15); margin: 10px auto 25px auto; width: calc(100% - 30px); max-width: 760px; border: 1px solid rgba(255,255,255,0.1); }
         footer .footer-logo { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--text-light); margin-bottom: 10px; }
@@ -247,6 +249,9 @@
             <span id="category-title" class="top-title-text">القسم</span>
         </div>
         <div class="categories-grid" id="category-products"></div>
+        <div id="category-loader" style="text-align:center; padding: 20px; display:none;">
+            <div class="spinner" style="margin: 0 auto; width: 30px; height: 30px; border-width: 3px;"></div>
+        </div>
     </main>
 
     <main id="details" class="hidden">
@@ -308,6 +313,13 @@
         window.cart = JSON.parse(localStorage.getItem('am_cart')) ||[];
         window.SELLER_PHONE = "201141226046";
         window.historyStack =['home'];
+
+        // متغيرات التحميل الكسول للسلايدر والأقسام
+        window.sliderProducts =[];
+        window.sliderIndex = 0;
+        window.catProducts =[];
+        window.catIndex = 0;
+        window.CAT_BATCH_SIZE = 4;
 
         window.optimizeImage = function(url, width) {
             if (!url) return '';
@@ -518,12 +530,24 @@
             `;
         }
 
+        // مراقب السلايدر للتحميل الكسول (Lazy Loading)
+        window.sliderObserver = new IntersectionObserver((entries) => {
+            if(entries[0].isIntersecting && window.sliderIndex < window.sliderProducts.length) {
+                window.sliderObserver.unobserve(entries[0].target);
+                let slider = document.getElementById('latest-products-slider');
+                slider.insertAdjacentHTML('beforeend', window.generateProductCardHTML(window.sliderProducts[window.sliderIndex]));
+                window.sliderIndex++;
+                let newLast = slider.lastElementChild;
+                if(newLast && window.sliderIndex < window.sliderProducts.length) {
+                    window.sliderObserver.observe(newLast);
+                }
+            }
+        }, { root: document.getElementById('latest-products-slider'), rootMargin: '50px' });
+
         window.renderHomeSlider = function() {
             const slider = document.getElementById('latest-products-slider');
             if(!slider) return;
-
-            // تم إضافة هذا السطر لمنع إعادة تحميل المنتجات مرة أخرى عند الرجوع للصفحة الرئيسية (يمنع اللاج)
-            if(slider.children.length > 0) return;
+            if(slider.children.length > 0) return; // منع إعادة التحميل
 
             let visibleProducts = window.products.filter(p => !p.hidden);
 
@@ -538,8 +562,17 @@
                 return dateB - dateA;
             });
 
-            slider.innerHTML = visibleProducts.slice(0, 10).map(p => window.generateProductCardHTML(p)).join('');
-            setTimeout(() => { slider.scrollLeft = 0; }, 10);
+            // تحميل أول بطاقتين فقط
+            window.sliderProducts = visibleProducts.slice(0, 10);
+            window.sliderIndex = 2; 
+            
+            slider.innerHTML = window.sliderProducts.slice(0, window.sliderIndex).map(p => window.generateProductCardHTML(p)).join('');
+            
+            // تفعيل المراقب للبطاقات القادمة
+            let lastEl = slider.lastElementChild;
+            if(lastEl && window.sliderIndex < window.sliderProducts.length) {
+                window.sliderObserver.observe(lastEl);
+            }
         }
 
         window.scrollSlider = function(direction) {
@@ -550,25 +583,31 @@
             else { slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); }
         }
 
+        // مراقب الأقسام للتحميل الكسول
+        window.catObserver = new IntersectionObserver((entries) => {
+            if(entries[0].isIntersecting) {
+                window.loadMoreCategoryProducts();
+            }
+        }, { rootMargin: '100px' });
+
         window.openCategory = function(catName) {
             const titleEl = document.getElementById('category-title');
             if(titleEl) titleEl.innerText = catName === 'عروض' ? 'عروض خاصة' : "قسم " + catName;
 
             const container = document.getElementById('category-products');
+            const loader = document.getElementById('category-loader');
             if(!container) return;
             
-            // إظهار اللودر والانتقال للصفحة فوراً لمنع تجميد الشاشة
-            container.innerHTML = '<div style="grid-column: span 2; display: flex; justify-content: center; padding: 40px 0;"><div class="spinner" style="width: 30px; height: 30px; border-width: 3px;"></div></div>';
+            container.innerHTML = '';
+            if(loader) loader.style.display = 'block';
             
             window.navigate('category');
 
-            // تأخير حقن المنتجات لأجزاء من الثانية لتسريع واجهة المستخدم
             setTimeout(() => {
-                let filtered =[];
                 if(catName === 'عروض') {
-                    filtered = window.products.filter(p => p.isOffer === true && !p.hidden && p.category !== 'سكن الطلاب');
+                    window.catProducts = window.products.filter(p => p.isOffer === true && !p.hidden && p.category !== 'سكن الطلاب');
                 } else {
-                    filtered = window.products.filter(p => {
+                    window.catProducts = window.products.filter(p => {
                         let match = (p.category === catName);
                         if(catName === 'ملابس رجالي' && p.category === 'رجالي') match = true;
                         if(catName === 'ملابس حريمي' && p.category === 'حريمي') match = true;
@@ -576,12 +615,43 @@
                     });
                 }
 
-                if(filtered.length === 0) {
+                window.catIndex = 0;
+
+                if(window.catProducts.length === 0) {
+                    if(loader) loader.style.display = 'none';
                     container.innerHTML = '<p style="grid-column: span 2; text-align:center; font-size:0.9rem; color:var(--text-muted)">لا توجد منتجات في هذا القسم حالياً.</p>';
-                } else {
-                    container.innerHTML = filtered.map(p => window.generateProductCardHTML(p)).join('');
+                    return;
                 }
+
+                // تحميل أول دفعة
+                window.loadMoreCategoryProducts();
+                
+                // تفعيل المراقب للدفعة القادمة
+                if(loader) window.catObserver.observe(loader);
+
             }, 10);
+        }
+
+        window.loadMoreCategoryProducts = function() {
+            const container = document.getElementById('category-products');
+            const loader = document.getElementById('category-loader');
+            if(!container) return;
+
+            let nextBatch = window.catProducts.slice(window.catIndex, window.catIndex + window.CAT_BATCH_SIZE);
+            if(nextBatch.length > 0) {
+                let html = nextBatch.map(p => window.generateProductCardHTML(p)).join('');
+                container.insertAdjacentHTML('beforeend', html);
+                window.catIndex += window.CAT_BATCH_SIZE;
+            }
+
+            if(window.catIndex >= window.catProducts.length) {
+                if(loader) {
+                    loader.style.display = 'none';
+                    window.catObserver.unobserve(loader);
+                }
+            } else {
+                if(loader) loader.style.display = 'block';
+            }
         }
 
         window.updateSliderDots = function(sliderElement) {
