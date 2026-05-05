@@ -10,6 +10,16 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-dark); padding-bottom: 40px;}
 
+        /* نظام الإشعارات الفاخر (Toasts) */
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { background: rgba(15, 28, 46, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #fff; padding: 8px 16px; border-radius: 50px; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; animation: toastIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: auto; border: 1px solid rgba(255,255,255,0.1); }
+        .toast.success { border-right: 3px solid #27ae60; }
+        .toast.error { border-right: 3px solid #e74c3c; }
+        .toast i { font-size: 0.85rem; }
+        .toast-out { animation: toastOut 0.3s ease-in forwards; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(-20px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes toastOut { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-20px) scale(0.9); } }
+
         #login-screen { position: fixed; top:0; left:0; width:100%; height:100%; background:var(--bg-main); z-index:9999; display:flex; justify-content:center; align-items:center; }
         .login-box { background:white; padding:30px; border-radius:20px; box-shadow:var(--shadow); width:90%; max-width:400px; text-align:center; }
 
@@ -48,9 +58,15 @@
         .admin-checkbox-label input[type="checkbox"] { width: 14px; height: 14px; accent-color: var(--accent); cursor: pointer; }
 
         .image-preview-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; padding-bottom: 5px; justify-content: flex-start; }
-        .preview-item { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 90px; flex-shrink: 0; background: var(--bg-main); padding: 5px; border-radius: 8px; border: 1px solid var(--border-light);}
+        .preview-item { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 90px; flex-shrink: 0; background: var(--bg-main); padding: 5px; border-radius: 8px; border: 1px solid var(--border-light); position: relative;}
         .preview-img { width: 100%; height: 80px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-light); }
-        .color-select-mini { width: 100%; padding: 4px; font-size: 0.7rem; border-radius: 4px; border: 1px solid var(--border-light); background: var(--bg-surface); outline: none; cursor: pointer;}
+        
+        .mini-select-btn { padding: 4px 8px; font-size: 0.7rem; border-radius: 6px; background: var(--bg-surface); border: 1px solid var(--border-light); width: 100%; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: var(--text-dark); transition: 0.2s; }
+        .mini-select-btn:hover { border-color: var(--accent); }
+        .mini-select-list { position: absolute; top: calc(100% + 2px); left: 0; right: 0; background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); z-index: 101; max-height: 120px; overflow-y: auto; display: none; flex-direction: column; padding: 3px; }
+        .mini-select-list.show { display: flex; animation: fadeInDown 0.2s ease-out; }
+        .mini-select-item { padding: 5px; font-size: 0.7rem; cursor: pointer; border-radius: 4px; transition: 0.2s; }
+        .mini-select-item:hover { background: var(--bg-main); color: var(--accent); font-weight: bold; }
 
         .btn-submit { width: 100%; padding: 12px; background: var(--text-dark); color: white; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px;}
         .btn-submit:hover { background: #000; }
@@ -58,10 +74,16 @@
 
         .product-list { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
         .product-item { background: var(--bg-main); border: 1px solid var(--border-light); padding: 8px 12px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; gap: 15px; transition: 0.3s;}
-        .product-item.is-hidden { opacity: 0.6; filter: grayscale(80%); border-style: dashed; }
+        /* تم إزالة الشفافية القوية وجعلها طبيعية مع تمييز بسيط */
+        .product-item.is-sold-out { background: var(--border-light); border-style: dashed; }
 
         .product-info-row { display: flex; align-items: center; gap: 15px; flex: 1; overflow: hidden;}
-        .product-info-row img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-light); flex-shrink: 0;}
+        
+        /* تنسيق حاوية الصورة وعلامة "نفذ" */
+        .img-wrapper { position: relative; width: 50px; height: 50px; flex-shrink: 0; }
+        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-light); }
+        .sold-out-badge { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #e74c3c; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.65rem; font-weight: bold; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.2); pointer-events: none; }
+
         .product-details { display: flex; align-items: center; gap: 15px; flex: 1; overflow: hidden;}
         .product-details h4 { margin: 0; font-size: 0.95rem; color: var(--bg-dark-blue); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;}
         .product-details .p-code { font-size: 0.8rem; color: var(--text-muted); background: var(--bg-surface); padding: 2px 8px; border-radius: 12px; border: 1px solid var(--border-light); white-space: nowrap;}
@@ -84,6 +106,9 @@
     </style>
 </head>
 <body>
+
+    <!-- حاوية الإشعارات -->
+    <div id="toast-container"></div>
 
     <div id="login-screen">
         <div class="login-box">
@@ -218,6 +243,21 @@
         window.editingId = null;
         window.currentEditProductData = null; 
 
+        window.showToast = function(msg, type = 'error') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icon = type === 'error' ? '<i class="fa-solid fa-circle-exclamation" style="color:#e74c3c"></i>' : '<i class="fa-solid fa-circle-check" style="color:#27ae60"></i>';
+            toast.innerHTML = `${icon} <span>${msg}</span>`;
+            
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('toast-out');
+                toast.addEventListener('animationend', () => toast.remove());
+            }, 3500);
+        }
+
         window.optimizeImage = function(url, width) {
             if (!url) return '';
             if (url.includes('res.cloudinary.com') && url.includes('/upload/')) {
@@ -230,13 +270,14 @@
         }
 
         document.addEventListener('click', function(e) {
-            if (!e.target.closest('.custom-select-btn') && !e.target.closest('.custom-select-list')) {
+            if (!e.target.closest('.custom-select-btn') && !e.target.closest('.mini-select-btn') && !e.target.closest('.custom-select-list')) {
                 document.querySelectorAll('.custom-select-list').forEach(el => el.classList.remove('show'));
+                document.querySelectorAll('.mini-select-list').forEach(el => el.classList.remove('show'));
             }
         });
 
         window.toggleAdminDropdown = function(id) {
-            document.querySelectorAll('.custom-select-list').forEach(el => {
+            document.querySelectorAll('.custom-select-list, .mini-select-list').forEach(el => {
                 if(el.id !== id) el.classList.remove('show');
             });
             document.getElementById(id).classList.toggle('show');
@@ -250,6 +291,13 @@
                 window.updateDynamicFields();
                 window.renderImagePreviews();
             }
+        }
+
+        window.selectImageColor = function(element, value, displayText) {
+            const container = element.closest('.mini-select-container');
+            container.querySelector('input[type="hidden"]').value = value;
+            container.querySelector('.color-display').innerText = displayText;
+            document.querySelectorAll('.mini-select-list').forEach(el => el.classList.remove('show'));
         }
 
         const categorySubTypes = {
@@ -340,12 +388,27 @@
             container.innerHTML = '';
 
             const needsColorMapping =['ملابس رجالي', 'ملابس حريمي', 'أحذية'].includes(cat);
-            let colorOptions = `<option value="">بدون لون</option>` + availableColors.map(c => `<option value="${c}">${c}</option>`).join('');
+            
+            let colorOptionsHtml = `<div class="mini-select-item" onclick="selectImageColor(this, '', 'بدون لون')">بدون لون</div>` + 
+                availableColors.map(c => `<div class="mini-select-item" onclick="selectImageColor(this, '${c}', '${c}')">${c}</div>`).join('');
 
             if (fileInput.files && fileInput.files.length > 0) {
                 Array.from(fileInput.files).slice(0, 7).forEach((file, index) => {
                     const url = URL.createObjectURL(file);
-                    let selectHtml = needsColorMapping ? `<select class="color-select-mini new-image-color" data-index="${index}">${colorOptions}</select>` : '';
+                    
+                    let selectHtml = needsColorMapping ? `
+                        <div class="mini-select-container" style="width: 100%; position: relative;">
+                            <input type="hidden" class="new-image-color" data-index="${index}" value="">
+                            <div class="mini-select-btn" onclick="toggleAdminDropdown('new-img-color-${index}')">
+                                <span class="color-display">بدون لون</span>
+                                <i class="fa-solid fa-chevron-down" style="font-size: 0.6rem;"></i>
+                            </div>
+                            <div class="mini-select-list" id="new-img-color-${index}">
+                                ${colorOptionsHtml}
+                            </div>
+                        </div>
+                    ` : '';
+
                     container.innerHTML += `
                         <div class="preview-item">
                             <img src="${url}" class="preview-img">
@@ -354,14 +417,24 @@
                     `;
                 });
             } else if (window.editingId && window.currentEditProductData && window.currentEditProductData.images) {
-                window.currentEditProductData.images.forEach((imgUrl) => {
+                window.currentEditProductData.images.forEach((imgUrl, index) => {
                     let selectedColor = (window.currentEditProductData.imageColorsMapping && window.currentEditProductData.imageColorsMapping[imgUrl]) ? window.currentEditProductData.imageColorsMapping[imgUrl] : '';
+                    let displayColorText = selectedColor || 'بدون لون';
+                    
                     let selectHtml = '';
                     if(needsColorMapping) {
-                        selectHtml = `<select class="color-select-mini old-image-color" data-url="${imgUrl}">
-                            <option value="">بدون لون</option>
-                            ${availableColors.map(c => `<option value="${c}" ${c === selectedColor ? 'selected' : ''}>${c}</option>`).join('')}
-                        </select>`;
+                        selectHtml = `
+                        <div class="mini-select-container" style="width: 100%; position: relative;">
+                            <input type="hidden" class="old-image-color" data-url="${imgUrl}" value="${selectedColor}">
+                            <div class="mini-select-btn" onclick="toggleAdminDropdown('old-img-color-${index}')">
+                                <span class="color-display">${displayColorText}</span>
+                                <i class="fa-solid fa-chevron-down" style="font-size: 0.6rem;"></i>
+                            </div>
+                            <div class="mini-select-list" id="old-img-color-${index}">
+                                ${colorOptionsHtml}
+                            </div>
+                        </div>
+                        `;
                     }
                     container.innerHTML += `
                         <div class="preview-item">
@@ -431,11 +504,11 @@
             try {
                 const response = await fetch(CLOUDINARY_URL, { method: "POST", body: formData });
                 const data = await response.json();
-                
+
                 if (data.error) {
                     throw new Error("Cloudinary Error: " + data.error.message);
                 }
-                
+
                 let optimizedUrl = data.secure_url.replace('/upload/', '/upload/c_limit,w_800,q_auto,f_auto/');
                 return optimizedUrl;
             } catch (err) {
@@ -459,13 +532,12 @@
             const sizes = Array.from(document.querySelectorAll('.size-checkbox:checked')).map(cb => cb.value);
             const colors = Array.from(document.querySelectorAll('.color-checkbox:checked')).map(cb => cb.value);
 
-            // نظام التنبيهات المخصص للحقول الفارغة
-            if (!name) { alert("قم بملئ حقل 'اسم المنتج' للنشر"); return; }
-            if (!desc) { alert("قم بملئ حقل 'وصف المنتج' للنشر"); return; }
-            if (!price) { alert("قم بملئ حقل 'السعر' للنشر"); return; }
-            if (!category) { alert("قم باختيار 'القسم' للنشر"); return; }
-            if (!qty) { alert("قم بملئ حقل 'الكمية المتاحة بالمخزن' للنشر"); return; }
-            if (!window.editingId && fileInput.files.length === 0) { alert("قم بإرفاق 'صورة واحدة على الأقل' للنشر"); return; }
+            if (!name) { showToast("يرجى ملء حقل 'اسم المنتج'", "error"); return; }
+            if (!desc) { showToast("يرجى ملء حقل 'وصف المنتج'", "error"); return; }
+            if (!price) { showToast("يرجى ملء حقل 'السعر'", "error"); return; }
+            if (!category) { showToast("يرجى اختيار 'القسم'", "error"); return; }
+            if (!qty) { showToast("يرجى ملء حقل 'الكمية المتاحة بالمخزن'", "error"); return; }
+            if (!window.editingId && fileInput.files.length === 0) { showToast("يرجى إرفاق 'صورة واحدة على الأقل'", "error"); return; }
 
             document.getElementById('btn-submit').style.display = 'none';
             const loadingMsg = document.getElementById('loading-msg');
@@ -480,19 +552,19 @@
                     const filesArray = Array.from(fileInput.files).slice(0, 7); 
                     newImageUrls = await Promise.all(filesArray.map(file => uploadToCloudinary(file)));
 
-                    const selects = document.querySelectorAll('.new-image-color');
-                    selects.forEach(select => {
-                        let idx = select.getAttribute('data-index');
-                        if(select.value && newImageUrls[idx]) {
-                            finalImageColorsMapping[newImageUrls[idx]] = select.value;
+                    const inputs = document.querySelectorAll('.new-image-color');
+                    inputs.forEach(input => {
+                        let idx = input.getAttribute('data-index');
+                        if(input.value && newImageUrls[idx]) {
+                            finalImageColorsMapping[newImageUrls[idx]] = input.value;
                         }
                     });
                 } else if (window.editingId && window.currentEditProductData) {
-                    const selects = document.querySelectorAll('.old-image-color');
-                    selects.forEach(select => {
-                        let url = select.getAttribute('data-url');
-                        if(select.value && url) {
-                            finalImageColorsMapping[url] = select.value;
+                    const inputs = document.querySelectorAll('.old-image-color');
+                    inputs.forEach(input => {
+                        let url = input.getAttribute('data-url');
+                        if(input.value && url) {
+                            finalImageColorsMapping[url] = input.value;
                         }
                     });
                 }
@@ -512,7 +584,7 @@
                     }
 
                     await updateDoc(productRef, updateData);
-                    alert("تم التعديل بنجاح!");
+                    showToast("تم تعديل المنتج بنجاح!", "success");
                     window.cancelEdit();
                 } else {
                     const newProduct = {
@@ -523,16 +595,16 @@
                         images: newImageUrls, img: newImageUrls[0], imageColorsMapping: finalImageColorsMapping, hidden: false
                     };
                     await addDoc(collection(db, "ghosn_products"), newProduct);
-                    alert("تم الرفع بنجاح!");
+                    showToast("تم رفع وإضافة المنتج بنجاح!", "success");
                     window.clearForm();
                 }
                 fetchProducts(); 
             } catch (e) {
                 console.error(e);
                 if (e.message.includes("Missing or insufficient permissions")) {
-                    alert("❌ خطأ: ليس لديك صلاحية الكتابة في قاعدة البيانات.\nيرجى تحديث قواعد Firebase (Rules).");
+                    showToast("خطأ: ليس لديك صلاحية الكتابة في قاعدة البيانات.", "error");
                 } else {
-                    alert("❌ حدث خطأ أثناء الحفظ: " + e.message);
+                    showToast("حدث خطأ أثناء الحفظ: " + e.message, "error");
                 }
             }
 
@@ -608,9 +680,13 @@
         window.renderAdminProducts = function() {
             const list = document.getElementById('admin-product-list');
             list.innerHTML = window.products.map((p) => `
-                <div class="product-item ${p.hidden ? 'is-hidden' : ''}">
+                <div class="product-item ${p.hidden ? 'is-sold-out' : ''}">
                     <div class="product-info-row">
-                        <img src="${window.optimizeImage(p.images && p.images.length > 0 ? p.images[0] : p.img, 100)}" loading="lazy">
+                        <!-- تم إضافة حاوية الصورة لعرض كلمة "نفذ" في المنتصف -->
+                        <div class="img-wrapper">
+                            <img src="${window.optimizeImage(p.images && p.images.length > 0 ? p.images[0] : p.img, 100)}" loading="lazy">
+                            ${p.hidden ? '<div class="sold-out-badge">نفذ</div>' : ''}
+                        </div>
                         <div class="product-details">
                             <h4>${p.name}</h4>
                             <span class="p-code">كود: ${p.shortCode}</span>
@@ -622,7 +698,7 @@
                     <div class="product-actions" id="actions-${p.firebaseId}">
                         <button class="btn-action btn-edit" onclick="editProduct('${p.firebaseId}')"><i class="fa-solid fa-pen"></i></button>
                         <button class="btn-action ${p.hidden ? 'btn-show' : 'btn-hide'}" onclick="toggleHide('${p.firebaseId}', ${p.hidden})">
-                            ${p.hidden ? '<i class="fa-solid fa-eye"></i>' : '<i class="fa-solid fa-eye-slash"></i>'}
+                            ${p.hidden ? '<i class="fa-solid fa-store"></i>' : '<i class="fa-solid fa-store-slash"></i>'}
                         </button>
                         <button class="btn-action btn-delete" onclick="showDeleteConfirm('${p.firebaseId}')"><i class="fa-solid fa-trash"></i></button>
                     </div>
@@ -634,6 +710,7 @@
             const productRef = doc(db, "ghosn_products", firebaseId);
             await updateDoc(productRef, { hidden: !currentStatus });
             fetchProducts();
+            showToast(currentStatus ? "تم إرجاع المنتج لحالة (متاح)" : "تم تعيين المنتج كـ (نفذ)", "success");
         }
 
         window.showDeleteConfirm = function(firebaseId) {
@@ -648,6 +725,7 @@
         window.confirmDelete = async function(firebaseId) {
             await deleteDoc(doc(db, "ghosn_products", firebaseId));
             fetchProducts();
+            showToast("تم حذف المنتج نهائياً", "success");
         }
     </script>
 </body>
