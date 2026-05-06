@@ -929,7 +929,9 @@
             document.getElementById('profile-products-title').innerText = `منتجات المسوق: ${admin.name}`;
                        profileContent.innerHTML = `
                 <div class="details-image-wrapper">
-                    <img src="${window.optimizeImage(admin.image, 600)}" onclick="openLightbox('${window.optimizeImage(admin.image, 800)}')" style="width:100%; max-height:350px; height:auto; object-fit:contain; background:var(--bg-surface); border-radius:var(--radius); border:1px solid var(--border-light); display:block; cursor:pointer;">
+                    <div class="details-slider">
+                        <img src="${window.optimizeImage(admin.image, 600)}" onclick="openLightbox('${window.optimizeImage(admin.image, 900)}')" style="object-fit: contain; background: var(--bg-surface);">
+                    </div>
                 </div>
                 <div class="info-bar" style="flex-direction: column; gap: 8px; align-items: stretch; margin-bottom: 25px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
@@ -1010,7 +1012,7 @@
             }
 
             let imgsArray = p.images && p.images.length > 0 ? p.images.slice(0, 7) :[p.img];
-            let sliderHtml = imgsArray.map(imgSrc => `<img src="${window.optimizeImage(imgSrc, 500)}" onclick="openLightbox('${window.optimizeImage(imgSrc, 800)}')">`).join('');
+            let sliderHtml = imgsArray.map(imgSrc => `<img src="${window.optimizeImage(imgSrc, 600)}" onclick="openLightbox('${window.optimizeImage(imgSrc, 900)}')">`).join('');
             let dotsHtml = imgsArray.map((_, i) => `<span class="dot ${i===0 ? 'active' : ''}"></span>`).join('');
 
             let safeSizes = p.sizes ||[];
