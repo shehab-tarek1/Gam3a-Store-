@@ -13,8 +13,6 @@
     <style>
         :root { --bg-main: #f4f6f9; --bg-surface: #ffffff; --bg-dark-blue: #0f1c2e; --text-light: #f8f9fa; --text-dark: #2d3436; --text-muted: #636e72; --border-light: #dfe6e9; --accent: #0984e3; --silver: #b2bec3; --radius: 20px; --shadow: 0 8px 20px rgba(0,0,0,0.06); }
         
-        /* تحسينات السلاسة ومنع التقطيع (Lag) */
-        html { scroll-behavior: smooth; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overscroll-behavior-y: none; }
 
@@ -33,8 +31,9 @@
         .cart-icon { font-size: 1.3rem; color: var(--text-light); cursor: pointer; position: relative; transition: 0.1s; margin-left: 5px;}
         .cart-count { position: absolute; top: -6px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; font-size: 0.7rem; padding: 2px 6px; font-weight: bold;}
 
-        main { padding: 20px 15px; width: 100%; max-width: 800px; flex: 1; transition: opacity 0.3s ease; }
-        .hidden { display: none !important; opacity: 0; }
+        /* تم إزالة transition و opacity لمنع التلاشي واللاج */
+        main { padding: 20px 15px; width: 100%; max-width: 800px; flex: 1; }
+        .hidden { display: none !important; }
 
         .cover-video-section { width: 100%; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); margin-bottom: 25px; position: relative; background: var(--bg-surface); border: 1px solid var(--border-light); line-height: 0; transform: translateZ(0); }
         .cover-video-section video { width: 100%; height: auto; max-height: 350px; object-fit: cover; pointer-events: none; display: block; }
@@ -49,15 +48,15 @@
 
         .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px; }
 
-        .category-card { position: relative; background-color: var(--bg-surface); border-radius: var(--radius); overflow: hidden; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; border: 1px solid var(--silver); transition: transform 0.2s ease, box-shadow 0.2s ease; will-change: transform; }
-        .category-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.12); }
+        /* تم إزالة will-change و transition لتخفيف اللاج */
+        .category-card { position: relative; background-color: var(--bg-surface); border-radius: var(--radius); overflow: hidden; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; border: 1px solid var(--silver); }
         .category-card img { width: 100%; height: 130px; object-fit: cover; object-position: top center; display: block;}
         .category-card h3 { background-color: var(--bg-dark-blue); color: var(--text-light); padding: 10px; font-size: 0.95rem; margin: 0;}
 
         .gender-ribbon { position: absolute; top: 10px; right: 10px; background: rgba(255, 255, 255, 0.95); border-radius: 8px; padding: 4px 8px; font-size: 0.55rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 5; border: 1px solid var(--border-light); color: var(--text-dark); line-height: 1.2; }
 
-        .inner-product-card { position: relative; background: var(--bg-surface); border-radius: var(--radius); overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; border: 1px solid var(--silver); flex-shrink: 0; scroll-snap-align: start; transition: transform 0.2s ease, box-shadow 0.2s ease; will-change: transform, box-shadow; }
-        .inner-product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 18px rgba(0,0,0,0.12); }
+        /* تم إزالة will-change و transition لتخفيف اللاج */
+        .inner-product-card { position: relative; background: var(--bg-surface); border-radius: var(--radius); overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; border: 1px solid var(--silver); flex-shrink: 0; scroll-snap-align: start; }
         .inner-product-card .img-container { position: relative; width: 100%; height: 130px; }
         .inner-product-card img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; border-bottom: 1px solid var(--border-light); transition: opacity 0.3s;}
 
@@ -101,7 +100,8 @@
         .social-links a:active { transform: scale(0.9); }
 
         .details-image-wrapper { width: 100%; max-width: 300px; margin: 0 auto 10px auto; overflow: hidden; position: relative;}
-        .details-slider { display: flex; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border-light); -webkit-overflow-scrolling: touch; }
+        /* تم إزالة scroll-behavior: smooth; لجعل تبديل الصور فورياً */
+        .details-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border-light); -webkit-overflow-scrolling: touch; position: relative; }
         .details-slider::-webkit-scrollbar { display: none; }
         .details-slider img { flex: 0 0 100%; width: 300px; height: 300px; object-fit: cover; object-position: top center; scroll-snap-align: center; }
         .slider-dots { display: flex; justify-content: center; gap: 6px; margin-top: 10px; margin-bottom: 15px;}
@@ -117,7 +117,6 @@
         .options-section { background: var(--bg-surface); padding: 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border-light);}
 
         .publisher-bar { cursor: pointer; transition: 0.2s; border: 1px solid var(--border-light); background: var(--bg-surface); }
-        .publisher-bar:hover { box-shadow: var(--shadow); transform: translateY(-2px); border-color: var(--silver); }
 
         .color-pill { cursor:pointer; display:flex; align-items:center; gap:4px; background:var(--bg-main); padding:3px 8px; border-radius:15px; border:1px solid var(--border-light); transition: 0.2s; }
         .color-pill.active { border-color: var(--accent); background: #e3f2fd; box-shadow: 0 0 5px rgba(9, 132, 227, 0.3); }
@@ -139,7 +138,7 @@
         .custom-select-list.show { display: flex; animation: fadeInDown 0.1s ease-out; }
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         .custom-select-item { padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.9rem; color: var(--text-dark); }
-        .custom-select-item:hover { background: var(--bg-main); color: var(--accent); }
+        .custom-select-item:active { background: var(--bg-main); color: var(--accent); }
     </style>
 </head>
 <body>
@@ -505,18 +504,34 @@
             window.navigateUI(pageId);
         }
 
-        window.navigateUI = function(pageId) {
+        // --- تعديلات التنقل لحفظ مكان الشاشة وإلغاء اللاج والتلاشي ---
+        window.scrollPositions = {};
+
+        window.navigateUI = function(pageId, isBack = false) {
             const pages =['home', 'category', 'details', 'cart', 'profile'];
+            
+            // حفظ مكان الشاشة الحالي
+            let currentVisible = pages.find(p => document.getElementById(p) && !document.getElementById(p).classList.contains('hidden'));
+            if (currentVisible) {
+                window.scrollPositions[currentVisible] = window.scrollY || document.documentElement.scrollTop;
+            }
+
+            // إخفاء كل الصفحات
             pages.forEach(p => {
                 const el = document.getElementById(p);
                 if(el) el.classList.add('hidden');
             });
 
+            // إظهار الصفحة المستهدفة
             const targetPage = document.getElementById(pageId);
             if(targetPage) targetPage.classList.remove('hidden');
 
-            // التمرير السلس لأعلى بدلاً من اللحظي لتقليل القطع
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // النزول للمكان المحفوظ فوراً بدون setTimeout لمنع اللاج
+            if (isBack && window.scrollPositions[pageId] !== undefined) {
+                window.scrollTo(0, window.scrollPositions[pageId]);
+            } else {
+                window.scrollTo(0, 0);
+            }
 
             const footer = document.getElementById('main-footer');
             if(footer) {
@@ -536,7 +551,8 @@
             if (window.historyStack.length > 1) {
                 window.historyStack.pop(); 
                 let previousPage = window.historyStack[window.historyStack.length - 1]; 
-                window.navigateUI(previousPage);
+                // تمرير true يخبر الدالة أننا نعود للخلف لاسترجاع مكان النزول
+                window.navigateUI(previousPage, true);
                 window.safeReplaceState(previousPage, "/"); 
             } else {
                 window.resetAndNavigate('home');
@@ -546,13 +562,15 @@
         window.addEventListener('popstate', (e) => {
             if (e.state && e.state.page) {
                 if (window.historyStack.length > 1) window.historyStack.pop();
-                window.navigateUI(e.state.page);
+                // تمرير true لأن إيماءة الرجوع في الهاتف تعتبر "رجوع للخلف"
+                window.navigateUI(e.state.page, true);
                 if(e.state.page === 'home') window.safeReplaceState('home', "/");
             } else {
-                window.navigateUI('home');
+                window.navigateUI('home', true);
                 window.safeReplaceState('home', "/");
             }
         });
+        // ----------------------------------------------------
 
         window.shareProduct = async function(event, id) {
             if(event) event.stopPropagation();
@@ -847,7 +865,8 @@
                     if (slider) {
                         const targetImg = slider.querySelectorAll('img')[index];
                         if(targetImg) {
-                            targetImg.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                            // تم تغيير behavior إلى 'auto' لتظهر الصورة فوراً بدون تقاطع
+                            slider.scrollTo({ left: targetImg.offsetLeft, behavior: 'auto' });
                         }
                     }
                 }
