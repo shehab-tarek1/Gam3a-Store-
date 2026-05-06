@@ -43,7 +43,7 @@
         .header-buttons { display: flex; gap: 8px; align-items: center; }
         .back-btn { text-decoration: none; color: var(--text-light); background: rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 15px; font-size: 0.85rem; transition: 0.3s; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; border: none;}
         .back-btn:hover { background: var(--accent); }
-        .profile-btn { background: #9b59b6; display: none; } /* زر بروفايل المسوق */
+        .profile-btn { background: #9b59b6; display: none; } 
         .profile-btn:hover { background: #8e44ad; }
 
         #admin-content { display: none; }
@@ -295,10 +295,11 @@
         const CLOUDINARY_PRESET = "My_public_preset";
 
         window.products =[];
-        window.admins = {}; // لحفظ بيانات جميع المسوقين لعرض أسمائهم للمالك
+        window.admins = {}; 
         window.editingId = null;
         window.currentEditProductData = null; 
         window.currentUserUid = null; 
+        window.currentUserShortCode = null; 
 
         window.showToast = function(msg, type = 'error') {
             const container = document.getElementById('toast-container');
@@ -534,7 +535,6 @@
                 window.currentUserUid = user.uid;
                 const masterAdminId = "XIarwijEVRSX7S8HY3qZIedH5qW2";
                 
-                // إظهار زر "صفحتي" للمسوقين فقط وتغيير العنوان للمالك
                 if(user.uid !== masterAdminId) {
                     document.getElementById('my-profile-btn').style.display = 'inline-flex';
                     document.getElementById('products-list-title').innerText = "المنتجات التي قمت بإضافتها";
@@ -548,17 +548,19 @@
                 fetchProducts();
             } else {
                 window.currentUserUid = null;
+                window.currentUserShortCode = null;
                 document.getElementById('login-screen').style.display = 'flex';
                 document.getElementById('admin-content').style.display = 'none';
             }
         });
 
-        // دالة الذهاب لصفحة بروفايل المسوق
         window.openMyProfile = function(e) {
             e.preventDefault();
-            if(window.currentUserUid) {
+            if(window.currentUserShortCode) {
                 const domain = window.location.origin;
-                window.open(`${domain}/?m=${window.currentUserUid}`, '_blank');
+                window.open(`${domain}/?m=${window.currentUserShortCode}`, '_blank');
+            } else {
+                showToast("جاري تحميل بياناتك، جرب مرة أخرى.", "error");
             }
         }
 
@@ -577,6 +579,8 @@
                 showToast("بيانات الدخول خاطئة!", "error");
             });
         }
+
+        function generateAdminCode() { return String(Math.floor(Math.random() * 90000) + 10000); } 
 
         window.registerAdmin = async function() {
             const name = document.getElementById('reg-name').value;
@@ -602,9 +606,11 @@
                 loadingMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري تسجيل الحساب...';
                 const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
                 const uid = userCredential.user.uid;
+                const newShortCode = generateAdminCode();
 
                 await setDoc(doc(db, "gam3a_admins", uid), {
                     uid: uid,
+                    shortCode: newShortCode,
                     name: name,
                     phone: '20' + phone.replace(/\D/g, '').replace(/^0/, ''),
                     address: address,
@@ -645,19 +651,28 @@
 
         async function fetchProducts() {
             try {
-                // جلب قائمة المسوقين لعرض أسمائهم للمالك الأساسي
                 const adminsSnapshot = await getDocs(collection(db, "gam3a_admins"));
                 window.admins = {};
-                adminsSnapshot.docs.forEach(doc => {
-                    window.admins[doc.id] = doc.data();
-                });
+                
+                // تحديث المسوقين القدامى برمز قصير تلقائي إن لم يكن لديهم
+                for (const docSnap of adminsSnapshot.docs) {
+                    const data = docSnap.data();
+                    if (!data.shortCode) {
+                        const newCode = generateAdminCode();
+                        await updateDoc(doc(db, "gam3a_admins", docSnap.id), { shortCode: newCode });
+                        data.shortCode = newCode;
+                    }
+                    window.admins[docSnap.id] = data;
+                    if(data.uid === window.currentUserUid) {
+                        window.currentUserShortCode = data.shortCode; 
+                    }
+                }
 
                 const querySnapshot = await getDocs(collection(db, "ghosn_products"));
                 let allProducts = querySnapshot.docs.map(doc => ({ firebaseId: doc.id, ...doc.data() }));
 
                 const masterAdminId = "XIarwijEVRSX7S8HY3qZIedH5qW2";
                 
-                // المالك الأساسي يرى جميع المنتجات، والمسوق يرى منتجاته فقط
                 if (window.currentUserUid === masterAdminId) {
                     window.products = allProducts;
                 } else {
@@ -868,7 +883,6 @@
 
             list.innerHTML = window.products.map((p) => {
                 let marketerBadge = '';
-                // إظهار شارة (بادج) باسم المسوق للمالك الأساسي فقط إذا كان المنتج ليس له
                 if (window.currentUserUid === masterAdminId && p.adminId && p.adminId !== masterAdminId) {
                     let marketerName = window.admins[p.adminId] ? window.admins[p.adminId].name : 'مسوق غير معروف';
                     marketerBadge = `<div style="font-size: 0.65rem; color: #fff; background: #9b59b6; padding: 2px 6px; border-radius: 8px; display: inline-block; margin-right: 5px;"><i class="fa-solid fa-user-tie"></i> ${marketerName}</div>`;
