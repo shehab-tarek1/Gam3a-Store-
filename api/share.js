@@ -1,23 +1,29 @@
 module.exports = async (req, res) => {
-    const type = req.query.type; 
+    const type = req.query.type; // إما 'product' أو 'marketer'
     const code = req.query.code;
 
+    // إخبار الخادم بفصل الكاش بناءً على نوع المتصفح
     res.setHeader('Vary', 'User-Agent');
 
+    // إذا لم يكن هناك كود، وجهه للرئيسية
     if (!code) {
         res.writeHead(302, { 'Location': '/', 'Cache-Control': 'no-store' });
         return res.end();
     }
 
     const userAgent = (req.headers['user-agent'] || '').toLowerCase();
+    
+    // فلتر قوي لكشف جميع روبوتات منصات التواصل الاجتماعي 
     const isBot = /bot|facebook|whatsapp|telegram|viber|skype|twitter|discord|linkedin/i.test(userAgent);
 
+    // إذا كان زائر بشري حقيقي، يتم توجيهه فورا للمتجر بذكاء 
     if (!isBot) {
         const redirectUrl = type === 'product' ? `/?p=${code}` : `/?m=${code}`;
         res.writeHead(302, { 'Location': redirectUrl, 'Cache-Control': 'no-store' });
         return res.end();
     }
 
+    // إذا كان روبوت، نجلب البيانات ونصنع له المعاينة
     const projectId = 'marketing-e9fdf'; 
     const collectionName = type === 'product' ? 'ghosn_products' : 'gam3a_admins';
 
@@ -29,7 +35,7 @@ module.exports = async (req, res) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 structuredQuery: {
-                    from: [{ collectionId: collectionName }],
+                    from:[{ collectionId: collectionName }],
                     where: {
                         fieldFilter: {
                             field: { fieldPath: 'shortCode' },
@@ -43,7 +49,10 @@ module.exports = async (req, res) => {
         });
 
         const data = await response.json();
-        if (!data || !data[0] || !data[0].document) throw new Error('Not found');
+        
+        if (!data || !data[0] || !data[0].document) {
+            throw new Error('لم يتم العثور على البيانات');
+        }
 
         const fields = data[0].document.fields || {};
 
@@ -58,10 +67,11 @@ module.exports = async (req, res) => {
             imageUrl = fields.images?.arrayValue?.values?.[0]?.stringValue || fields.img?.stringValue || '';
             siteUrl = `https://${req.headers.host}/p/${code}`;
         } else {
+            // بيانات المعاينة (بروفايل المسوق مع رقم الهاتف)
             title = `المسوق: ${fields.name?.stringValue || 'Ghosn STORE'}`;
-            // إظهار هاتف المسوق في المعاينة كما طلبت
-            const marketerPhone = fields.phone?.stringValue ? `\n📞 للتواصل: ${fields.phone.stringValue}` : '';
-            desc = `تصفح أحدث الموديلات والمنتجات من هذا المسوق.${marketerPhone}`;
+            // جلب رقم الهاتف 
+            const phone = fields.phone?.stringValue || '';
+            desc = `للتواصل: ${phone}\nتصفح أحدث الموديلات والمنتجات من ${fields.name?.stringValue || 'هذا المسوق'}`;
             imageUrl = fields.image?.stringValue || '';
             siteUrl = `https://${req.headers.host}/m/${code}`;
         }
