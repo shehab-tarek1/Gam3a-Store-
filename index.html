@@ -927,7 +927,9 @@
 
             const profileContent = document.getElementById('profile-content');
             document.getElementById('profile-products-title').innerText = `منتجات المسوق: ${admin.name}`;
-                       profileContent.innerHTML = `
+                       let bioHtml = admin.bio ? `<div style="width: 100%; margin-top: 5px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; white-space: pre-wrap;">${admin.bio}</div>` : '';
+
+            profileContent.innerHTML = `
                 <div class="details-image-wrapper">
                     <div class="details-slider">
                         <img src="${window.optimizeImage(admin.image, 600)}" onclick="openLightbox('${window.optimizeImage(admin.image, 900)}')" style="object-fit: contain; background: var(--bg-surface);">
@@ -942,6 +944,7 @@
                         <span style="font-size:0.85rem; color:var(--text-dark);"><i class="fa-solid fa-location-dot" style="color:var(--accent);"></i> ${admin.address}</span>
                         <span style="font-size:0.85rem; color:var(--text-dark); font-weight:bold;" dir="ltr"><i class="fa-solid fa-phone" style="color:var(--accent);"></i> ${admin.phone}</span>
                     </div>
+                    ${bioHtml}
                 </div>
             `;
 
