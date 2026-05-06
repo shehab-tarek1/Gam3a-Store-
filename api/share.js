@@ -52,7 +52,7 @@ module.exports = async (req, res) => {
         let title, desc, imageUrl, siteUrl;
 
         if (type === 'product') {
-            title = fields.name?.stringValue || 'Ghosn STORE';
+            title = fields.name?.stringValue || 'gam3a store';
             const price = fields.price?.integerValue || fields.price?.doubleValue || '';
             desc = `🔖 كود المنتج: ${code}\n${fields.description?.stringValue || 'تسوق أحدث المنتجات.'}`;
             if (price) title += ` | ${price} ج.م`;
