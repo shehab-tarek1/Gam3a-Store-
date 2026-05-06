@@ -710,20 +710,7 @@
             `;
         }
 
-        window.sliderObserver = new IntersectionObserver((entries) => {
-            if(entries[0].isIntersecting && window.sliderIndex < window.sliderProducts.length) {
-                window.sliderObserver.unobserve(entries[0].target);
-                let slider = document.getElementById('latest-products-slider');
-                slider.insertAdjacentHTML('beforeend', window.generateProductCardHTML(window.sliderProducts[window.sliderIndex]));
-                window.sliderIndex++;
-                let newLast = slider.lastElementChild;
-                if(newLast && window.sliderIndex < window.sliderProducts.length) {
-                    window.sliderObserver.observe(newLast);
-                }
-            }
-        }, { root: document.getElementById('latest-products-slider'), rootMargin: '50px' });
-
-        window.renderHomeSlider = function() {
+       window.renderHomeSlider = function() {
             const slider = document.getElementById('latest-products-slider');
             if(!slider) return;
 
@@ -734,22 +721,17 @@
                 return;
             }
 
+            // ترتيب المنتجات من الأحدث للأقدم
             visibleProducts.sort((a, b) => {
                 let dateA = a.createdAt ? (a.createdAt.seconds || new Date(a.createdAt).getTime()) : 0;
                 let dateB = b.createdAt ? (b.createdAt.seconds || new Date(b.createdAt).getTime()) : 0;
                 return dateB - dateA;
             });
 
+            // أخذ أحدث 10 منتجات وعرضهم كلهم فوراً بدون تقطيع
             window.sliderProducts = visibleProducts.slice(0, 10);
-            window.sliderIndex = 2; 
-
-            slider.innerHTML = window.sliderProducts.slice(0, window.sliderIndex).map(p => window.generateProductCardHTML(p)).join('');
-
-            let lastEl = slider.lastElementChild;
-            if(lastEl && window.sliderIndex < window.sliderProducts.length) {
-                window.sliderObserver.observe(lastEl);
-            }
-        }
+            slider.innerHTML = window.sliderProducts.map(p => window.generateProductCardHTML(p)).join('');
+        } 
 
         window.scrollSlider = function(direction) {
             const slider = document.getElementById('latest-products-slider');
