@@ -52,7 +52,7 @@
 
         .inner-product-card { position: relative; background: var(--bg-surface); border-radius: var(--radius); overflow: hidden; box-shadow: 0 6px 15px rgba(0,0,0,0.12); cursor: pointer; border: 1px solid var(--silver); flex-shrink: 0; scroll-snap-align: start; }
         .inner-product-card .img-container { position: relative; width: 100%; height: 130px; }
-        .inner-product-card img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; border-bottom: 1px solid var(--border-light);}
+        .inner-product-card img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; border-bottom: 1px solid var(--border-light); transition: 0.3s;}
 
         .card-info { padding: 10px; text-align: right; }
         .title-price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
@@ -71,7 +71,7 @@
 
         .badge-discount { position: absolute; top: 8px; left: 8px; background-color: #e74c3c; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; z-index: 5;}
         
-        .badge-outofstock { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(231, 76, 60, 0.95); color: white; padding: 6px 18px; border-radius: 8px; font-size: 0.9rem; font-weight: bold; z-index: 5; white-space: nowrap; box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4); border: 2px solid #fff; pointer-events: none; letter-spacing: 0.5px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+        .badge-outofstock { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); background-color: rgba(231, 76, 60, 0.95); color: white; padding: 6px 18px; border-radius: 8px; font-size: 0.9rem; font-weight: bold; z-index: 5; white-space: nowrap; box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4); border: 2px solid #fff; pointer-events: none; letter-spacing: 0.5px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
         .img-outofstock { opacity: 0.85; }
 
         .slider-section { background-color: var(--bg-surface); padding: 18px 15px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 25px;}
@@ -105,9 +105,9 @@
         .info-bar { display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface); padding: 12px 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border-light); font-size: 0.95rem;}
         .options-section { background: var(--bg-surface); padding: 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border-light);}
 
-        /* شريط المسوق المعدل بدون شبورة وبنفس إطار البطاقات */
+        /* شريط الناشر (المسوق) بالتصميم المطابق للبطاقات */
         .publisher-bar { cursor: pointer; transition: 0.2s; border: 1px solid var(--border-light); background: var(--bg-surface); }
-        .publisher-bar:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+        .publisher-bar:hover { box-shadow: var(--shadow); transform: translateY(-2px); border-color: var(--silver); }
 
         .color-pill { cursor:pointer; display:flex; align-items:center; gap:4px; background:var(--bg-main); padding:3px 8px; border-radius:15px; border:1px solid var(--border-light); transition: 0.1s; }
         .color-pill.active { border-color: var(--accent); background: #e3f2fd; box-shadow: 0 0 5px rgba(9, 132, 227, 0.3); }
@@ -158,9 +158,7 @@
         <img id="lightbox-img" src="">
     </div>
 
-    <!-- الصفحة الرئيسية -->
     <main id="home" class="hidden">
-
         <div class="cover-video-section">
             <video autoplay muted loop playsinline disablepictureinpicture preload="metadata">
                 <source src="https://res.cloudinary.com/dsxrjmcxs/video/upload/w_800,q_auto,f_auto/v1777896277/zimedbjtjhpbcgxixvnr.mp4" type="video/mp4">
@@ -229,7 +227,6 @@
                 <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&q=80">
                 <h3>سكن الطلاب</h3>
             </div>
-
             <div class="category-card" style="grid-column: span 2;" onclick="openCategory('عروض')">
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_700,q_auto,f_auto/v1777901914/v1dl24ujnayzxsxcljov.png" style="height: 120px; object-position: center;">
                 <h3>عروض خاصة</h3>
@@ -237,7 +234,6 @@
         </div>
     </main>
 
-    <!-- صفحة الأقسام -->
     <main id="category" class="hidden">
         <div class="top-bar">
             <div style="display: flex; gap: 12px; align-items: center;">
@@ -251,26 +247,24 @@
         </div>
     </main>
 
-    <!-- صفحة تفاصيل المنتج -->
     <main id="details" class="hidden">
         <div class="top-bar">
             <div style="display: flex; gap: 12px; align-items: center;">
                 <div class="back-arrow" onclick="goBackSafe()"><i class="fa-solid fa-arrow-right"></i> رجوع</div>
                 <span class="top-title-text">التفاصيل</span>
             </div>
-            <div class="share-btn-top" id="details-share-btn"><i class="fa-solid fa-share-nodes"></i></div>
+            <div class="share-btn-top" id="details-share-btn" onclick=""><i class="fa-solid fa-share-nodes"></i></div>
         </div>
         <div id="product-details-content"></div>
     </main>
 
-    <!-- صفحة بروفايل المسوق -->
     <main id="profile" class="hidden">
         <div class="top-bar">
             <div style="display: flex; gap: 12px; align-items: center;">
                 <div class="back-arrow" onclick="goBackSafe()"><i class="fa-solid fa-arrow-right"></i> رجوع</div>
                 <span class="top-title-text">البروفايل</span>
             </div>
-            <div class="share-btn-top" id="profile-share-btn"><i class="fa-solid fa-share-nodes"></i></div>
+            <div class="share-btn-top" id="profile-share-btn" onclick=""><i class="fa-solid fa-share-nodes"></i></div>
         </div>
         <div id="profile-content"></div>
         <h3 class="top-title-text" style="text-align: center; margin: 20px 0; display: block; border-radius: 12px;" id="profile-products-title">منتجات المسوق</h3>
@@ -280,7 +274,6 @@
         </div>
     </main>
 
-    <!-- سلة الطلبات -->
     <main id="cart" class="hidden">
         <div class="top-bar">
             <div style="display: flex; gap: 12px; align-items: center;">
@@ -381,9 +374,16 @@
                 const loader = document.getElementById('global-loader');
                 if(loader) loader.style.display = 'none';
 
+                // التحقق من الرابط بذكاء سواء كان من خلال Query أو Path
+                const path = window.location.pathname;
                 const urlParams = new URLSearchParams(window.location.search);
-                const sharedCode = urlParams.get('p');
-                const marketerCode = urlParams.get('m');
+                
+                let sharedCode = urlParams.get('p');
+                let marketerCode = urlParams.get('m');
+
+                if (path.startsWith('/p/')) sharedCode = path.replace('/p/', '').split('/')[0];
+                if (path.startsWith('/m/')) marketerCode = path.replace('/m/', '').split('/')[0];
+
                 window.history.replaceState({ page: 'home' }, "");
 
                 if (sharedCode) {
@@ -391,14 +391,27 @@
                     if (targetProduct) {
                         window.historyStack = ['home', 'details'];
                         window.history.pushState({ page: 'details' }, "");
-                        window.openProduct(targetProduct.id, false);
-                        return;
+                        try {
+                            window.openProduct(targetProduct.id, false);
+                            return;
+                        } catch(e) { console.error(e); }
                     }
-                } else if (marketerCode && window.admins[marketerCode]) {
-                    window.historyStack = ['home', 'profile'];
-                    window.history.pushState({ page: 'profile' }, "");
-                    window.openProfile(marketerCode, false);
-                    return;
+                } else if (marketerCode) {
+                    let targetAdminId = null;
+                    for (const [uid, adminData] of Object.entries(window.admins)) {
+                        if (String(adminData.shortCode) === String(marketerCode) || String(uid) === String(marketerCode)) {
+                            targetAdminId = uid;
+                            break;
+                        }
+                    }
+                    if (targetAdminId) {
+                        window.historyStack = ['home', 'profile'];
+                        window.history.pushState({ page: 'profile' }, "");
+                        try {
+                            window.openProfile(targetAdminId, false);
+                            return;
+                        } catch(e) { console.error(e); }
+                    }
                 }
                 
                 window.resetAndNavigate('home');
@@ -417,7 +430,7 @@
                         window.openCategory(catName, false); 
                     }
                 } else if (currentPage === 'details' && window.currentViewedProductId) {
-                    window.openProduct(window.currentViewedProductId, false); 
+                    try { window.openProduct(window.currentViewedProductId, false); } catch(e){}
                 }
             }
         }
@@ -489,13 +502,12 @@
             if(pageId === 'cart') window.renderCart();
         }
 
-        // حل مشكلة تجميد زر الرجوع من خلال التلاعب في الواجهة برمجياً بشكل آمن
         window.goBackSafe = function() {
             if (window.historyStack.length > 1) {
                 window.historyStack.pop(); 
                 let previousPage = window.historyStack[window.historyStack.length - 1]; 
                 window.navigateUI(previousPage);
-                window.history.replaceState({ page: previousPage }, ""); // تحديث السجل بدون تجميد
+                window.history.replaceState({ page: previousPage }, ""); 
             } else {
                 window.resetAndNavigate('home');
             }
@@ -510,14 +522,14 @@
             }
         });
 
-        // حل مشكلة المشاركة في متصفحات مثل فيسبوك باستخدام try-catch لنسخ الرابط احتياطياً
+        // تم إضافة الروابط القصيرة للمشاركة والحل الآمن للمتصفحات العنيدة
         window.shareProduct = async function(event, id) {
             if(event) event.stopPropagation();
             const p = window.products.find(x => String(x.id) === String(id));
             if(!p) return;
 
             const domain = window.location.origin;
-            const shareUrl = `${domain}/?p=${p.shortCode}`;
+            const shareUrl = `${domain}/p/${p.shortCode}`;
             const shareText = `شاهد هذا المنتج من Ghosn STORE:\n`;
 
             try {
@@ -527,7 +539,6 @@
                     throw new Error("Share API not supported");
                 }
             } catch (err) {
-                // بديل آمن للنسخ
                 try {
                     const textArea = document.createElement("textarea");
                     textArea.value = shareText + shareUrl;
@@ -547,7 +558,7 @@
             if(!admin) return;
 
             const domain = window.location.origin;
-            const shareUrl = `${domain}/?m=${adminId}`;
+            const shareUrl = `${domain}/m/${admin.shortCode}`;
             const shareText = `تصفح منتجات المسوق ${admin.name} على Ghosn STORE:\n`;
 
             try {
@@ -690,7 +701,6 @@
             }
         }, { rootMargin: '100px' });
 
-        // حل مشكلة قسم ملابس رجالي وحريمي بدعم الأسماء القديمة والجديدة
         window.openCategory = function(catName, pushHistory = true) {
             const titleEl = document.getElementById('category-title');
             if(titleEl) titleEl.innerText = catName === 'عروض' ? 'عروض خاصة' : "قسم " + catName;
@@ -711,6 +721,7 @@
                 } else {
                     window.catProducts = window.products.filter(p => {
                         let match = (p.category === catName);
+                        // معالجة ذكية للأسماء لتفادي مشكلة اختفاء قسم الملابس
                         if(catName === 'ملابس رجالي' && (p.category === 'ملابس رجالي' || p.category === 'رجالي')) match = true;
                         if(catName === 'ملابس حريمي' && (p.category === 'ملابس حريمي' || p.category === 'حريمي')) match = true;
                         return match;
@@ -1047,7 +1058,7 @@
                 <div class="options-section publisher-bar" onclick="openProfile('${p.adminId}')">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                         <div style="display: flex; align-items: center; gap: 10px;">
-                            <img src="${window.optimizeImage(admin.image, 100)}" style="width:40px; height:40px; border-radius:50%; border:2px solid #000; object-fit:cover;">
+                            <img src="${window.optimizeImage(admin.image, 100)}" style="width:40px; height:40px; border-radius:50%; border:1px solid var(--border-light); object-fit:cover;">
                             <span style="font-weight:bold; font-size:0.9rem; color:var(--bg-dark-blue);">المسوق: ${admin.name}</span>
                         </div>
                         <span style="font-size:0.75rem; color:var(--text-muted); font-weight:bold;">${adminJoinDate}</span>
@@ -1137,7 +1148,7 @@
 
             const baseUrl = window.location.href.split('?')[0].split('#')[0];
             const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-            const productUrl = `${cleanBaseUrl}/?p=${p.shortCode}`;
+            const productUrl = `${cleanBaseUrl}/p/${p.shortCode}`;
             const totalPrice = p.price * qty;
 
             let msg = `مرحباً Ghosn STORE، أود طلب:\n\n🔖 كود المنتج: ${p.shortCode}\n المنتج: ${p.name}\n القسم: ${p.category}\n اللون: ${color || 'غير محدد'}\n المقاس: ${size || 'غير محدد'}\n العدد: ${qty}\n إجمالي الحساب: ${totalPrice} ج.م\n\n🔗 الرابط: ${productUrl}`;
@@ -1192,7 +1203,7 @@
 
             let msg = `مرحباً Ghosn STORE، هذا طلبي من السلة:\n\n` + window.cart.map((item, i) => {
                 const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-                const productUrl = `${cleanBaseUrl}/?p=${item.shortCode}`;
+                const productUrl = `${cleanBaseUrl}/p/${item.shortCode}`;
                 let itemTotal = item.price * item.selQty;
                 totalCartPrice += itemTotal;
                 return `${i+1}- ${item.name} (قسم: ${item.category})\n🔖 كود: ${item.shortCode}\n ${item.selColor ? `لون: ${item.selColor} / ` : ''}${item.selSize ? `مقاس: ${item.selSize} / ` : ''}عدد: ${item.selQty}\n السعر: ${itemTotal} ج.م\n🔗 الرابط: ${productUrl}`;
