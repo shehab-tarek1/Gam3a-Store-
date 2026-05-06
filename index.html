@@ -105,7 +105,6 @@
         .info-bar { display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface); padding: 12px 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border-light); font-size: 0.95rem;}
         .options-section { background: var(--bg-surface); padding: 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border-light);}
 
-        /* شريط الناشر (المسوق) بالتصميم المطابق للبطاقات */
         .publisher-bar { cursor: pointer; transition: 0.2s; border: 1px solid var(--border-light); background: var(--bg-surface); }
         .publisher-bar:hover { box-shadow: var(--shadow); transform: translateY(-2px); border-color: var(--silver); }
 
@@ -374,7 +373,6 @@
                 const loader = document.getElementById('global-loader');
                 if(loader) loader.style.display = 'none';
 
-                // التحقق من الرابط بذكاء سواء كان من خلال Query أو Path
                 const path = window.location.pathname;
                 const urlParams = new URLSearchParams(window.location.search);
                 
@@ -522,7 +520,6 @@
             }
         });
 
-        // تم إضافة الروابط القصيرة للمشاركة والحل الآمن للمتصفحات العنيدة
         window.shareProduct = async function(event, id) {
             if(event) event.stopPropagation();
             const p = window.products.find(x => String(x.id) === String(id));
@@ -721,7 +718,6 @@
                 } else {
                     window.catProducts = window.products.filter(p => {
                         let match = (p.category === catName);
-                        // معالجة ذكية للأسماء لتفادي مشكلة اختفاء قسم الملابس
                         if(catName === 'ملابس رجالي' && (p.category === 'ملابس رجالي' || p.category === 'رجالي')) match = true;
                         if(catName === 'ملابس حريمي' && (p.category === 'ملابس حريمي' || p.category === 'حريمي')) match = true;
                         return match;
@@ -925,6 +921,7 @@
             }
         }
 
+        // تم إضافة سطر إظهار الواجهة في حالة الدخول من رابط مباشر لتفادي الشاشة البيضاء
         window.openProduct = function(id, pushToHistory = true) {
             window.currentViewedProductId = id; 
 
@@ -1107,7 +1104,10 @@
                     ${orderSectionHTML}
                 `;
             }
-            if(pushToHistory) window.navigate('details', pushToHistory);
+            
+            // الحل القاطع لمشكلة الشاشة البيضاء هنا!
+            if (pushToHistory) window.navigate('details');
+            else window.navigateUI('details');
         }
 
         window.updateOrderTotal = function(price, qty) {
