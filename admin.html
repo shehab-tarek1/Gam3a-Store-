@@ -47,66 +47,68 @@
         .profile-btn:hover { background: #8e44ad; }
 
         #admin-content { display: none; }
-        .admin-container { max-width: 850px; margin: 0 auto; background: var(--bg-surface); padding: 15px; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border-light);}
-        .section-title { font-size: 1.05rem; border-bottom: 2px solid var(--border-light); padding-bottom: 6px; margin-bottom: 12px; color: var(--text-dark); display: flex; justify-content: space-between; align-items: center; font-weight: bold;}
+        
+        /* تضييق وتصغير الحاويات والمسافات */
+        .admin-container { max-width: 850px; margin: 0 auto; background: var(--bg-surface); padding: 12px; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border-light);}
+        .section-title { font-size: 1.05rem; border-bottom: 2px solid var(--border-light); padding-bottom: 4px; margin-bottom: 8px; color: var(--text-dark); display: flex; justify-content: space-between; align-items: center; font-weight: bold;}
 
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .form-group { margin-bottom: 8px; position: relative; text-align: right; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .form-group { margin-bottom: 4px; position: relative; text-align: right; }
         .form-group.full-width { grid-column: span 2; }
         @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } .form-group.full-width { grid-column: span 1; } }
 
-        .form-group label { display: block; margin-bottom: 4px; font-weight: bold; font-size: 0.8rem; color: var(--text-dark);}
-        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border-light); border-radius: 8px; font-size: 0.85rem; background: var(--bg-main); outline: none;}
+        .form-group label { display: block; margin-bottom: 2px; font-weight: bold; font-size: 0.75rem; color: var(--text-dark);}
+        .form-control { width: 100%; padding: 8px; border: 1px solid var(--border-light); border-radius: 8px; font-size: 0.8rem; background: var(--bg-main); outline: none;}
         .form-control:focus { border-color: var(--accent); box-shadow: 0 0 5px rgba(9, 132, 227, 0.3); }
 
-        .custom-select-btn { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 10px; background: var(--bg-main); border: 1px solid var(--border-light); border-radius: 8px; font-size: 0.85rem; color: var(--text-dark); cursor: pointer; transition: 0.3s; }
+        .custom-select-btn { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 8px; background: var(--bg-main); border: 1px solid var(--border-light); border-radius: 8px; font-size: 0.8rem; color: var(--text-dark); cursor: pointer; transition: 0.3s; }
         .custom-select-list { position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 8px; margin-top: 4px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 100; max-height: 200px; overflow-y: auto; display: none; flex-direction: column; padding: 5px; }
         .custom-select-list.show { display: flex; animation: fadeInDown 0.2s ease-out; }
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-        .custom-select-item { padding: 8px 10px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; color: var(--text-dark); text-align: right; }
+        .custom-select-item { padding: 6px 10px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-size: 0.8rem; color: var(--text-dark); text-align: right; }
         .custom-select-item:hover { background: var(--bg-main); color: var(--accent); font-weight: bold; }
 
-        .multi-select-header { background: var(--bg-main); border: 1px solid var(--border-light); padding: 10px; border-radius: 8px; font-weight: bold; font-size: 0.85rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: var(--bg-dark-blue); transition: 0.3s;}
-        .multi-select-list { background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 8px; padding: 10px; display: none; flex-wrap: wrap; gap: 8px; margin-top: 4px; max-height: 150px; overflow-y: auto; }
+        .multi-select-header { background: var(--bg-main); border: 1px solid var(--border-light); padding: 8px; border-radius: 8px; font-weight: bold; font-size: 0.8rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: var(--bg-dark-blue); transition: 0.3s;}
+        .multi-select-list { background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 8px; padding: 8px; display: none; flex-wrap: wrap; gap: 6px; margin-top: 4px; max-height: 120px; overflow-y: auto; }
         .multi-select-list.show { display: flex; animation: fadeInDown 0.2s ease-out; }
-        .admin-checkbox-label { display: flex; align-items: center; gap: 5px; font-size: 0.8rem; cursor: pointer; color: var(--text-dark); user-select: none; width: 30%; min-width: 80px;}
+        .admin-checkbox-label { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; cursor: pointer; color: var(--text-dark); user-select: none; width: 30%; min-width: 80px;}
 
-        .image-preview-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; padding-bottom: 5px; justify-content: flex-start; }
-        .preview-item { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 90px; flex-shrink: 0; background: var(--bg-main); padding: 5px; border-radius: 8px; border: 1px solid var(--border-light); position: relative;}
-        .preview-img { width: 100%; height: 80px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-light); }
-        
+        .image-preview-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; padding-bottom: 5px; justify-content: flex-start; }
+        .preview-item { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 80px; flex-shrink: 0; background: var(--bg-main); padding: 5px; border-radius: 8px; border: 1px solid var(--border-light); position: relative;}
+        .preview-img { width: 100%; height: 70px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-light); }
+
         .mini-select-btn { padding: 4px 8px; font-size: 0.7rem; border-radius: 6px; background: var(--bg-surface); border: 1px solid var(--border-light); width: 100%; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: var(--text-dark); transition: 0.2s; }
         .mini-select-list { position: absolute; top: calc(100% + 2px); left: 0; right: 0; background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); z-index: 101; max-height: 120px; overflow-y: auto; display: none; flex-direction: column; padding: 3px; }
         .mini-select-list.show { display: flex; animation: fadeInDown 0.2s ease-out; }
-        .mini-select-item { padding: 5px; font-size: 0.7rem; cursor: pointer; border-radius: 4px; transition: 0.2s; text-align: right; }
+        .mini-select-item { padding: 4px; font-size: 0.7rem; cursor: pointer; border-radius: 4px; transition: 0.2s; text-align: right; }
 
-        .btn-submit { width: 100%; padding: 12px; background: var(--text-dark); color: white; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 15px;}
+        .btn-submit { width: 100%; padding: 10px; background: var(--text-dark); color: white; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px;}
         .btn-submit:hover { background: #000; }
-        .btn-cancel { background: #e74c3c; display: none; padding: 5px 10px; border:none; border-radius:6px; color:white; cursor:pointer; font-size: 0.8rem;}
+        .btn-cancel { background: #e74c3c; display: none; padding: 4px 8px; border:none; border-radius:6px; color:white; cursor:pointer; font-size: 0.75rem;}
 
-        .product-list { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
-        .product-item { background: var(--bg-main); border: 1px solid var(--border-light); padding: 8px 12px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; gap: 15px; transition: 0.3s;}
+        .product-list { margin-top: 15px; display: flex; flex-direction: column; gap: 6px; }
+        .product-item { background: var(--bg-main); border: 1px solid var(--border-light); padding: 8px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; transition: 0.3s;}
         .product-item.is-sold-out { background: var(--border-light); border-style: dashed; }
 
-        .product-info-row { display: flex; align-items: center; gap: 15px; flex: 1; overflow: hidden;}
-        .img-wrapper { position: relative; width: 50px; height: 50px; flex-shrink: 0; }
+        .product-info-row { display: flex; align-items: center; gap: 10px; flex: 1; overflow: hidden;}
+        .img-wrapper { position: relative; width: 45px; height: 45px; flex-shrink: 0; }
         .img-wrapper img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-light); }
-        .sold-out-badge { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #e74c3c; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.65rem; font-weight: bold; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.2); pointer-events: none; }
+        
+        .product-details { display: flex; flex-direction: column; justify-content: center; flex: 1; overflow: hidden;}
+        .product-details h4 { margin: 0; font-size: 0.85rem; color: var(--bg-dark-blue); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        .p-code-row { display: flex; gap: 5px; align-items: center; margin-top: 3px;}
+        .product-details .p-code { font-size: 0.7rem; color: var(--text-muted); background: var(--bg-surface); padding: 2px 6px; border-radius: 12px; border: 1px solid var(--border-light); white-space: nowrap;}
 
-        .product-details { display: flex; align-items: center; gap: 15px; flex: 1; overflow: hidden;}
-        .product-details h4 { margin: 0; font-size: 0.95rem; color: var(--bg-dark-blue); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;}
-        .product-details .p-code { font-size: 0.8rem; color: var(--text-muted); background: var(--bg-surface); padding: 2px 8px; border-radius: 12px; border: 1px solid var(--border-light); white-space: nowrap;}
-
-        .product-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0;}
-        .btn-action { border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; color: white; font-size: 0.8rem; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 5px;}
+        .product-actions { display: flex; align-items: center; gap: 5px; flex-shrink: 0;}
+        .btn-action { border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; color: white; font-size: 0.75rem; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 4px;}
         .btn-edit { background: var(--accent); }
         .btn-hide { background: #f39c12; }
         .btn-show { background: #27ae60; }
         .btn-delete { background: #e74c3c; }
 
-        @media (max-width: 650px) { .product-item { flex-direction: column; align-items: stretch; } .product-actions { justify-content: flex-end; } .product-details { flex-wrap: wrap; gap: 5px; } }
+        @media (max-width: 650px) { .product-item { flex-direction: column; align-items: stretch; } .product-actions { justify-content: flex-end; } .product-details { flex-wrap: wrap; gap: 2px; } }
 
-        .loading { display: none; color: var(--accent); font-weight: bold; text-align: center; margin-top: 8px; font-size: 0.85rem;}
+        .loading { display: none; color: var(--accent); font-weight: bold; text-align: center; margin-top: 8px; font-size: 0.8rem;}
         .dynamic-field { display: none; }
     </style>
 </head>
@@ -117,7 +119,7 @@
     <div id="login-screen">
         <div class="login-box">
             <h2 style="margin-bottom:10px; color:var(--bg-dark-blue); font-size: 1.3rem;"><i class="fa-solid fa-lock"></i> الإدارة والمسوقين</h2>
-            
+
             <div class="auth-tabs">
                 <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">تسجيل الدخول</button>
                 <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">إنشاء حساب</button>
@@ -151,7 +153,7 @@
                         <input type="text" id="reg-name" class="form-control" placeholder="اسمك ثلاثي">
                     </div>
                     <div class="form-group">
-                        <label>رقم الهاتف</label>
+                        <label>رقم الهاتف الأساسي</label>
                         <input type="tel" id="reg-phone" class="form-control" placeholder="010..." style="direction: ltr; text-align: right;">
                     </div>
                     <div class="form-group">
@@ -173,7 +175,7 @@
 
     <div id="admin-content">
         <header>
-            <div class="header-title"><i class="fa-solid fa-user-gear"></i> لوحة الإدارة</div>
+            <div class="header-title"><i class="fa-solid fa-user-gear"></i> الإدارة</div>
             <div class="header-buttons">
                 <button id="my-profile-btn" class="back-btn profile-btn" onclick="openMyProfile(event)"><i class="fa-solid fa-id-badge"></i> صفحتي</button>
                 <a href="/" class="back-btn"><i class="fa-solid fa-store"></i> المتجر</a>
@@ -186,14 +188,13 @@
                 <button id="btn-cancel-edit" class="btn-cancel" onclick="cancelEdit()"><i class="fa-solid fa-times"></i> إلغاء التعديل</button>
             </div>
 
+            <!-- تم إعادة ترتيب الحقول بشكل متجاور لتقليل المساحة الكلية -->
             <div class="form-grid">
                 <div class="form-group full-width"><label>اسم المنتج</label><input type="text" id="p-name" class="form-control"></div>
                 <div class="form-group full-width"><label>وصف المنتج</label><textarea id="p-desc" class="form-control" rows="2"></textarea></div>
 
-                <div class="form-group">
-                    <label>السعر (جنية مصري)</label>
-                    <input type="number" id="p-price" class="form-control" placeholder="مثال: 250" min="0">
-                </div>
+                <div class="form-group"><label>السعر (ج.م)</label><input type="number" id="p-price" class="form-control" placeholder="مثال: 250" min="0"></div>
+                <div class="form-group"><label>الكمية المتاحة بالمخزن</label><input type="number" id="p-qty" class="form-control" min="0"></div>
 
                <div class="form-group">
                     <label>القسم</label>
@@ -243,14 +244,21 @@
                     </div>
                 </div>
 
-                <div class="form-group"><label>الكمية المتاحة بالمخزن</label><input type="number" id="p-qty" class="form-control" min="0"></div>
                 <div class="form-group"><label>أماكن التوصيل المتاحة</label><input type="text" id="p-delivery" class="form-control" value="جميع المحافظات"></div>
 
-                <div class="form-group" style="display:flex; align-items:center; gap:8px; margin-top:8px;">
-                    <input type="checkbox" id="p-isOffer" style="width:16px; height:16px;" onchange="toggleDiscount()">
-                    <label style="margin:0; cursor:pointer;" for="p-isOffer">كـ (عرض خاص)</label>
+                <div class="form-group">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+                        <label style="margin:0;">نسبة الخصم</label>
+                        <label style="font-size:0.7rem; font-weight:bold; cursor:pointer; color:var(--accent);"><input type="checkbox" id="p-isOffer" style="vertical-align: middle;" onchange="toggleDiscount()"> كـ (عرض خاص)</label>
+                    </div>
+                    <input type="text" id="p-discount" class="form-control" disabled placeholder="مثال: 20%">
                 </div>
-                <div class="form-group"><label>نسبة الخصم</label><input type="text" id="p-discount" class="form-control" disabled></div>
+
+                <!-- حقل إدخال رقم الواتساب المخصص للمنتج -->
+                <div class="form-group">
+                    <label><i class="fa-brands fa-whatsapp" style="color:#25D366;"></i> رقم واتساب الطلبات</label>
+                    <input type="tel" id="p-whatsapp" class="form-control" placeholder="يترك فارغاً لاستخدام رقم حسابك" style="direction:ltr; text-align:right;">
+                </div>
 
                 <div class="form-group full-width dynamic-field" id="sizes-group"></div>
                 <div class="form-group full-width dynamic-field" id="colors-group"></div>
@@ -266,8 +274,7 @@
             <div id="loading-msg" class="loading"><i class="fa-solid fa-spinner fa-spin"></i> جاري الرفع...</div>
             <button id="btn-submit" class="btn-submit" onclick="saveProduct()"><i class="fa-solid fa-upload"></i> حفظ ورفع المنتج</button>
 
-            <!-- تغيير العنوان برمجياً بناءً على نوع المستخدم -->
-            <h3 class="section-title" style="margin-top: 25px;" id="products-list-title">المنتجات التي قمت بإضافتها</h3>
+            <h3 class="section-title" style="margin-top: 20px;" id="products-list-title">المنتجات التي قمت بإضافتها</h3>
             <div class="product-list" id="admin-product-list"></div>
         </div>
     </div>
@@ -335,10 +342,8 @@
         window.switchAuthTab = function(tab) {
             document.getElementById('tab-login').classList.remove('active');
             document.getElementById('tab-register').classList.remove('active');
-            
             document.getElementById('form-login').style.display = 'none';
             document.getElementById('form-register').style.display = 'none';
-
             document.getElementById(`tab-${tab}`).classList.add('active');
             document.getElementById(`form-${tab}`).style.display = 'block';
         }
@@ -472,14 +477,14 @@
             container.innerHTML = '';
 
             const needsColorMapping =['ملابس رجالي', 'ملابس حريمي', 'أحذية'].includes(cat);
-            
+
             let colorOptionsHtml = `<div class="mini-select-item" onclick="selectImageColor(this, '', 'بدون لون')">بدون لون</div>` + 
                 availableColors.map(c => `<div class="mini-select-item" onclick="selectImageColor(this, '${c}', '${c}')">${c}</div>`).join('');
 
             if (fileInput.files && fileInput.files.length > 0) {
                 Array.from(fileInput.files).slice(0, 7).forEach((file, index) => {
                     const url = URL.createObjectURL(file);
-                    
+
                     let selectHtml = needsColorMapping ? `
                         <div class="mini-select-container" style="width: 100%; position: relative;">
                             <input type="hidden" class="new-image-color" data-index="${index}" value="">
@@ -504,7 +509,7 @@
                 window.currentEditProductData.images.forEach((imgUrl, index) => {
                     let selectedColor = (window.currentEditProductData.imageColorsMapping && window.currentEditProductData.imageColorsMapping[imgUrl]) ? window.currentEditProductData.imageColorsMapping[imgUrl] : '';
                     let displayColorText = selectedColor || 'بدون لون';
-                    
+
                     let selectHtml = '';
                     if(needsColorMapping) {
                         selectHtml = `
@@ -534,7 +539,7 @@
             if (user) {
                 window.currentUserUid = user.uid;
                 const masterAdminId = "XIarwijEVRSX7S8HY3qZIedH5qW2";
-                
+
                 if(user.uid !== masterAdminId) {
                     document.getElementById('my-profile-btn').style.display = 'inline-flex';
                     document.getElementById('products-list-title').innerText = "المنتجات التي قمت بإضافتها";
@@ -567,14 +572,14 @@
         window.loginAdmin = function() {
             const loginInput = document.getElementById('login-input').value.trim();
             const pass = document.getElementById('login-password').value;
-            
+
             if(!loginInput || !pass) { showToast("يرجى إدخال البيانات كاملة", "error"); return; }
-            
+
             let email = loginInput;
             if(!loginInput.includes('@')) {
                 email = window.formatPhoneToEmail(loginInput);
             }
-            
+
             signInWithEmailAndPassword(auth, email, pass).catch(error => {
                 showToast("بيانات الدخول خاطئة!", "error");
             });
@@ -641,7 +646,7 @@
                 const response = await fetch(CLOUDINARY_URL, { method: "POST", body: formData });
                 const data = await response.json();
                 if (data.error) throw new Error("Cloudinary Error: " + data.error.message);
-                
+
                 let optimizedUrl = data.secure_url.replace('/upload/', '/upload/c_fill,w_300,h_300,g_face,q_auto,f_auto/');
                 return optimizedUrl;
             } catch (err) {
@@ -653,8 +658,7 @@
             try {
                 const adminsSnapshot = await getDocs(collection(db, "gam3a_admins"));
                 window.admins = {};
-                
-                // تحديث المسوقين القدامى برمز قصير تلقائي إن لم يكن لديهم
+
                 for (const docSnap of adminsSnapshot.docs) {
                     const data = docSnap.data();
                     if (!data.shortCode) {
@@ -672,7 +676,7 @@
                 let allProducts = querySnapshot.docs.map(doc => ({ firebaseId: doc.id, ...doc.data() }));
 
                 const masterAdminId = "XIarwijEVRSX7S8HY3qZIedH5qW2";
-                
+
                 if (window.currentUserUid === masterAdminId) {
                     window.products = allProducts;
                 } else {
@@ -724,8 +728,17 @@
             const isOffer = document.getElementById('p-isOffer').checked;
             const discount = document.getElementById('p-discount').value;
             const delivery = document.getElementById('p-delivery').value;
-            const fileInput = document.getElementById('p-image');
+            
+            // قراءة رقم الواتساب المخصص وتنسيقه
+            const whatsappRaw = document.getElementById('p-whatsapp').value.trim();
+            let finalWhatsapp = "";
+            if(whatsappRaw) {
+                finalWhatsapp = whatsappRaw.replace(/\D/g, '');
+                if(finalWhatsapp.startsWith('0')) finalWhatsapp = '2' + finalWhatsapp;
+                if(!finalWhatsapp.startsWith('20')) finalWhatsapp = '20' + finalWhatsapp;
+            }
 
+            const fileInput = document.getElementById('p-image');
             const subType = document.getElementById('p-type') ? document.getElementById('p-type').value : "";
             const targetGender = document.getElementById('p-gender') ? document.getElementById('p-gender').value : "";
             const sizes = Array.from(document.querySelectorAll('.size-checkbox:checked')).map(cb => cb.value);
@@ -772,7 +785,7 @@
 
                 if (window.editingId) {
                     const productRef = doc(db, "ghosn_products", window.editingId);
-                    let updateData = { name, description: desc, price: parseFloat(price), category, subType, targetGender, qty: parseInt(qty), isOffer, discount, sizes, colors, delivery };
+                    let updateData = { name, description: desc, price: parseFloat(price), category, subType, targetGender, qty: parseInt(qty), isOffer, discount, sizes, colors, delivery, whatsapp: finalWhatsapp };
 
                     if(newImageUrls.length > 0) {
                         updateData.images = newImageUrls;
@@ -790,7 +803,7 @@
                         id: Date.now(), 
                         createdAt: Date.now(),
                         shortCode: generateShortCode(),
-                        name, description: desc, price: parseFloat(price), category, subType, targetGender, qty: parseInt(qty), isOffer, discount, sizes, colors, delivery,
+                        name, description: desc, price: parseFloat(price), category, subType, targetGender, qty: parseInt(qty), isOffer, discount, sizes, colors, delivery, whatsapp: finalWhatsapp,
                         images: newImageUrls, img: newImageUrls[0], imageColorsMapping: finalImageColorsMapping, hidden: false,
                         adminId: window.currentUserUid 
                     };
@@ -824,6 +837,11 @@
             document.getElementById('p-name').value = p.name;
             document.getElementById('p-desc').value = p.description || "";
             document.getElementById('p-price').value = p.price || 0; 
+            
+            // قراءة رقم الواتس المخصص لعرضه
+            let dispWa = p.whatsapp || "";
+            if(dispWa.startsWith('20')) dispWa = '0' + dispWa.substring(2);
+            document.getElementById('p-whatsapp').value = dispWa;
 
             document.getElementById('p-category').value = p.category;
             document.getElementById('cat-display').innerText = p.category || "-- اختر القسم --";
@@ -871,6 +889,7 @@
             document.getElementById('cat-display').innerText = '-- اختر القسم --';
             document.getElementById('p-qty').value = ''; document.getElementById('p-image').value = '';
             document.getElementById('p-isOffer').checked = false; document.getElementById('p-discount').value = '';
+            document.getElementById('p-whatsapp').value = '';
             document.getElementById('image-preview-container').innerHTML = '';
 
             window.updateDynamicFields(); 
@@ -895,10 +914,13 @@
                             <img src="${window.optimizeImage(p.images && p.images.length > 0 ? p.images[0] : p.img, 100)}" loading="lazy">
                         </div>
                         <div class="product-details">
-                            <h4>${p.name} ${marketerBadge}</h4>
-                            <span class="p-code">كود: ${p.shortCode}</span>
-                            <span class="p-price">${p.price || 0} ج.م</span>
-                            <span style="font-size: 0.8rem; color: var(--text-muted);">المتاح: <strong>${p.qty}</strong></span>
+                            <h4>${p.name}</h4>
+                            <div class="p-code-row">
+                                <span class="p-code">كود: ${p.shortCode}</span>
+                                <span style="font-size:0.75rem; color:var(--accent); font-weight:bold;">${p.price || 0} ج.م</span>
+                                <span style="font-size:0.75rem; color:var(--text-muted);">المتاح: <strong>${p.qty}</strong></span>
+                            </div>
+                            ${marketerBadge ? `<div style="margin-top:3px;">${marketerBadge}</div>` : ''}
                         </div>
                     </div>
                     
