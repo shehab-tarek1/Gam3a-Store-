@@ -36,7 +36,7 @@
         .cover-video-section { width: 100%; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); margin-bottom: 25px; position: relative; background: var(--bg-surface); border: 1px solid var(--border-light); line-height: 0; }
         .cover-video-section video { width: 100%; height: auto; max-height: 350px; object-fit: cover; pointer-events: none; display: block; }
 
-        .top-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .top-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; justify-content: space-between; }
         .back-arrow { display: inline-flex; align-items: center; gap: 8px; color: var(--bg-dark-blue); font-weight: bold; cursor: pointer; padding: 8px 15px; background: var(--bg-surface); border-radius: 25px; box-shadow: var(--shadow); font-size: 0.85rem; transition: 0.1s;}
         .top-title-text { font-size: 0.85rem; font-weight: bold; color: var(--text-muted); background: var(--bg-surface); padding: 8px 15px; border-radius: 25px; box-shadow: var(--shadow); border: 1px solid var(--border-light);}
 
@@ -70,8 +70,6 @@
         .card-desc-snippet { font-size: 0.7rem; color: var(--text-muted); margin: 0; text-align: right; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; border-top: 1px dashed var(--border-light); padding-top: 8px; }
 
         .badge-discount { position: absolute; top: 8px; left: 8px; background-color: #e74c3c; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; z-index: 5;}
-        
-        /* تصميم تأثير הختم المائل */
         .badge-outofstock { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); background-color: rgba(231, 76, 60, 0.95); color: white; padding: 6px 18px; border-radius: 8px; font-size: 0.9rem; font-weight: bold; z-index: 5; white-space: nowrap; box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4); border: 2px solid #fff; pointer-events: none; letter-spacing: 0.5px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
         .img-outofstock { opacity: 0.85; }
 
@@ -105,6 +103,10 @@
 
         .info-bar { display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface); padding: 12px 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border-light); font-size: 0.95rem;}
         .options-section { background: var(--bg-surface); padding: 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border-light);}
+
+        /* شريط الناشر المُعدل ليتطابق مع البطاقات */
+        .publisher-bar { cursor: pointer; transition: 0.2s; border: 1px solid var(--border-light); background: var(--bg-surface); }
+        .publisher-bar:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.08); transform: translateY(-2px); }
 
         .color-pill { cursor:pointer; display:flex; align-items:center; gap:4px; background:var(--bg-main); padding:3px 8px; border-radius:15px; border:1px solid var(--border-light); transition: 0.1s; }
         .color-pill.active { border-color: var(--accent); background: #e3f2fd; box-shadow: 0 0 5px rgba(9, 132, 227, 0.3); }
@@ -156,7 +158,6 @@
     </div>
 
     <main id="home" class="hidden">
-
         <div class="cover-video-section">
             <video autoplay muted loop playsinline disablepictureinpicture preload="metadata">
                 <source src="https://res.cloudinary.com/dsxrjmcxs/video/upload/w_800,q_auto,f_auto/v1777896277/zimedbjtjhpbcgxixvnr.mp4" type="video/mp4">
@@ -183,25 +184,16 @@
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777897952/f0zjvcf4shbdm6vpsu9v.png">
                 <h3>ملابس حريمي</h3>
             </div>
-
             <div class="category-card" onclick="openCategory('أحذية')">
-                <div class="gender-ribbon">
-                    <span>رجالي</span>
-                    <span>حريمي</span>
-                </div>
+                <div class="gender-ribbon"><span>رجالي</span><span>حريمي</span></div>
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777898077/vxj0evps2e6dqnvd8kc9.png">
                 <h3>أحذية</h3>
             </div>
-
             <div class="category-card" onclick="openCategory('برفانات')">
-                <div class="gender-ribbon">
-                    <span>رجالي</span>
-                    <span>حريمي</span>
-                </div>
+                <div class="gender-ribbon"><span>رجالي</span><span>حريمي</span></div>
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777898091/o7n4f5rmofg75heasp2n.png">
                 <h3>برفانات</h3>
             </div>
-
             <div class="category-card" onclick="openCategory('اكسسورات رجالي')">
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777899460/w2jl5kfkm6laxg8azxj2.png">
                 <h3>اكسسورات رجالي</h3>
@@ -234,7 +226,6 @@
                 <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&q=80">
                 <h3>سكن الطلاب</h3>
             </div>
-
             <div class="category-card" style="grid-column: span 2;" onclick="openCategory('عروض')">
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_700,q_auto,f_auto/v1777901914/v1dl24ujnayzxsxcljov.png" style="height: 120px; object-position: center;">
                 <h3>عروض خاصة</h3>
@@ -244,8 +235,10 @@
 
     <main id="category" class="hidden">
         <div class="top-bar">
-            <div class="back-arrow" onclick="goBack()"><i class="fa-solid fa-arrow-right"></i> رجوع</div>
-            <span id="category-title" class="top-title-text">القسم</span>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="back-arrow" onclick="goBack()"><i class="fa-solid fa-arrow-right"></i> رجوع</div>
+                <span id="category-title" class="top-title-text">القسم</span>
+            </div>
         </div>
         <div class="categories-grid" id="category-products"></div>
         <div id="category-loader" style="text-align:center; padding: 20px; display:none;">
@@ -254,7 +247,7 @@
     </main>
 
     <main id="details" class="hidden">
-        <div class="top-bar" style="justify-content: space-between;">
+        <div class="top-bar">
             <div style="display: flex; gap: 12px; align-items: center;">
                 <div class="back-arrow" onclick="goBack()"><i class="fa-solid fa-arrow-right"></i> رجوع</div>
                 <span class="top-title-text">التفاصيل</span>
@@ -264,10 +257,28 @@
         <div id="product-details-content"></div>
     </main>
 
+    <main id="profile" class="hidden">
+        <div class="top-bar">
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="back-arrow" onclick="goBack()"><i class="fa-solid fa-arrow-right"></i> رجوع</div>
+                <span class="top-title-text">البروفايل</span>
+            </div>
+            <div class="share-btn-top" id="profile-share-btn" onclick=""><i class="fa-solid fa-share-nodes"></i></div>
+        </div>
+        <div id="profile-content"></div>
+        <h3 class="top-title-text" style="text-align: center; margin: 20px 0; display: block; border-radius: 12px;" id="profile-products-title">منتجات المسوق</h3>
+        <div class="categories-grid" id="profile-products"></div>
+        <div id="profile-loader" style="text-align:center; padding: 20px; display:none;">
+            <div class="spinner" style="margin: 0 auto; width: 30px; height: 30px; border-width: 3px;"></div>
+        </div>
+    </main>
+
     <main id="cart" class="hidden">
         <div class="top-bar">
-            <div class="back-arrow" onclick="goBack()"><i class="fa-solid fa-arrow-right"></i> رجوع للتبضع</div>
-            <span class="top-title-text">سلة الطلبات</span>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="back-arrow" onclick="goBack()"><i class="fa-solid fa-arrow-right"></i> رجوع</div>
+                <span class="top-title-text">السلة</span>
+            </div>
         </div>
         <div class="slider-section" style="margin-top: 10px;">
             <div id="cart-items"></div>
@@ -293,7 +304,6 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        // تم تغيير الاستدعاء من getDocs إلى onSnapshot للتحديث اللحظي
         import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -310,11 +320,16 @@
         const db = getFirestore(app);
 
         window.products =[];
+        window.admins = {}; 
         window.cart = JSON.parse(localStorage.getItem('am_cart')) ||[];
         window.SELLER_PHONE = "201206244875";
         window.historyStack =['home'];
         
-        window.currentViewedProductId = null; // تتبع المنتج الحالي
+        window.currentViewedProductId = null; 
+        
+        window.profileProducts =[];
+        window.profileIndex = 0;
+        window.PROFILE_BATCH_SIZE = 2; 
 
         window.sliderProducts =[];
         window.sliderIndex = 0;
@@ -350,64 +365,71 @@
         }
 
         let isInitialLoad = true;
+        let productsLoaded = false;
+        let adminsLoaded = false;
         
-        // دالة جلب المنتجات المحدثة للعمل بالتحديث الفوري
-        async function fetchProducts() {
-            try {
-                onSnapshot(collection(db, "ghosn_products"), (querySnapshot) => {
-                    window.products = querySnapshot.docs.map(doc => ({ id: doc.id, firebaseId: doc.id, ...doc.data() }));
+        function checkAndInit() {
+            if(productsLoaded && adminsLoaded && isInitialLoad) {
+                isInitialLoad = false;
+                const loader = document.getElementById('global-loader');
+                if(loader) loader.style.display = 'none';
 
-                    // إذا كانت هذه المرة الأولى التي يفتح فيها المستخدم الموقع
-                    if (isInitialLoad) {
-                        isInitialLoad = false;
-                        const loader = document.getElementById('global-loader');
-                        if(loader) loader.style.display = 'none';
+                const urlParams = new URLSearchParams(window.location.search);
+                const sharedCode = urlParams.get('p');
+                const marketerCode = urlParams.get('m');
+                window.history.replaceState({ page: 'home' }, "");
 
-                        const urlParams = new URLSearchParams(window.location.search);
-                        const sharedCode = urlParams.get('p');
-                        window.history.replaceState({ page: 'home' }, "");
-
-                        if (sharedCode) {
-                            const targetProduct = window.products.find(x => String(x.shortCode) === String(sharedCode));
-                            if (targetProduct) {
-                                window.historyStack =['home', 'details'];
-                                window.history.pushState({ page: 'details' }, "");
-                                window.openProduct(targetProduct.id, false);
-                                return;
-                            }
-                        }
-                        window.resetAndNavigate('home');
-                    } else {
-                        // في حال حصول تعديل من الأدمن، يتم التحديث في الخلفية بدون عمل ريفرش
-                        const currentPage = window.historyStack[window.historyStack.length - 1];
-                        
-                        if (currentPage === 'home') {
-                            const slider = document.getElementById('latest-products-slider');
-                            if(slider) slider.innerHTML = ''; // تفريغ لإعادة البناء
-                            window.renderHomeSlider();
-                        } else if (currentPage === 'category') {
-                            const titleEl = document.getElementById('category-title');
-                            if (titleEl) {
-                                let catName = titleEl.innerText;
-                                if(catName === 'عروض خاصة') catName = 'عروض';
-                                else catName = catName.replace('قسم ', '');
-                                window.openCategory(catName, false); // false لمنع إضافة للسجل
-                            }
-                        } else if (currentPage === 'details' && window.currentViewedProductId) {
-                            window.openProduct(window.currentViewedProductId, false); // إعادة بناء صفحة المنتج الحالية
-                        }
+                if (sharedCode) {
+                    const targetProduct = window.products.find(x => String(x.shortCode) === String(sharedCode));
+                    if (targetProduct) {
+                        window.historyStack =['home', 'details'];
+                        window.history.pushState({ page: 'details' }, "");
+                        window.openProduct(targetProduct.id, false);
+                        return;
                     }
-                }, (error) => {
-                    console.error("خطأ في جلب البيانات:", error);
-                    if(isInitialLoad) {
-                        const loader = document.getElementById('global-loader');
-                        if(loader) loader.style.display = 'none';
+                } else if (marketerCode && window.admins[marketerCode]) {
+                    window.historyStack =['home', 'profile'];
+                    window.history.pushState({ page: 'profile' }, "");
+                    window.openProfile(marketerCode);
+                    return;
+                }
+                
+                window.resetAndNavigate('home');
+            } else if (!isInitialLoad) {
+                const currentPage = window.historyStack[window.historyStack.length - 1];
+                if (currentPage === 'home') {
+                    const slider = document.getElementById('latest-products-slider');
+                    if(slider) slider.innerHTML = ''; 
+                    window.renderHomeSlider();
+                } else if (currentPage === 'category') {
+                    const titleEl = document.getElementById('category-title');
+                    if (titleEl) {
+                        let catName = titleEl.innerText;
+                        if(catName === 'عروض خاصة') catName = 'عروض';
+                        else catName = catName.replace('قسم ', '');
+                        window.openCategory(catName, false); 
                     }
-                });
-            } catch (error) {
-                console.error("خطأ:", error);
+                } else if (currentPage === 'details' && window.currentViewedProductId) {
+                    window.openProduct(window.currentViewedProductId, false); 
+                }
             }
         }
+
+        onSnapshot(collection(db, "ghosn_products"), (querySnapshot) => {
+            window.products = querySnapshot.docs.map(doc => ({ id: doc.id, firebaseId: doc.id, ...doc.data() }));
+            productsLoaded = true;
+            checkAndInit();
+        }, (error) => console.error("خطأ في المنتجات:", error));
+
+        onSnapshot(collection(db, "gam3a_admins"), (querySnapshot) => {
+            window.admins = {};
+            querySnapshot.docs.forEach(doc => {
+                window.admins[doc.id] = doc.data();
+            });
+            adminsLoaded = true;
+            checkAndInit();
+        }, (error) => console.error("خطأ في المسوقين:", error));
+
 
         window.showToast = function(message, color = "#2ecc71") {
             const toast = document.getElementById('toast');
@@ -436,7 +458,7 @@
         }
 
         window.navigateUI = function(pageId) {
-            const pages =['home', 'category', 'details', 'cart'];
+            const pages =['home', 'category', 'details', 'cart', 'profile'];
             pages.forEach(p => {
                 const el = document.getElementById(p);
                 if(el) el.classList.add('hidden');
@@ -461,6 +483,18 @@
             if(pageId === 'cart') window.renderCart();
         }
 
+        // حل مشكلة تجميد زر الرجوع من خلال التلاعب في الواجهة برمجياً
+        window.goBack = function() {
+            if (window.historyStack.length > 1) {
+                window.historyStack.pop(); 
+                let previousPage = window.historyStack[window.historyStack.length - 1]; 
+                window.navigateUI(previousPage);
+                window.history.pushState({ page: previousPage }, ""); // تحديث السجل بدون تجميد
+            } else {
+                window.resetAndNavigate('home');
+            }
+        }
+
         window.addEventListener('popstate', (e) => {
             if (window.historyStack.length > 1) {
                 window.historyStack.pop(); 
@@ -471,33 +505,53 @@
             }
         });
 
-        window.goBack = function() {
-            if (window.historyStack.length > 1) {
-                window.history.back();
-            } else {
-                window.resetAndNavigate('home');
-            }
-        }
-
-        window.shareProduct = function(event, id) {
+        // حل مشكلة تجميد المتصفحات في المشاركة بوضع Try-Catch آمن
+        window.shareProduct = async function(event, id) {
             if(event) event.stopPropagation();
             const p = window.products.find(x => String(x.id) === String(id));
             if(!p) return;
 
             const domain = window.location.origin;
-            const shareUrl = `${domain}/p/${p.shortCode}`;
+            const shareUrl = `${domain}/?p=${p.shortCode}`;
             const shareText = `شاهد هذا المنتج من Ghosn STORE:\n`;
 
-            if (navigator.share) {
-                navigator.share({ 
-                    title: p.name, 
-                    text: shareText, 
-                    url: shareUrl 
-                }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(shareText + shareUrl).then(() => {
+            try {
+                if (navigator.share) {
+                    await navigator.share({ title: p.name, text: shareText, url: shareUrl });
+                } else {
+                    throw new Error("Share not supported");
+                }
+            } catch (err) {
+                try {
+                    await navigator.clipboard.writeText(shareText + shareUrl);
                     window.showToast("تم نسخ رابط المنتج بنجاح", "#0984e3"); 
-                });
+                } catch(e) {
+                    prompt("تفضل بنسخ الرابط التالي:", shareUrl);
+                }
+            }
+        }
+
+        window.shareProfile = async function(adminId) {
+            const admin = window.admins[adminId];
+            if(!admin) return;
+
+            const domain = window.location.origin;
+            const shareUrl = `${domain}/?m=${adminId}`;
+            const shareText = `تصفح منتجات المسوق ${admin.name} على Ghosn STORE:\n`;
+
+            try {
+                if (navigator.share) {
+                    await navigator.share({ title: admin.name, text: shareText, url: shareUrl });
+                } else {
+                    throw new Error("Share not supported");
+                }
+            } catch (err) {
+                try {
+                    await navigator.clipboard.writeText(shareText + shareUrl);
+                    window.showToast("تم نسخ رابط البروفايل بنجاح", "#0984e3");
+                } catch(e) {
+                     prompt("تفضل بنسخ الرابط التالي:", shareUrl);
+                }
             }
         }
 
@@ -506,32 +560,11 @@
             if(badge) badge.innerText = window.cart.length; 
         }
 
-        window.getOrderedColors = function(p) {
-            let orderedColors =[];
-            if (p.images && p.imageColorsMapping) {
-                p.images.forEach(imgUrl => {
-                    let color = p.imageColorsMapping[imgUrl];
-                    if (color && p.colors.includes(color) && !orderedColors.includes(color)) {
-                        orderedColors.push(color);
-                    }
-                });
-            }
-            if (p.colors) {
-                p.colors.forEach(c => {
-                    if (!orderedColors.includes(c)) {
-                        orderedColors.push(c);
-                    }
-                });
-            }
-            return orderedColors;
-        }
-
         window.generateProductCardHTML = function(p) {
             let displayImg = window.optimizeImage(p.images ? p.images[0] : p.img, 400);
             
             let isSoldOut = (p.hidden === true || p.qty <= 0);
             let discountBadge = (p.isOffer && p.discount && !isSoldOut) ? `<div class="badge-discount">خصم ${p.discount}</div>` : '';
-            // تغيير النص إلى "نفذت الكمية"
             let outOfStockBadge = isSoldOut ? `<div class="badge-outofstock">نفذت الكمية</div>` : '';
             let imgClass = isSoldOut ? 'img-outofstock' : '';
 
@@ -621,6 +654,7 @@
             }
         }, { rootMargin: '100px' });
 
+        // حل مشكلة قسم ملابس رجالي وحريمي 
         window.openCategory = function(catName, pushHistory = true) {
             const titleEl = document.getElementById('category-title');
             if(titleEl) titleEl.innerText = catName === 'عروض' ? 'عروض خاصة' : "قسم " + catName;
@@ -641,8 +675,9 @@
                 } else {
                     window.catProducts = window.products.filter(p => {
                         let match = (p.category === catName);
-                        if(catName === 'ملابس رجالي' && p.category === 'رجالي') match = true;
-                        if(catName === 'ملابس حريمي' && p.category === 'حريمي') match = true;
+                        // مطابقة ذكية للكلمات المحتملة لتجنب اختفاء المنتجات
+                        if(catName === 'ملابس رجالي' && (p.category === 'ملابس رجالي' || p.category === 'رجالي')) match = true;
+                        if(catName === 'ملابس حريمي' && (p.category === 'ملابس حريمي' || p.category === 'حريمي')) match = true;
                         return match;
                     });
                 }
@@ -761,8 +796,90 @@
             }
         });
 
+        window.profileObserver = new IntersectionObserver((entries) => {
+            if(entries[0].isIntersecting) {
+                window.loadMoreProfileProducts();
+            }
+        }, { rootMargin: '50px' });
+
+        window.openProfile = function(adminId) {
+            const admin = window.admins[adminId];
+            if(!admin) return;
+
+            const shareBtn = document.getElementById('profile-share-btn');
+            if(shareBtn) shareBtn.setAttribute('onclick', `shareProfile('${adminId}')`);
+
+            let joinDate = "حديثاً";
+            if(admin.createdAt) {
+                let d = new Date(admin.createdAt);
+                joinDate = d.toLocaleDateString('ar-EG');
+            }
+
+            const profileContent = document.getElementById('profile-content');
+            document.getElementById('profile-products-title').innerText = `منتجات المسوق: ${admin.name}`;
+
+            profileContent.innerHTML = `
+                <div class="details-image-wrapper">
+                    <img src="${window.optimizeImage(admin.image, 500)}" style="width:100%; height:300px; object-fit:cover; border-radius:var(--radius); border:1px solid var(--border-light); display:block;">
+                </div>
+                <div class="info-bar" style="flex-direction: column; gap: 8px; align-items: stretch; margin-bottom: 25px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <strong style="font-size:1.1rem; color:var(--bg-dark-blue);">${admin.name}</strong>
+                        <span style="font-size:0.8rem; color:var(--text-muted);">انضم: ${joinDate}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-top: 1px dashed var(--border-light); padding-top: 8px;">
+                        <span style="font-size:0.85rem; color:var(--text-dark);"><i class="fa-solid fa-location-dot" style="color:var(--accent);"></i> ${admin.address}</span>
+                        <span style="font-size:0.85rem; color:var(--text-dark); font-weight:bold;" dir="ltr"><i class="fa-solid fa-phone" style="color:var(--accent);"></i> ${admin.phone}</span>
+                    </div>
+                </div>
+            `;
+
+            window.profileProducts = window.products.filter(p => p.adminId === adminId);
+            window.profileIndex = 0;
+            
+            const container = document.getElementById('profile-products');
+            const loader = document.getElementById('profile-loader');
+            container.innerHTML = '';
+            
+            window.navigate('profile');
+
+            setTimeout(() => {
+                if(window.profileProducts.length === 0) {
+                    if(loader) loader.style.display = 'none';
+                    container.innerHTML = '<p style="grid-column: span 2; text-align:center; font-size:0.9rem; color:var(--text-muted)">لم يقم هذا المسوق برفع منتجات بعد.</p>';
+                    return;
+                }
+                
+                if(loader) loader.style.display = 'block';
+                window.loadMoreProfileProducts();
+                if(loader) window.profileObserver.observe(loader);
+            }, 10);
+        }
+
+        window.loadMoreProfileProducts = function() {
+            const container = document.getElementById('profile-products');
+            const loader = document.getElementById('profile-loader');
+            if(!container) return;
+
+            let nextBatch = window.profileProducts.slice(window.profileIndex, window.profileIndex + window.PROFILE_BATCH_SIZE);
+            if(nextBatch.length > 0) {
+                let html = nextBatch.map(p => window.generateProductCardHTML(p)).join('');
+                container.insertAdjacentHTML('beforeend', html);
+                window.profileIndex += window.PROFILE_BATCH_SIZE;
+            }
+
+            if(window.profileIndex >= window.profileProducts.length) {
+                if(loader) {
+                    loader.style.display = 'none';
+                    window.profileObserver.unobserve(loader);
+                }
+            } else {
+                if(loader) loader.style.display = 'block';
+            }
+        }
+
         window.openProduct = function(id, pushToHistory = true) {
-            window.currentViewedProductId = id; // تخزين आईडी المنتج الحالي للتحديثات المباشرة
+            window.currentViewedProductId = id; 
 
             const p = window.products.find(x => String(x.id) === String(id));
 
@@ -881,6 +998,30 @@
                 orderSectionHTML = `<button class="btn" style="background:#bdc3c7; color:#fff; cursor:not-allowed; margin-top: 15px; border: 1px solid var(--border-light);"><i class="fa-solid fa-ban"></i> نفذت الكمية</button>`;
             }
 
+            let publisherBarHTML = '';
+            if (p.adminId && window.admins[p.adminId]) {
+                const admin = window.admins[p.adminId];
+                let adminJoinDate = "حديثاً";
+                if(admin.createdAt) {
+                    let d = new Date(admin.createdAt);
+                    adminJoinDate = d.toLocaleDateString('ar-EG');
+                }
+                
+                publisherBarHTML = `
+                <div class="options-section publisher-bar" onclick="openProfile('${p.adminId}')">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img src="${window.optimizeImage(admin.image, 100)}" style="width:40px; height:40px; border-radius:50%; border:2px solid #000; object-fit:cover;">
+                            <span style="font-weight:bold; font-size:0.9rem; color:var(--bg-dark-blue);">المسوق: ${admin.name}</span>
+                        </div>
+                        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:bold;">${adminJoinDate}</span>
+                    </div>
+                    <div style="font-size:0.75rem; color:var(--accent); text-align: center; margin-top: 8px; font-weight:bold;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> اضغط لعرض بروفايل المسوق
+                    </div>
+                </div>`;
+            }
+
             const container = document.getElementById('product-details-content');
             if(container) {
                 container.innerHTML = `
@@ -905,6 +1046,8 @@
                         <div style="font-weight:bold; font-size:0.9rem; color:var(--text-dark); margin-bottom: 8px;"><i class="fa-solid fa-file-lines" style="color:var(--accent);"></i> تفاصيل المنتج:</div>
                         <p style="font-size:0.85rem; color:var(--text-muted); line-height: 1.6; margin: 0; white-space: pre-wrap;">${p.description}</p>
                     </div>
+
+                    ${publisherBarHTML}
 
                     <div class="options-section" style="font-size:0.85rem; color:var(--text-dark)">
                         <div style="margin-bottom: 10px;"><i class="fa-solid fa-hashtag" style="color:var(--accent); width: 15px;"></i> <strong>كود المنتج:</strong> <span style="color:var(--bg-dark-blue); font-weight:bold;">${p.shortCode}</span></div>
@@ -958,7 +1101,7 @@
 
             const baseUrl = window.location.href.split('?')[0].split('#')[0];
             const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-            const productUrl = `${cleanBaseUrl}/p/${p.shortCode}`;
+            const productUrl = `${cleanBaseUrl}/?p=${p.shortCode}`;
             const totalPrice = p.price * qty;
 
             let msg = `مرحباً Ghosn STORE، أود طلب:\n\n🔖 كود المنتج: ${p.shortCode}\n المنتج: ${p.name}\n القسم: ${p.category}\n اللون: ${color || 'غير محدد'}\n المقاس: ${size || 'غير محدد'}\n العدد: ${qty}\n إجمالي الحساب: ${totalPrice} ج.م\n\n🔗 الرابط: ${productUrl}`;
@@ -1013,7 +1156,7 @@
 
             let msg = `مرحباً Ghosn STORE، هذا طلبي من السلة:\n\n` + window.cart.map((item, i) => {
                 const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-                const productUrl = `${cleanBaseUrl}/p/${item.shortCode}`;
+                const productUrl = `${cleanBaseUrl}/?p=${item.shortCode}`;
                 let itemTotal = item.price * item.selQty;
                 totalCartPrice += itemTotal;
                 return `${i+1}- ${item.name} (قسم: ${item.category})\n🔖 كود: ${item.shortCode}\n ${item.selColor ? `لون: ${item.selColor} / ` : ''}${item.selSize ? `مقاس: ${item.selSize} / ` : ''}عدد: ${item.selQty}\n السعر: ${itemTotal} ج.م\n🔗 الرابط: ${productUrl}`;
@@ -1025,7 +1168,6 @@
         }
 
         window.updateCartBadge();
-        fetchProducts();
     </script>
 </body>
 </html>
