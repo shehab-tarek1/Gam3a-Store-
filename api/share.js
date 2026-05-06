@@ -1,36 +1,29 @@
 module.exports = async (req, res) => {
-    const type = req.query.type; // يحدد هل الرابط لمنتج (p) أم لمسوق (m)
+    const type = req.query.type; 
     const code = req.query.code;
 
-    // إخبار الخادم بفصل الكاش بناءً على نوع المتصفح
     res.setHeader('Vary', 'User-Agent');
 
-    // إذا لم يكن هناك كود، وجهه للرئيسية
     if (!code) {
         res.writeHead(302, { 'Location': '/', 'Cache-Control': 'no-store' });
         return res.end();
     }
 
     const userAgent = (req.headers['user-agent'] || '').toLowerCase();
-    
-    // فلتر قوي لكشف جميع روبوتات منصات التواصل الاجتماعي 
     const isBot = /bot|facebook|whatsapp|telegram|viber|skype|twitter|discord|linkedin/i.test(userAgent);
 
-    // 🔴 إذا كان زائر بشري حقيقي، يتم توجيهه فورا للمتجر بذكاء 
     if (!isBot) {
         const redirectUrl = type === 'product' ? `/?p=${code}` : `/?m=${code}`;
         res.writeHead(302, { 'Location': redirectUrl, 'Cache-Control': 'no-store' });
         return res.end();
     }
 
-    // 🟢 إذا كان روبوت (واتساب، فيسبوك، الخ)، نجلب البيانات ونصنع له المعاينة
     const projectId = 'marketing-e9fdf'; 
     const collectionName = type === 'product' ? 'ghosn_products' : 'gam3a_admins';
 
     const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents:runQuery`;
 
     try {
-        // البحث برقم الكود في قاعدة البيانات المناسبة
         const response = await fetch(firestoreUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -50,16 +43,12 @@ module.exports = async (req, res) => {
         });
 
         const data = await response.json();
-        
-        if (!data || !data[0] || !data[0].document) {
-            throw new Error('لم يتم العثور على البيانات');
-        }
+        if (!data || !data[0] || !data[0].document) throw new Error('Not found');
 
         const fields = data[0].document.fields || {};
 
         let title, desc, imageUrl, siteUrl;
 
-        // تجهيز بيانات المعاينة (البطاقة)
         if (type === 'product') {
             title = fields.name?.stringValue || 'Ghosn STORE';
             const price = fields.price?.integerValue || fields.price?.doubleValue || '';
@@ -69,19 +58,18 @@ module.exports = async (req, res) => {
             imageUrl = fields.images?.arrayValue?.values?.[0]?.stringValue || fields.img?.stringValue || '';
             siteUrl = `https://${req.headers.host}/p/${code}`;
         } else {
-            // تجهيز بيانات المعاينة (بروفايل المسوق)
             title = `المسوق: ${fields.name?.stringValue || 'Ghosn STORE'}`;
-            desc = `تصفح أحدث الموديلات والمنتجات من ${fields.name?.stringValue || 'هذا المسوق'} - ${fields.address?.stringValue || ''}`;
+            // إظهار هاتف المسوق في المعاينة كما طلبت
+            const marketerPhone = fields.phone?.stringValue ? `\n📞 للتواصل: ${fields.phone.stringValue}` : '';
+            desc = `تصفح أحدث الموديلات والمنتجات من هذا المسوق.${marketerPhone}`;
             imageUrl = fields.image?.stringValue || '';
             siteUrl = `https://${req.headers.host}/m/${code}`;
         }
 
-        // تحسين جودة الصورة وعرضها بحجم مناسب لفيسبوك وواتساب
         if (imageUrl.includes('cloudinary.com')) {
             imageUrl = imageUrl.replace(/\/upload\/(?:[a-zA-Z0-9_,-]+\/)?/, '/upload/w_600,h_600,c_fill,q_80,f_jpg/');
         }
 
-        // كود الـ HTML الصامت الذي يقرأه الروبوت
         const botHtml = `
             <!DOCTYPE html>
             <html lang="ar" dir="rtl">
