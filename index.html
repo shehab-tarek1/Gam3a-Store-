@@ -139,6 +139,19 @@
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         .custom-select-item { padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.9rem; color: var(--text-dark); }
         .custom-select-item:active { background: var(--bg-main); color: var(--accent); }
+
+<div class="slider-section">
+            <div class="slider-header">
+                <h2>أحدث الإضافات</h2>
+                <div class="slider-nav">
+                    <div class="slider-arrow" onclick="scrollSlider('right')"><i class="fa-solid fa-chevron-right"></i></div>
+                    <div class="slider-arrow" onclick="scrollSlider('left')"><i class="fa-solid fa-chevron-left"></i></div>
+                </div>
+            </div>
+            <div class="slider-container" id="latest-products-slider"></div>
+        </div>
+
+        <div class="categories-grid">
     </style>
 </head>
 <body>
@@ -186,8 +199,12 @@
             </div>
             <div class="slider-container" id="latest-products-slider"></div>
         </div>
+<!-- شريط الأقسام المتاحة الجديد -->
+        <div class="section-title-ribbon">
+            <i class="fa-solid fa-layer-group"></i> الأقسام المتاحة
+        </div>
 
-        <div class="categories-grid">
+            <div class="categories-grid">
             <div class="category-card" onclick="openCategory('ملابس رجالي')">
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777897969/qi3lscagmdzbrkvup5vf.png" loading="lazy">
                 <h3>ملابس رجالي</h3>
