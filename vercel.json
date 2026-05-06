@@ -1,8 +1,12 @@
 {
-  "rewrites": [
+  "rewrites":[
     {
       "source": "/p/:code",
-      "destination": "/api/share?p=:code"
+      "destination": "/api/share?type=product&code=:code"
+    },
+    {
+      "source": "/m/:code",
+      "destination": "/api/share?type=marketer&code=:code"
     }
   ]
 }
