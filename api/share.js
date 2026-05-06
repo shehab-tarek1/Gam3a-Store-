@@ -1,37 +1,29 @@
 module.exports = async (req, res) => {
-    const p = req.query.p;
+    const type = req.query.type; // إما 'product' أو 'marketer'
+    const code = req.query.code;
 
-    // 🔴 السر هنا: إخبار الخادم بفصل الكاش بناءً على نوع المتصفح/الزائر
     res.setHeader('Vary', 'User-Agent');
 
-    // إذا لم يكن هناك كود، وجهه للرئيسية مع منع الكاش
-    if (!p) {
-        res.writeHead(302, { 
-            'Location': '/',
-            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
-        });
+    if (!code) {
+        res.writeHead(302, { 'Location': '/', 'Cache-Control': 'no-store' });
         return res.end();
     }
 
     const userAgent = (req.headers['user-agent'] || '').toLowerCase();
+    // فلتر قوي لكشف روبوتات جميع منصات التواصل الاجتماعي
+    const isBot = /bot|facebook|whatsapp|telegram|viber|skype|twitter|discord|linkedin/i.test(userAgent);
 
-    // التفريق بين روبوت واتساب والمستخدم البشري داخل واتساب
-    const isWhatsAppBot = userAgent.includes('whatsapp') && !userAgent.includes('mozilla');
-    const isOtherBot = /bot|crawler|spider|facebookexternalhit|twitter|telegram|linkedin|discord|viber|skype/i.test(userAgent);
-    const isBot = isWhatsAppBot || isOtherBot;
-
-    // 🔴 إذا كان مستخدم حقيقي، نقوم بتوجيهه للمتجر فوراً مع "منع حفظ هذا التوجيه في الكاش"
+    // إذا كان زائر حقيقي، وجهه فورا للموقع
     if (!isBot) {
-        res.writeHead(302, { 
-            'Location': `/?p=${p}`,
-            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
-        });
+        const redirectUrl = type === 'product' ? `/?p=${code}` : `/?m=${code}`;
+        res.writeHead(302, { 'Location': redirectUrl, 'Cache-Control': 'no-store' });
         return res.end();
     }
 
-    // 🟢 إذا كان روبوت، نجلب بيانات المنتج من Firebase
-    // ⚠️ تنبيه: تأكد أن هذا هو اسم مشروع فايربيز الخاص بالمتجر الجديد وليس القديم
+    // أسماء قواعد البيانات الجديدة
     const projectId = 'marketing-e9fdf'; 
+    const collectionName = type === 'product' ? 'ghosn_products' : 'gam3a_admins';
+
     const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents:runQuery`;
 
     try {
@@ -40,12 +32,12 @@ module.exports = async (req, res) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 structuredQuery: {
-                    from: [{ collectionId: 'products' }],
+                    from: [{ collectionId: collectionName }],
                     where: {
                         fieldFilter: {
                             field: { fieldPath: 'shortCode' },
                             op: 'EQUAL',
-                            value: { stringValue: p }
+                            value: { stringValue: code }
                         }
                     },
                     limit: 1
@@ -53,37 +45,32 @@ module.exports = async (req, res) => {
             })
         });
 
-        if (!response.ok) throw new Error('Document not found');
         const data = await response.json();
-
-        if (!data || !data[0] || !data[0].document) {
-            throw new Error('Product not found');
-        }
+        if (!data || !data[0] || !data[0].document) throw new Error('Not found');
 
         const fields = data[0].document.fields || {};
-        // تم تغيير الاسم هنا إلى Ghosn STORE
-        const title = fields.name?.stringValue || 'Ghosn STORE';
-        const price = fields.price?.integerValue || fields.price?.doubleValue || '';
-        const desc = fields.description?.stringValue || 'تسوق أحدث الملابس بأفضل الأسعار.';
 
-        const formattedPrice = price ? `${price} ج.م` : '';
-        const titleWithPrice = `${title}${formattedPrice ? ' | ' + formattedPrice : ''}`;
-        const finalDesc = `🔖 كود المنتج: ${p}\n${desc}`;
+        let title, desc, imageUrl, siteUrl;
 
-        // تم إصلاح مشكلة السطر الجديد هنا
-        let imageUrl = 'https://res.cloudinary.com/dsxrjmcxs/image/upload/w_600,h_600,c_fill,q_80,f_jpg/v1777061113/t2f9uqoiwgt2iukgsuih.jpg'; 
-
-        if (fields.images?.arrayValue?.values?.length > 0) {
-            imageUrl = fields.images.arrayValue.values[0].stringValue;
-        } else if (fields.img?.stringValue) {
-            imageUrl = fields.img.stringValue;
+        // تجهيز بيانات المعاينة بناءً على نوع الرابط (منتج أم بروفايل)
+        if (type === 'product') {
+            title = fields.name?.stringValue || 'Ghosn STORE';
+            const price = fields.price?.integerValue || fields.price?.doubleValue || '';
+            desc = `🔖 كود المنتج: ${code}\n${fields.description?.stringValue || 'تسوق أحدث المنتجات.'}`;
+            if (price) title += ` | ${price} ج.م`;
+            
+            imageUrl = fields.images?.arrayValue?.values?.[0]?.stringValue || fields.img?.stringValue || '';
+            siteUrl = `https://${req.headers.host}/p/${code}`;
+        } else {
+            title = `المسوق: ${fields.name?.stringValue || 'Ghosn STORE'}`;
+            desc = `تصفح أحدث الموديلات والمنتجات من ${fields.name?.stringValue || 'هذا المسوق'} - ${fields.address?.stringValue || ''}`;
+            imageUrl = fields.image?.stringValue || '';
+            siteUrl = `https://${req.headers.host}/m/${code}`;
         }
 
+        // تحسين جودة الصورة
         if (imageUrl.includes('cloudinary.com')) {
-            imageUrl = imageUrl.replace(
-                /\/upload\/(?:[a-zA-Z0-9_,-]+\/)?/, 
-                '/upload/w_600,h_600,c_fill,q_80,f_jpg/'
-            );
+            imageUrl = imageUrl.replace(/\/upload\/(?:[a-zA-Z0-9_,-]+\/)?/, '/upload/w_600,h_600,c_fill,q_80,f_jpg/');
         }
 
         const botHtml = `
@@ -91,38 +78,33 @@ module.exports = async (req, res) => {
             <html lang="ar" dir="rtl">
             <head>
                 <meta charset="UTF-8">
-                <title>${titleWithPrice}</title>
+                <title>${title}</title>
                 <meta property="og:type" content="website" />
-                <meta property="og:title" content="${titleWithPrice}" />
-                <meta property="og:description" content="${finalDesc}" />
+                <meta property="og:title" content="${title}" />
+                <meta property="og:description" content="${desc}" />
                 <meta property="og:image" content="${imageUrl}" />
                 <meta property="og:image:secure_url" content="${imageUrl}" />
                 <meta property="og:image:type" content="image/jpeg" />
                 <meta property="og:image:width" content="600" />
                 <meta property="og:image:height" content="600" />
                 <meta property="og:site_name" content="Ghosn STORE" />
-                <meta property="og:url" content="https://${req.headers.host}/p/${p}" />
+                <meta property="og:url" content="${siteUrl}" />
                 <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content="${titleWithPrice}" />
-                <meta name="twitter:description" content="${finalDesc}" />
+                <meta name="twitter:title" content="${title}" />
+                <meta name="twitter:description" content="${desc}" />
                 <meta name="twitter:image" content="${imageUrl}" />
             </head>
             <body></body>
             </html>
         `;
 
-        // تقليل مدة الكاش للروبوتات وتحديثه في الخلفية
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
-        res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
-
+        res.setHeader('Cache-Control', 'public, max-age=3600');
         return res.status(200).send(botHtml);
 
     } catch (error) {
-        console.error("Error generating share preview:", error);
-        res.writeHead(302, { 
-            'Location': '/',
-            'Cache-Control': 'no-store, no-cache'
-        });
+        console.error("Share preview error:", error);
+        res.writeHead(302, { 'Location': '/', 'Cache-Control': 'no-store' });
         return res.end();
     }
 };
