@@ -1,32 +1,25 @@
 module.exports = async (req, res) => {
-    const type = req.query.type; // إما 'product' أو 'marketer'
+    const type = req.query.type; 
     const code = req.query.code;
 
-    // إخبار الخادم بفصل الكاش بناءً على نوع المتصفح
     res.setHeader('Vary', 'User-Agent');
 
-    // إذا لم يكن هناك كود، وجهه للرئيسية
     if (!code) {
         res.writeHead(302, { 'Location': '/', 'Cache-Control': 'no-store' });
         return res.end();
     }
 
     const userAgent = (req.headers['user-agent'] || '').toLowerCase();
-    
-    // فلتر قوي لكشف جميع روبوتات منصات التواصل الاجتماعي 
     const isBot = /bot|facebook|whatsapp|telegram|viber|skype|twitter|discord|linkedin/i.test(userAgent);
 
-    // إذا كان زائر بشري حقيقي، يتم توجيهه فورا للمتجر بذكاء 
     if (!isBot) {
         const redirectUrl = type === 'product' ? `/?p=${code}` : `/?m=${code}`;
         res.writeHead(302, { 'Location': redirectUrl, 'Cache-Control': 'no-store' });
         return res.end();
     }
 
-    // إذا كان روبوت، نجلب البيانات ونصنع له المعاينة
     const projectId = 'marketing-e9fdf'; 
     const collectionName = type === 'product' ? 'ghosn_products' : 'gam3a_admins';
-
     const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents:runQuery`;
 
     try {
@@ -69,9 +62,8 @@ module.exports = async (req, res) => {
         } else {
             // بيانات المعاينة (بروفايل المسوق مع رقم الهاتف)
             title = `المسوق: ${fields.name?.stringValue || 'Ghosn STORE'}`;
-            // جلب رقم الهاتف 
             const phone = fields.phone?.stringValue || '';
-            desc = `للتواصل: ${phone}\nتصفح أحدث الموديلات والمنتجات من ${fields.name?.stringValue || 'هذا المسوق'}`;
+            desc = `للتواصل: ${phone}`;
             imageUrl = fields.image?.stringValue || '';
             siteUrl = `https://${req.headers.host}/m/${code}`;
         }
