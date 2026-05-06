@@ -61,7 +61,7 @@ module.exports = async (req, res) => {
             siteUrl = `https://${req.headers.host}/p/${code}`;
         } else {
             // بيانات المعاينة (بروفايل المسوق مع رقم الهاتف)
-            title = `المسوق: ${fields.name?.stringValue || 'Ghosn STORE'}`;
+            title = `المسوق: ${fields.name?.stringValue || 'gam3a store'}`;
             const phone = fields.phone?.stringValue || '';
             desc = `للتواصل: ${phone}`;
             imageUrl = fields.image?.stringValue || '';
