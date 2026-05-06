@@ -40,8 +40,8 @@
 
         header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: var(--bg-dark-blue); box-shadow: var(--shadow); margin-bottom: 15px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;}
         .header-title { font-size: 1.1rem; font-weight: bold; color: var(--text-light); display: flex; align-items: center; gap: 8px;}
-        .header-buttons { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end;}
-        .back-btn { text-decoration: none; color: var(--text-light); background: rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 15px; font-size: 0.85rem; transition: 0.3s; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; border: none;}
+        .header-buttons { display: flex; gap: 5px; align-items: center; flex-wrap: nowrap; justify-content: flex-end;}
+        .back-btn { text-decoration: none; color: var(--text-light); background: rgba(255,255,255,0.15); padding: 5px 8px; border-radius: 12px; font-size: 0.7rem; transition: 0.3s; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; border: none; white-space: nowrap;}
         .back-btn:hover { background: var(--accent); }
         .profile-btn { background: #9b59b6; display: none; } 
         .profile-btn:hover { background: #8e44ad; }
@@ -148,7 +148,7 @@
                     <div class="avatar-hint">اضغط لرفع الصورة</div>
                 </div>
 
-                <div class="reg-grid">
+               <div class="reg-grid">
                     <div class="form-group">
                         <label>الاسم الثلاثي بالعربي</label>
                         <input type="text" id="reg-name" class="form-control" placeholder="اسمك ثلاثي">
@@ -157,18 +157,23 @@
                         <label>رقم الهاتف الأساسي</label>
                         <input type="tel" id="reg-phone" class="form-control" placeholder="010..." style="direction: ltr; text-align: right;">
                     </div>
-                    <div class="form-group full-width">
+                    <div class="form-group">
                         <label>العنوان التفصيلي</label>
                         <input type="text" id="reg-address" class="form-control" placeholder="المحافظة - المركز">
                     </div>
+                    <div class="form-group">
+                        <label>كلمة المرور</label>
+                        <input type="password" id="reg-password" class="form-control" placeholder="••••••">
+                    </div>
+                    <div class="form-group full-width" style="grid-column: 1 / -1;">
+                        <label>نبذة تعريفية (تظهر للعملاء)</label>
+                        <textarea id="reg-bio" class="form-control" rows="2" placeholder="اكتب وصف قصير عنك أو عن منتجاتك..."></textarea>
+                    </div>
                 </div>
 
-                <div class="form-group" style="margin-top: 6px;">
-                    <label>كلمة المرور</label>
-                    <input type="password" id="reg-password" class="form-control" placeholder="••••••">
-                </div>
-
+                <!-- سطر التحميل اللي كان ناقص -->
                 <div id="reg-loading" class="loading" style="margin-top: 10px;"><i class="fa-solid fa-spinner fa-spin"></i> جاري إنشاء الحساب...</div>
+                
                 <button class="btn-submit" id="btn-reg-submit" onclick="registerAdmin()" style="margin-top: 10px;">إنشاء حساب وتسجيل الدخول</button>
             </div>
 
@@ -706,11 +711,12 @@
 
         function generateAdminCode() { return String(Math.floor(Math.random() * 90000) + 10000); } 
 
-        window.registerAdmin = async function() {
+      window.registerAdmin = async function() {
             const name = document.getElementById('reg-name').value;
             const phone = document.getElementById('reg-phone').value;
             const address = document.getElementById('reg-address').value;
             const pass = document.getElementById('reg-password').value;
+            const bio = document.getElementById('reg-bio').value; // سحب النبذة التعريفية
             const avatarFile = document.getElementById('reg-avatar').files[0];
 
             if(!avatarFile) { showToast("يرجى رفع صورة شخصية", "error"); return; }
@@ -738,6 +744,7 @@
                     name: name,
                     phone: '20' + phone.replace(/\D/g, '').replace(/^0/, ''),
                     address: address,
+                    bio: bio, // حفظ النبذة في قاعدة البيانات
                     image: avatarUrl,
                     createdAt: Date.now()
                 });
