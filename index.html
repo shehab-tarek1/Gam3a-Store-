@@ -684,7 +684,7 @@
             let colorCirclesHTML = '';
             if (p.colors && p.colors.length > 0) {
                 let sortedColors = window.getOrderedColors(p);
-                let circles = sortedColors.map(c => `<div class="card-color-circle" style="background-color: ${window.getColorCode(c)};" title="${c}"></div>`).join('');
+                let circles = sortedColors.map(c => `<div class="card-color-circle" style="background: ${window.getColorCode(c)};" title="${c}"></div>`).join('');
                 colorCirclesHTML = `<div class="card-color-circles"><span class="color-label">الألوان:</span>${circles}</div>`;
             }
 
@@ -1017,7 +1017,7 @@
 
                 let detailsCircles = sortedColors.map(c => `
                     <div id="color-pill-${c}" class="color-pill ${c === defaultColor ? 'active' : ''}" onclick="selectColor('${c}', '${p.id}')">
-                        <div style="width:10px; height:10px; border-radius:50%; border:1px solid var(--silver); background-color: ${window.getColorCode(c)};"></div>
+                        <div style="width:10px; height:10px; border-radius:50%; border:1px solid var(--silver); background: ${window.getColorCode(c)};"></div>
                         <span style="font-size:0.7rem; color:var(--text-dark); font-weight:bold;">${c}</span>
                     </div>`).join('');
 
