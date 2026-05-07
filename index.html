@@ -819,6 +819,7 @@
 
                 window.loadMoreCategoryProducts();
 
+                window.catObserver.disconnect();
                 if(loader) window.catObserver.observe(loader);
 
             }, 10);
@@ -846,11 +847,15 @@
             }
         }
 
+        let scrollTimeout;
         window.updateSliderDots = function(sliderElement) {
-            const absScroll = Math.abs(sliderElement.scrollLeft);
-            const index = Math.round(absScroll / sliderElement.clientWidth);
-            const dots = sliderElement.parentElement.parentElement.querySelectorAll('.dot');
-            dots.forEach((dot, i) => { dot.classList.toggle('active', i === index); });
+            if(scrollTimeout) clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                const absScroll = Math.abs(sliderElement.scrollLeft);
+                const index = Math.round(absScroll / sliderElement.clientWidth);
+                const dots = sliderElement.parentElement.parentElement.querySelectorAll('.dot');
+                dots.forEach((dot, i) => { dot.classList.toggle('active', i === index); });
+            }, 50);
         }
 
         window.openLightbox = function(src) {
@@ -985,6 +990,7 @@
 
                 if(loader) loader.style.display = 'block';
                 window.loadMoreProfileProducts();
+                window.profileObserver.disconnect();
                 if(loader) window.profileObserver.observe(loader);
             }, 10);
         }
