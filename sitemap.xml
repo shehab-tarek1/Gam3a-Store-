@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  
-  <!-- الصفحة الرئيسية للمتجر -->
+
   <url>
     <loc>https://gam3a-store.vercel.app/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- سياسة الخصوصية -->
   <url>
     <loc>https://gam3a-store.vercel.app/privacy.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
-  <!-- شروط الاستخدام -->
   <url>
     <loc>https://gam3a-store.vercel.app/terms.html</loc>
     <changefreq>monthly</changefreq>
