@@ -88,7 +88,7 @@
         /* تم إزالة will-change و transition لتخفيف اللاج */
         .inner-product-card { position: relative; background: var(--bg-surface); border-radius: var(--radius); overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; border: 1px solid var(--silver); flex-shrink: 0; scroll-snap-align: start; }
         .inner-product-card .img-container { position: relative; width: 100%; height: 130px; }
-        .inner-product-card img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; border-bottom: 1px solid var(--border-light); transition: opacity 0.3s;}
+.inner-product-card img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; border-bottom: 1px solid var(--border-light); transition: opacity 0.3s;}
 
         .card-info { padding: 10px; text-align: right; }
         .title-price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
@@ -414,6 +414,7 @@
             let cropParams = '';
             let cleanUrl = url;
             
+            // استخراج إحداثيات الجزء اللي إنت حددته في لوحة التحكم
             if (url.includes('#crop=')) {
                 const parts = url.split('#crop=');
                 cleanUrl = parts[0];
@@ -421,20 +422,34 @@
             }
 
             if (cleanUrl.includes('res.cloudinary.com') && cleanUrl.includes('/upload/')) {
-                // استخراج الرابط الأصلي النظيف بدون أي تأثيرات سابقة
                 let parts = cleanUrl.split('/upload/');
-                let match = parts[1].match(/(v\d+\/.*)/);
-                let rawEnd = match ? match[1] : parts[1].substring(parts[1].indexOf('/') + 1);
+                
+                // تنظيف الرابط من أي أوامر قديمة
+                let rawEnd = parts[1];
+                let versionMatch = rawEnd.match(/(v\d+\/.*)/);
+                if (versionMatch) {
+                    rawEnd = versionMatch[1]; 
+                } else {
+                    let splitSlash = rawEnd.split('/');
+                    rawEnd = splitSlash[splitSlash.length - 1]; 
+                }
+
                 let baseUrl = parts[0] + '/upload/';
 
                 if (isLightbox) {
-                    // في حالة الفتح: عرض الصورة كاملة بدون قص
+                    // لما العميل يضغط على الصورة عشان يكبرها: تفتح الصورة الأصلية كاملة بكل أجزائها
                     return baseUrl + `c_limit,w_${width},q_auto,f_auto/` + rawEnd;
                 } else {
-                    // في حالة البطاقة: تطبيق القص أولاً ثم التصغير
-                    return baseUrl + cropParams + `c_scale,w_${width},q_auto,f_auto/` + rawEnd;
+                    if (cropParams) {
+                        // في البطاقة من بره: يعرض الجزء اللي إنت حددته بس
+                        return baseUrl + cropParams + `c_limit,w_${width},q_auto,f_auto/` + rawEnd;
+                    } else {
+                        // لو صورة قديمة متحددتش: يعرضها زي ما هي
+                        return baseUrl + `c_limit,w_${width},q_auto,f_auto/` + rawEnd;
+                    }
                 }
             }
+            
             if (cleanUrl.includes('images.pexels.com')) {
                 return cleanUrl.replace(/w=\d+/, `w=${width}`);
             }
@@ -1539,4 +1554,3 @@ if(p.whatsapp) {
 <script 
 </body>
 </html>
-
