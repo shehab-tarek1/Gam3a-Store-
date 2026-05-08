@@ -408,15 +408,32 @@
         window.catIndex = 0;
         window.CAT_BATCH_SIZE = 8;
 
-        window.optimizeImage = function(url, width) {
+        window.optimizeImage = function(url, width, isLightbox = false) {
             if (!url) return '';
-            if (url.includes('res.cloudinary.com') && url.includes('/upload/')) {
-                return url.replace('/upload/', `/upload/c_scale,w_${width}/`);
+            
+            let cropParams = '';
+            let cleanUrl = url;
+            
+            // استخراج إحداثيات الجزء المحدد لو موجودة
+            if (url.includes('#crop=')) {
+                const parts = url.split('#crop=');
+                cleanUrl = parts[0];
+                cropParams = 'c_crop,' + parts[1] + '/';
             }
-            if (url.includes('images.pexels.com')) {
-                return url.replace(/w=\d+/, `w=${width}`);
+
+            if (cleanUrl.includes('res.cloudinary.com') && cleanUrl.includes('/upload/')) {
+                if (isLightbox) {
+                    // في حالة الفتح (اللايت بوكس)، نعرض الصورة كاملة بدون قص
+                    return cleanUrl.replace('/upload/', `/upload/c_limit,w_${width}/`);
+                } else {
+                    // في حالة البطاقة، نطبق القص أولاً ثم نصغر الحجم
+                    return cleanUrl.replace('/upload/', `/upload/${cropParams}c_scale,w_${width}/`);
+                }
             }
-            return url;
+            if (cleanUrl.includes('images.pexels.com')) {
+                return cleanUrl.replace(/w=\d+/, `w=${width}`);
+            }
+            return cleanUrl;
         }
 
         window.getColorCode = function(color) {
@@ -971,7 +988,7 @@
             profileContent.innerHTML = `
                 <div class="details-image-wrapper">
                     <div class="details-slider">
-                        <img src="${window.optimizeImage(admin.image, 600)}" onclick="openLightbox('${window.optimizeImage(admin.image, 900)}')" style="object-fit: contain; background: var(--bg-surface);">
+                        <img src="${window.optimizeImage(admin.image, 600)}" onclick="openLightbox('${window.optimizeImage(admin.image, 900, true)}')" style="object-fit: contain; background: var(--bg-surface);">
                     </div>
                 </div>
                 <div class="info-bar" style="flex-direction: column; gap: 8px; align-items: stretch; margin-bottom: 25px;">
@@ -1055,11 +1072,10 @@
             }
 
             let imgsArray = p.images && p.images.length > 0 ? p.images.slice(0, 7) :[p.img];
-            let sliderHtml = imgsArray.map((imgSrc, index) => `<img src="${window.optimizeImage(imgSrc, 700)}" ${index === 0 ? '' : 'loading="lazy"'} onclick="openLightbox('${window.optimizeImage(imgSrc, 700)}')">`).join('');
-            let dotsHtml = imgsArray.map((_, i) => `<span class="dot ${i===0 ? 'active' : ''}"></span>`).join('');
+            let sliderHtml = imgsArray.map((imgSrc, index) => `<img src="${window.optimizeImage(imgSrc, 600)}" ${index === 0 ? '' : 'loading="lazy"'} onclick="openLightbox('${window.optimizeImage(imgSrc, 700, true)}')">`).join('');
 
             let safeSizes = p.sizes ||[];
-            let safeColors = p.colors ||[];
+            let safeColors = p.colors ||
 
             let sizeItems = safeSizes.map(s => `<div class="custom-select-item" onclick="selectCustomOption('size', '${s}')">${s}</div>`).join('');
             let colorItems = safeColors.map(c => `<div class="custom-select-item" onclick="selectColor('${c}', '${p.id}')">${c}</div>`).join('');
