@@ -60,10 +60,20 @@ module.exports = async (req, res) => {
             imageUrl = fields.images?.arrayValue?.values?.[0]?.stringValue || fields.img?.stringValue || '';
             siteUrl = `https://${req.headers.host}/p/${code}`;
         } else {
-            // بيانات المعاينة (بروفايل المسوق مع رقم الهاتف)
+            // بيانات المعاينة (بروفايل المسوق مع رقم الهاتف والنبذة)
             title = `معرض منتجات المسوق: ${fields.name?.stringValue || 'gam3a store'}`;
-            const phone = fields.phone?.stringValue || '';
-            desc = `للتواصل: ${phone}`;
+            
+            // سحب الرقم وتعديله ليظهر للعملاء بصيغة 010 بدلاً من 2010
+            let phone = fields.phone?.stringValue || '';
+            if (phone.startsWith('20')) {
+                phone = '0' + phone.substring(2);
+            }
+            
+            const bio = fields.bio?.stringValue || ''; // سحب النبذة التعريفية
+            
+            // لو المسوق كاتب نبذة هتظهر، ولو مش كاتب هيظهر رقم التواصل بس
+            desc = bio ? `${bio}\nللتواصل: ${phone}` : `للتواصل: ${phone}`;
+            
             imageUrl = fields.image?.stringValue || '';
             siteUrl = `https://${req.headers.host}/m/${code}`;
         }
