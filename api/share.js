@@ -71,8 +71,8 @@ module.exports = async (req, res) => {
             
             const bio = fields.bio?.stringValue || ''; // سحب النبذة التعريفية
             
-            // لو المسوق كاتب نبذة هتظهر، ولو مش كاتب هيظهر رقم التواصل بس
-            desc = bio ? `${bio}\nللتواصل: ${phone}` : `للتواصل: ${phone}`;
+            // لو المسوق كاتب نبذة هتظهر، وبعدها سطر فاضي، وبعدين رقم التواصل في سطر لوحده تحت خالص
+            desc = bio ? `${bio}\n\nللتواصل: ${phone}` : `للتواصل: ${phone}`;
             
             imageUrl = fields.image?.stringValue || '';
             siteUrl = `https://${req.headers.host}/m/${code}`;
