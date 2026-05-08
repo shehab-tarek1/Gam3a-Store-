@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم | gam3a store</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- مكتبة قص الصور -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
     <style>
         :root { --bg-main: #f4f6f9; --bg-surface: #ffffff; --bg-dark-blue: #0f1c2e; --text-light: #f8f9fa; --text-dark: #2d3436; --text-muted: #636e72; --border-light: #dfe6e9; --accent: #0984e3; --radius: 15px; --shadow: 0 8px 20px rgba(0,0,0,0.06); }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -75,8 +80,8 @@
         .admin-checkbox-label { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; cursor: pointer; color: var(--text-dark); user-select: none; width: 30%; min-width: 80px;}
 
         .image-preview-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; padding-bottom: 5px; justify-content: flex-start; }
-        .preview-item { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 80px; flex-shrink: 0; background: var(--bg-main); padding: 5px; border-radius: 8px; border: 1px solid var(--border-light); position: relative;}
-        .preview-img { width: 100%; height: 70px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-light); }
+        .preview-item { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 90px; flex-shrink: 0; background: var(--bg-main); padding: 5px; border-radius: 8px; border: 1px solid var(--border-light); position: relative;}
+        .preview-img { width: 100%; height: 80px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-light); }
 
         .mini-select-btn { padding: 4px 8px; font-size: 0.7rem; border-radius: 6px; background: var(--bg-surface); border: 1px solid var(--border-light); width: 100%; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: var(--text-dark); transition: 0.2s; }
         .mini-select-list { position: absolute; top: calc(100% + 2px); left: 0; right: 0; background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); z-index: 101; max-height: 120px; overflow-y: auto; display: none; flex-direction: column; padding: 3px; }
@@ -114,6 +119,20 @@
     </style>
 </head>
 <body>
+
+    <!-- شاشة قص الصور المخفية -->
+    <div id="cropper-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:100000; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="width:95%; max-width:500px; background:#fff; padding:15px; border-radius:15px; text-align:center;">
+            <h3 style="margin-bottom:10px; color:var(--bg-dark-blue);"><i class="fa-solid fa-crop"></i> حدد الجزء المطلوب</h3>
+            <div style="width:100%; height:50vh; background:#eee; margin-bottom:15px; overflow:hidden;">
+                <img id="cropper-image" style="max-width:100%; display:block;">
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-submit" style="margin:0; flex:2;" onclick="saveCrop()"><i class="fa-solid fa-check"></i> تحديد وحفظ</button>
+                <button class="btn-submit" style="margin:0; flex:1; background:#e74c3c;" onclick="closeCropper()"><i class="fa-solid fa-times"></i> إلغاء</button>
+            </div>
+        </div>
+    </div>
 
     <div id="toast-container"></div>
 
@@ -171,9 +190,8 @@
                     </div>
                 </div>
 
-                <!-- سطر التحميل اللي كان ناقص -->
                 <div id="reg-loading" class="loading" style="margin-top: 10px;"><i class="fa-solid fa-spinner fa-spin"></i> جاري إنشاء الحساب...</div>
-                
+
                 <button class="btn-submit" id="btn-reg-submit" onclick="registerAdmin()" style="margin-top: 10px;">إنشاء حساب وتسجيل الدخول</button>
             </div>
 
@@ -190,10 +208,10 @@
             </div>
         </header>
 
-        <!-- قسم تعديل الملف الشخصي (مخفي افتراضياً) -->
+        <!-- قسم تعديل الملف الشخصي -->
         <div class="admin-container" id="profile-edit-section" style="display: none; margin-bottom: 20px;">
             <div class="section-title">تعديل الملف الشخصي</div>
-            
+
             <div class="avatar-upload-container">
                 <label for="edit-avatar" class="avatar-wrapper">
                     <img id="edit-avatar-preview" src="" style="display:block;">
@@ -302,7 +320,7 @@
 
                     <div class="form-group full-width">
                         <label>صور المنتج (حتى 7 صور)</label>
-                        <input type="file" id="p-image" class="form-control" accept="image/*" multiple onchange="renderImagePreviews()">
+                        <input type="file" id="p-image" class="form-control" accept="image/*" multiple onchange="handleFileSelect(event)">
                         <div id="image-preview-container" class="image-preview-grid"></div>
                     </div>
 
@@ -345,6 +363,87 @@
         window.currentEditProductData = null; 
         window.currentUserUid = null; 
         window.currentUserShortCode = null; 
+
+        // --- نظام إدارة الصور المتقدم (جديد وقديم) ---
+        window.productImages =[]; 
+        window.productCropData = {}; 
+        window.currentCropper = null;
+        window.currentCropIndex = null;
+
+        window.handleFileSelect = function(event) {
+            const newFiles = Array.from(event.target.files);
+            window.productImages = window.productImages.concat(newFiles).slice(0, 7); 
+            renderImagePreviews();
+        }
+
+        window.triggerReplace = function(index) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = (e) => {
+                if(e.target.files[0]) {
+                    window.productImages[index] = e.target.files[0];
+                    delete window.productCropData[index]; 
+                    renderImagePreviews();
+                }
+            };
+            input.click();
+        }
+
+        window.deleteImage = function(index) {
+            window.productImages.splice(index, 1);
+            let newCropData = {};
+            for(let key in window.productCropData) {
+                let k = parseInt(key);
+                if(k < index) newCropData[k] = window.productCropData[k];
+                else if(k > index) newCropData[k - 1] = window.productCropData[k];
+            }
+            window.productCropData = newCropData;
+            renderImagePreviews();
+        }
+
+        window.openCropper = function(index) {
+            window.currentCropIndex = index;
+            const item = window.productImages[index];
+            const img = document.getElementById('cropper-image');
+            
+            img.crossOrigin = "anonymous"; 
+
+            if (item instanceof File) {
+                img.src = URL.createObjectURL(item);
+            } else {
+                img.src = item.split('#crop=')[0]; 
+            }
+            
+            document.getElementById('cropper-modal').style.display = 'flex';
+
+            if(window.currentCropper) window.currentCropper.destroy();
+
+            img.onload = function() {
+                window.currentCropper = new Cropper(img, {
+                    aspectRatio: 1, 
+                    viewMode: 1, 
+                    dragMode: 'move',
+                    autoCropArea: 1,
+                    cropBoxResizable: false, 
+                    toggleDragModeOnDblclick: false,
+                });
+            }
+        }
+
+        window.closeCropper = function() {
+            document.getElementById('cropper-modal').style.display = 'none';
+            if(window.currentCropper) window.currentCropper.destroy();
+        }
+
+        window.saveCrop = function() {
+            if(!window.currentCropper) return;
+            const cropData = window.currentCropper.getData(true); 
+            window.productCropData[window.currentCropIndex] = `x_${Math.round(cropData.x)},y_${Math.round(cropData.y)},w_${Math.round(cropData.width)},h_${Math.round(cropData.height)}`;
+            document.getElementById('cropper-modal').style.display = 'none';
+            renderImagePreviews();
+        }
+        // -----------------------
 
         window.showToast = function(msg, type = 'error') {
             const container = document.getElementById('toast-container');
@@ -424,7 +523,6 @@
             document.querySelectorAll('.custom-select-list').forEach(el => el.classList.remove('show'));
             if(isCategory) {
                 window.updateDynamicFields();
-                window.renderImagePreviews();
             }
         }
 
@@ -517,68 +615,53 @@
 
         window.renderImagePreviews = function() {
             const container = document.getElementById('image-preview-container');
-            const fileInput = document.getElementById('p-image');
             const cat = document.getElementById('p-category').value;
-
             container.innerHTML = '';
 
             const needsColorMapping =['ملابس رجالي', 'ملابس حريمي', 'أحذية'].includes(cat);
-
             let colorOptionsHtml = `<div class="mini-select-item" onclick="selectImageColor(this, '', 'بدون لون')">بدون لون</div>` + 
                 availableColors.map(c => `<div class="mini-select-item" onclick="selectImageColor(this, '${c}', '${c}')">${c}</div>`).join('');
 
-            if (fileInput.files && fileInput.files.length > 0) {
-                Array.from(fileInput.files).slice(0, 7).forEach((file, index) => {
-                    const url = URL.createObjectURL(file);
+            window.productImages.forEach((item, index) => {
+                let url = item instanceof File ? URL.createObjectURL(item) : window.optimizeImage(item, 100);
+                
+                let borderStyle = window.productCropData[index] ? "3px solid #2ecc71" : "1px solid var(--border-light)";
 
-                    let selectHtml = needsColorMapping ? `
-                        <div class="mini-select-container" style="width: 100%; position: relative;">
-                            <input type="hidden" class="new-image-color" data-index="${index}" value="">
-                            <div class="mini-select-btn" onclick="toggleAdminDropdown('new-img-color-${index}')">
-                                <span class="color-display">بدون لون</span>
-                                <i class="fa-solid fa-chevron-down" style="font-size: 0.6rem;"></i>
-                            </div>
-                            <div class="mini-select-list" id="new-img-color-${index}">
-                                ${colorOptionsHtml}
-                            </div>
-                        </div>
-                    ` : '';
+                let selectedColor = '';
+                if (window.currentEditProductData && window.currentEditProductData.imageColorsMapping && typeof item === 'string') {
+                    let originalUrl = item.split('#crop=')[0];
+                    selectedColor = window.currentEditProductData.imageColorsMapping[item] || window.currentEditProductData.imageColorsMapping[originalUrl] || '';
+                }
+                let displayColorText = selectedColor || 'بدون لون';
 
-                    container.innerHTML += `
-                        <div class="preview-item">
-                            <img src="${url}" class="preview-img">
-                            ${selectHtml}
+                let selectHtml = needsColorMapping ? `
+                    <div class="mini-select-container" style="width: 100%; position: relative; margin-top: 5px;">
+                        <input type="hidden" class="image-color-select" data-index="${index}" value="${selectedColor}">
+                        <div class="mini-select-btn" onclick="toggleAdminDropdown('img-color-${index}')">
+                            <span class="color-display">${displayColorText}</span>
+                            <i class="fa-solid fa-chevron-down" style="font-size: 0.6rem;"></i>
                         </div>
-                    `;
-                });
-            } else if (window.editingId && window.currentEditProductData && window.currentEditProductData.images) {
-                window.currentEditProductData.images.forEach((imgUrl, index) => {
-                    let selectedColor = (window.currentEditProductData.imageColorsMapping && window.currentEditProductData.imageColorsMapping[imgUrl]) ? window.currentEditProductData.imageColorsMapping[imgUrl] : '';
-                    let displayColorText = selectedColor || 'بدون لون';
+                        <div class="mini-select-list" id="img-color-${index}">
+                            ${colorOptionsHtml}
+                        </div>
+                    </div>
+                ` : '';
 
-                    let selectHtml = '';
-                    if(needsColorMapping) {
-                        selectHtml = `
-                        <div class="mini-select-container" style="width: 100%; position: relative;">
-                            <input type="hidden" class="old-image-color" data-url="${imgUrl}" value="${selectedColor}">
-                            <div class="mini-select-btn" onclick="toggleAdminDropdown('old-img-color-${index}')">
-                                <span class="color-display">${displayColorText}</span>
-                                <i class="fa-solid fa-chevron-down" style="font-size: 0.6rem;"></i>
-                            </div>
-                            <div class="mini-select-list" id="old-img-color-${index}">
-                                ${colorOptionsHtml}
+                container.innerHTML += `
+                    <div class="preview-item" style="width: 90px;">
+                        <div style="position: relative; width: 100%;">
+                            <img src="${url}" class="preview-img" style="border: ${borderStyle}; width: 100%; height: 80px;">
+                            
+                            <div style="position: absolute; top: -5px; right: -5px; display: flex; flex-direction: column; gap: 3px;">
+                                <button onclick="deleteImage(${index})" style="background:#e74c3c; color:#fff; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer;" title="حذف"><i class="fa-solid fa-times"></i></button>
+                                <button onclick="triggerReplace(${index})" style="background:#f39c12; color:#fff; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer;" title="استبدال"><i class="fa-solid fa-rotate"></i></button>
+                                <button onclick="openCropper(${index})" style="background:#0984e3; color:#fff; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer;" title="قص وتحديد"><i class="fa-solid fa-crop"></i></button>
                             </div>
                         </div>
-                        `;
-                    }
-                    container.innerHTML += `
-                        <div class="preview-item">
-                            <img src="${window.optimizeImage(imgUrl, 100)}" class="preview-img">
-                            ${selectHtml}
-                        </div>
-                    `;
-                });
-            }
+                        ${selectHtml}
+                    </div>
+                `;
+            });
         }
 
         onAuthStateChanged(auth, (user) => {
@@ -586,7 +669,6 @@
                 window.currentUserUid = user.uid;
                 const masterAdminId = "XIarwijEVRSX7S8HY3qZIedH5qW2";
 
-                // إظهار أزرار البروفايل للجميع (بما فيهم المالك)
                 document.getElementById('my-profile-btn').style.display = 'inline-flex';
                 document.getElementById('edit-profile-btn').style.display = 'inline-flex';
 
@@ -617,20 +699,19 @@
             }
         }
 
-        // دوال تعديل الملف الشخصي
         window.openEditProfile = function() {
             document.getElementById('product-management-section').style.display = 'none';
             document.getElementById('profile-edit-section').style.display = 'block';
-            
+
             let adminData = window.admins[window.currentUserUid] || {};
-            
+
             document.getElementById('edit-name').value = adminData.name || '';
             let phone = adminData.phone || '';
             if(phone.startsWith('20')) phone = '0' + phone.substring(2);
             document.getElementById('edit-phone').value = phone;
             document.getElementById('edit-address').value = adminData.address || '';
             document.getElementById('edit-bio').value = adminData.bio || '';
-            
+
             const previewImg = document.getElementById('edit-avatar-preview');
             if(adminData.image) {
                 previewImg.src = window.optimizeImage(adminData.image, 300);
@@ -670,7 +751,6 @@
 
                 let shortCode = window.admins[window.currentUserUid]?.shortCode || generateAdminCode();
 
-                // استخدام merge: true لضمان إنشاء المستند إذا لم يكن موجوداً (للمالك)
                 await setDoc(doc(db, "gam3a_admins", window.currentUserUid), {
                     uid: window.currentUserUid,
                     shortCode: shortCode,
@@ -683,7 +763,7 @@
                 }, { merge: true });
 
                 showToast("تم تحديث بياناتك بنجاح!", "success");
-                await fetchProducts(); // تحديث البيانات محلياً
+                await fetchProducts(); 
                 cancelEditProfile();
             } catch (e) {
                 showToast("حدث خطأ: " + e.message, "error");
@@ -716,7 +796,7 @@
             const phone = document.getElementById('reg-phone').value;
             const address = document.getElementById('reg-address').value;
             const pass = document.getElementById('reg-password').value;
-            const bio = document.getElementById('reg-bio').value; // سحب النبذة التعريفية
+            const bio = document.getElementById('reg-bio').value; 
             const avatarFile = document.getElementById('reg-avatar').files[0];
 
             if(!avatarFile) { showToast("يرجى رفع صورة شخصية", "error"); return; }
@@ -744,7 +824,7 @@
                     name: name,
                     phone: '20' + phone.replace(/\D/g, '').replace(/^0/, ''),
                     address: address,
-                    bio: bio, // حفظ النبذة في قاعدة البيانات
+                    bio: bio, 
                     image: avatarUrl,
                     createdAt: Date.now()
                 });
@@ -773,7 +853,6 @@
                 const data = await response.json();
                 if (data.error) throw new Error("Cloudinary Error: " + data.error.message);
 
-                // تم إزالة القص (c_fill, g_face) واستخدام c_limit لرفع الصورة كاملة
                 let optimizedUrl = data.secure_url.replace('/upload/', '/upload/c_limit,w_600,q_auto,f_auto/');
                 return optimizedUrl;
             } catch (err) {
@@ -839,7 +918,6 @@
                 const response = await fetch(CLOUDINARY_URL, { method: "POST", body: formData });
                 const data = await response.json();
                 if (data.error) throw new Error("Cloudinary Error: " + data.error.message);
-                // تم رفع جودة صور المنتجات لـ 900
                 let optimizedUrl = data.secure_url.replace('/upload/', '/upload/c_limit,w_900,q_auto,f_auto/');
                 return optimizedUrl;
             } catch (err) {
@@ -865,7 +943,6 @@
                 if(!finalWhatsapp.startsWith('20')) finalWhatsapp = '20' + finalWhatsapp;
             }
 
-            const fileInput = document.getElementById('p-image');
             const subType = document.getElementById('p-type') ? document.getElementById('p-type').value : "";
             const targetGender = document.getElementById('p-gender') ? document.getElementById('p-gender').value : "";
             const sizes = Array.from(document.querySelectorAll('.size-checkbox:checked')).map(cb => cb.value);
@@ -876,34 +953,41 @@
             if (!price) { showToast("يرجى ملء حقل 'السعر'", "error"); return; }
             if (!category) { showToast("يرجى اختيار 'القسم'", "error"); return; }
             if (!qty) { showToast("يرجى ملء حقل 'الكمية المتاحة بالمخزن'", "error"); return; }
-            if (!window.editingId && fileInput.files.length === 0) { showToast("يرجى إرفاق 'صورة واحدة على الأقل'", "error"); return; }
+            
+            if (!window.editingId && window.productImages.length === 0) { showToast("يرجى إرفاق 'صورة واحدة على الأقل'", "error"); return; }
 
             document.getElementById('btn-submit').style.display = 'none';
             const loadingMsg = document.getElementById('loading-msg');
             loadingMsg.style.display = 'block';
 
-            let newImageUrls =[];
+            let finalImageUrls =[];
             let finalImageColorsMapping = {};
 
             try {
-                if (fileInput.files.length > 0) {
-                    loadingMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري رفع الصور...';
-                    const filesArray = Array.from(fileInput.files).slice(0, 7); 
-                    newImageUrls = await Promise.all(filesArray.map(file => uploadToCloudinary(file)));
+                if (window.productImages.length > 0) {
+                    loadingMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري معالجة ورفع الصور...';
+                    
+                    for (let i = 0; i < window.productImages.length; i++) {
+                        let item = window.productImages[i];
+                        let url = "";
+                        
+                        if (item instanceof File) {
+                            url = await uploadToCloudinary(item);
+                        } else {
+                            url = item.split('#crop=')[0];
+                        }
 
-                    const inputs = document.querySelectorAll('.new-image-color');
+                        if (window.productCropData[i]) {
+                            url += `#crop=${window.productCropData[i]}`;
+                        }
+                        finalImageUrls.push(url);
+                    }
+
+                    const inputs = document.querySelectorAll('.image-color-select');
                     inputs.forEach(input => {
                         let idx = input.getAttribute('data-index');
-                        if(input.value && newImageUrls[idx]) {
-                            finalImageColorsMapping[newImageUrls[idx]] = input.value;
-                        }
-                    });
-                } else if (window.editingId && window.currentEditProductData) {
-                    const inputs = document.querySelectorAll('.old-image-color');
-                    inputs.forEach(input => {
-                        let url = input.getAttribute('data-url');
-                        if(input.value && url) {
-                            finalImageColorsMapping[url] = input.value;
+                        if(input.value && finalImageUrls[idx]) {
+                            finalImageColorsMapping[finalImageUrls[idx]] = input.value;
                         }
                     });
                 }
@@ -914,13 +998,11 @@
                     const productRef = doc(db, "ghosn_products", window.editingId);
                     let updateData = { name, description: desc, price: parseFloat(price), category, subType, targetGender, qty: parseInt(qty), isOffer, discount, sizes, colors, delivery, whatsapp: finalWhatsapp };
 
-                    if(newImageUrls.length > 0) {
-                        updateData.images = newImageUrls;
-                        updateData.img = newImageUrls[0];
-                        updateData.imageColorsMapping = finalImageColorsMapping;
-                    } else {
-                        updateData.imageColorsMapping = finalImageColorsMapping;
+                    if(finalImageUrls.length > 0) {
+                        updateData.images = finalImageUrls;
+                        updateData.img = finalImageUrls[0];
                     }
+                    updateData.imageColorsMapping = finalImageColorsMapping;
 
                     await updateDoc(productRef, updateData);
                     showToast("تم تعديل المنتج بنجاح!", "success");
@@ -931,7 +1013,7 @@
                         createdAt: Date.now(),
                         shortCode: generateShortCode(),
                         name, description: desc, price: parseFloat(price), category, subType, targetGender, qty: parseInt(qty), isOffer, discount, sizes, colors, delivery, whatsapp: finalWhatsapp,
-                        images: newImageUrls, img: newImageUrls[0], imageColorsMapping: finalImageColorsMapping, hidden: false,
+                        images: finalImageUrls, img: finalImageUrls[0], imageColorsMapping: finalImageColorsMapping, hidden: false,
                         adminId: window.currentUserUid 
                     };
                     await addDoc(collection(db, "ghosn_products"), newProduct);
@@ -987,6 +1069,8 @@
                 if(p.sizes) document.querySelectorAll('.size-checkbox').forEach(cb => cb.checked = p.sizes.includes(cb.value));
                 if(p.colors) document.querySelectorAll('.color-checkbox').forEach(cb => cb.checked = p.colors.includes(cb.value));
 
+                window.productImages = p.images ? [...p.images] : (p.img ? [p.img] :[]);
+                window.productCropData = {};
                 window.renderImagePreviews();
 
             }, 50);
@@ -1017,6 +1101,9 @@
             document.getElementById('p-isOffer').checked = false; document.getElementById('p-discount').value = '';
             document.getElementById('p-whatsapp').value = '';
             document.getElementById('image-preview-container').innerHTML = '';
+            
+            window.productImages =[];
+            window.productCropData = {};
 
             window.updateDynamicFields(); 
             window.toggleDiscount();
