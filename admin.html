@@ -412,7 +412,14 @@
             if (item instanceof File) {
                 img.src = URL.createObjectURL(item);
             } else {
-                img.src = item.split('#crop=')[0]; 
+                // استدعاء الصورة الأصلية بالكامل (بدون تصغير) لضمان دقة القص
+                let rawUrl = item.split('#crop=')[0]; 
+                if(rawUrl.includes('/upload/')) {
+                    let parts = rawUrl.split('/upload/');
+                    let match = parts[1].match(/(v\d+\/.*)/);
+                    if(match) rawUrl = parts[0] + '/upload/' + match[1];
+                }
+                img.src = rawUrl;
             }
             
             document.getElementById('cropper-modal').style.display = 'flex';
@@ -421,11 +428,11 @@
 
             img.onload = function() {
                 window.currentCropper = new Cropper(img, {
-                    aspectRatio: 1, 
+                    aspectRatio: 1, // إجبار القص على شكل مربع ليناسب البطاقة
                     viewMode: 1, 
-                    dragMode: 'move',
+                    dragMode: 'move', // تحريك الصورة فقط
                     autoCropArea: 1,
-                    cropBoxResizable: false, 
+                    cropBoxResizable: false, // منع تغيير حجم مربع القص (إجباري)
                     toggleDragModeOnDblclick: false,
                 });
             }
@@ -977,8 +984,11 @@
                             url = item.split('#crop=')[0];
                         }
 
+                        // دمج إحداثيات القص الجديدة، أو الحفاظ على القديمة لو لم تتغير
                         if (window.productCropData[i]) {
                             url += `#crop=${window.productCropData[i]}`;
+                        } else if (typeof item === 'string' && item.includes('#crop=')) {
+                            url += `#crop=${item.split('#crop=')[1]}`;
                         }
                         finalImageUrls.push(url);
                     }
