@@ -1376,18 +1376,58 @@ if(p.whatsapp) {
             window.showToast("تم إزالة المنتج من السلة", "#e74c3c"); 
         }
 
-        // دالة مساعدة لإرسال الواتساب
+        // دالة مساعدة لإرسال الواتساب (محدثة لتجميع المنتجات المتشابهة)
         window.sendWhatsApp = function(targetPhone, items, totalCartPrice, cName, cPhone) {
             const baseUrl = window.location.href.split('?')[0].split('#')[0];
             const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
 
-            let msg = `مرحباً، هذا طلبي من السلة:\n\n👤 اسم العميل: ${cName}\n📞 رقم العميل: ${cPhone}\n\n` + items.map((item, i) => {
-                const productUrl = `${cleanBaseUrl}/p/${item.shortCode}`;
-                let itemTotal = item.price * item.selQty;
-                return `${i+1}- ${item.name} (قسم: ${item.category})\n🔖 كود: ${item.shortCode}\n ${item.selColor ? `لون: ${item.selColor} / ` : ''}${item.selSize ? `مقاس: ${item.selSize} / ` : ''}عدد: ${item.selQty}\n السعر: ${itemTotal} ج.م\n🔗 الرابط: ${productUrl}`;
-            }).join('\n\n-----------------\n\n');
+            // تجميع المنتجات المتشابهة (نفس الكود) مع بعض
+            let groupedItems = {};
+            items.forEach(item => {
+                if (!groupedItems[item.shortCode]) {
+                    groupedItems[item.shortCode] = {
+                        name: item.name,
+                        category: item.category,
+                        shortCode: item.shortCode,
+                        price: item.price,
+                        variations:[],
+                        totalPrice: 0
+                    };
+                }
+                groupedItems[item.shortCode].variations.push({
+                    color: item.selColor,
+                    size: item.selSize,
+                    qty: item.selQty
+                });
+                groupedItems[item.shortCode].totalPrice += (item.price * item.selQty);
+            });
 
-            msg += `\n\n🛒 إجمالي الحساب: ${totalCartPrice} ج.م`;
+            let msg = `مرحباً، هذا طلبي من السلة:\n\n👤 اسم العميل: ${cName}\n📞 رقم العميل: ${cPhone}\n\n`;
+            
+            let counter = 1;
+            let keys = Object.keys(groupedItems);
+            
+            for (let code in groupedItems) {
+                let g = groupedItems[code];
+                const productUrl = `${cleanBaseUrl}/p/${g.shortCode}`;
+                
+                msg += `${counter}- ${g.name} (قسم: ${g.category})\n🔖 كود: ${g.shortCode}\n`;
+                
+                // رص الألوان والمقاسات تحت بعض
+                g.variations.forEach(v => {
+                    msg += ` 🔸 ${v.color ? `لون: ${v.color} ` : ''}${v.size ? `| مقاس: ${v.size} ` : ''}| عدد: ${v.qty}\n`;
+                });
+                
+                msg += ` 💰 إجمالي الصنف: ${g.totalPrice} ج.م\n🔗 الرابط: ${productUrl}`;
+                
+                // إضافة فاصل بين المنتجات المختلفة فقط
+                if (counter < keys.length) {
+                    msg += `\n\n-----------------\n\n`;
+                }
+                counter++;
+            }
+
+            msg += `\n\n🛒 إجمالي الحساب الكلي: ${totalCartPrice} ج.م`;
 
             window.open(`https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`, '_blank');
         }
@@ -1396,10 +1436,10 @@ if(p.whatsapp) {
         window.sendGroupWhatsApp = function(targetPhone) {
             let cName = document.getElementById('cart-customer-name').value.trim();
             let cPhone = document.getElementById('cart-customer-phone').value.trim();
-
+            
             let items = window.cart.filter(item => (item.marketerPhone || window.SELLER_PHONE) === targetPhone);
             let total = items.reduce((sum, item) => sum + (item.price * item.selQty), 0);
-
+            
             window.sendWhatsApp(targetPhone, items, total, cName, cPhone);
         }
 
@@ -1454,7 +1494,7 @@ if(p.whatsapp) {
                     groupCounter++;
                 }
                 html += `</div>`;
-
+                
                 document.getElementById('cart-checkout-btn').style.display = 'none';
                 splitDiv.innerHTML = html;
                 splitDiv.scrollIntoView({behavior: 'smooth'});
