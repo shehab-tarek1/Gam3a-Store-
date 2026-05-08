@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
         });
 
         const data = await response.json();
-        
+
         if (!data || !data[0] || !data[0].document) {
             throw new Error('لم يتم العثور على البيانات');
         }
@@ -52,28 +52,60 @@ module.exports = async (req, res) => {
         let title, desc, imageUrl, siteUrl;
 
         if (type === 'product') {
+            // 1. تنسيق العنوان (الاسم | السعر | الكود)
             title = fields.name?.stringValue || 'gam3a store';
             const price = fields.price?.integerValue || fields.price?.doubleValue || '';
-            desc = `🔖 كود المنتج: ${code}\n${fields.description?.stringValue || 'تسوق أحدث المنتجات.'}`;
             if (price) title += ` | ${price} ج.م`;
-            
+            title += ` | كود: ${code}`; // الكود في أقصى اليسار
+
+            // 2. سحب الوصف
+            let productDesc = fields.description?.stringValue || 'تسوق أحدث المنتجات.';
+
+            // 3. سحب رقم هاتف المسوق
+            let phone = fields.whatsapp?.stringValue || ''; // لو المسوق حاطط رقم مخصص للمنتج
+            let adminId = fields.adminId?.stringValue || '';
+
+            // لو مفيش رقم مخصص للمنتج، السيرفر هيروح يجيب رقم المسوق الأساسي من قاعدة البيانات
+            if (!phone && adminId) {
+                try {
+                    const adminUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/gam3a_admins/${adminId}`;
+                    const adminRes = await fetch(adminUrl);
+                    const adminData = await adminRes.json();
+                    phone = adminData.fields?.phone?.stringValue || '';
+                } catch(e) {
+                    console.error("Error fetching admin phone:", e);
+                }
+            }
+
+            // لو مفيش رقم خالص، هيحط رقم الإدارة الافتراضي
+            if (!phone) phone = '201206244875';
+
+            // 4. تعديل الرقم (استبدال 20 بـ 0)
+            if (phone.startsWith('20')) {
+                phone = '0' + phone.substring(2);
+            }
+
+            // 5. تنسيق الوصف النهائي
+            desc = `الوصف: ${productDesc}\n\nللطلب تواصل مع: ${phone}`;
+
             imageUrl = fields.images?.arrayValue?.values?.[0]?.stringValue || fields.img?.stringValue || '';
             siteUrl = `https://${req.headers.host}/p/${code}`;
+            
         } else {
             // بيانات المعاينة (بروفايل المسوق مع رقم الهاتف والنبذة)
             title = `معرض منتجات المسوق: ${fields.name?.stringValue || 'gam3a store'}`;
-            
+
             // سحب الرقم وتعديله ليظهر للعملاء بصيغة 010 بدلاً من 2010
             let phone = fields.phone?.stringValue || '';
             if (phone.startsWith('20')) {
                 phone = '0' + phone.substring(2);
             }
-            
+
             const bio = fields.bio?.stringValue || ''; // سحب النبذة التعريفية
-            
+
             // لو المسوق كاتب نبذة هتظهر، وبعدها سطر فاضي، وبعدين رقم التواصل في سطر لوحده تحت خالص
             desc = bio ? `${bio}\n\nللتواصل: ${phone}` : `للتواصل: ${phone}`;
-            
+
             imageUrl = fields.image?.stringValue || '';
             siteUrl = `https://${req.headers.host}/m/${code}`;
         }
