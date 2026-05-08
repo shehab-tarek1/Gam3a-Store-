@@ -56,7 +56,7 @@ module.exports = async (req, res) => {
             title = fields.name?.stringValue || 'gam3a store';
             const price = fields.price?.integerValue || fields.price?.doubleValue || '';
             if (price) title += ` | ${price} ج.م`;
-            title += ` | كود: ${code}`; // الكود في أقصى اليسار
+            title += ` |   ك: ${code}`; // الكود في أقصى اليسار
 
             // 2. سحب الوصف
             let productDesc = fields.description?.stringValue || 'تسوق أحدث المنتجات.';
