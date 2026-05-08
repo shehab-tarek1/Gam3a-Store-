@@ -860,15 +860,18 @@
             }
         }
 
-        let scrollTimeout;
+        let ticking = false;
         window.updateSliderDots = function(sliderElement) {
-            if(scrollTimeout) clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                const absScroll = Math.abs(sliderElement.scrollLeft);
-                const index = Math.round(absScroll / sliderElement.clientWidth);
-                const dots = sliderElement.parentElement.parentElement.querySelectorAll('.dot');
-                dots.forEach((dot, i) => { dot.classList.toggle('active', i === index); });
-            }, 50);
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const absScroll = Math.abs(sliderElement.scrollLeft);
+                    const index = Math.round(absScroll / sliderElement.clientWidth);
+                    const dots = sliderElement.parentElement.parentElement.querySelectorAll('.dot');
+                    dots.forEach((dot, i) => { dot.classList.toggle('active', i === index); });
+                    ticking = false;
+                });
+                ticking = true;
+            }
         }
 
         window.openLightbox = function(src) {
