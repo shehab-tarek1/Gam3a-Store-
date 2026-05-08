@@ -428,11 +428,11 @@
 
             img.onload = function() {
                 window.currentCropper = new Cropper(img, {
-                    aspectRatio: 1, // إجبار القص على شكل مربع ليناسب البطاقة
+                    aspectRatio: 170 / 145, // نسبة مستطيل تتطابق مع مقاس البطاقة في الموقع
                     viewMode: 1, 
-                    dragMode: 'move', // تحريك الصورة فقط
+                    dragMode: 'move',
                     autoCropArea: 1,
-                    cropBoxResizable: false, // منع تغيير حجم مربع القص (إجباري)
+                    cropBoxResizable: false, 
                     toggleDragModeOnDblclick: false,
                 });
             }
