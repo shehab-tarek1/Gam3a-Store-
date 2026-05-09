@@ -86,7 +86,6 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.08); 
             cursor: pointer; 
             border: 1px solid var(--silver);
-            /* تسريع كارت الشاشة بدون خنق الرامات */
             transform: translateZ(0);
             backface-visibility: hidden;
         }
@@ -105,15 +104,9 @@
             border: 1px solid var(--silver); 
             flex-shrink: 0; 
             scroll-snap-align: start; 
-            
-            /* 1. منع جريان السلايدر وإجباره على الوقوف عند كل بطاقة */
             scroll-snap-stop: always; 
-            
-            /* 2. تسريع كارت الشاشة بدون خنق الرامات */
             transform: translateZ(0);
             backface-visibility: hidden;
-
-            /* 3. السحر الجديد: مسح البطاقة من المعالج لو خرجت بره الشاشة (تنظيف الرامات تلقائياً) */
             content-visibility: auto; 
             contain-intrinsic-size: 250px; 
         }
@@ -204,24 +197,16 @@
         .online-dot { position: absolute; top: -2px; right: -4px; width: 10px; height: 10px; background: #2ecc71; border-radius: 50%; border: 2px solid var(--bg-dark-blue); }
         .online-dot::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 50%; background: #2ecc71; animation: pulse-green 1.5s infinite; }
 
-/* 1. إجبار السلايدر على الوقوف عند كل صورة/بطاقة وعدم الجريان */
         .details-slider img, .slider-container .inner-product-card {
             scroll-snap-stop: always;
         }
 
-        /* 2. تعديل عرض التابلت (الشاشات الأكبر من 600 بكسل) */
         @media (min-width: 600px) {
-            /* جعل شبكة الأقسام 3 بجوار بعض */
             .categories-grid { grid-template-columns: repeat(3, 1fr); }
-            
-            /* بطاقة العروض تأخذ العرض بالكامل (3 عواميد) */
             .category-card[style*="grid-column: span 2;"] { grid-column: span 3 !important; }
-            
-            /* جعل سلايدر المنتجات يعرض 3 بطاقات بجوار بعض */
             .slider-container .inner-product-card { width: calc(33.333% - 8px); }
         }
     </style>
-<!-- كود SEO الذكي (يقرأه جوجل فقط ولا يظهر للزوار) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -255,7 +240,7 @@
         </div>
         <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
             
-            <!-- جرس الإشعارات الجديد -->
+            <!-- جرس الإشعارات -->
             <div class="cart-icon custom-select-wrapper" style="margin: 0;">
                 <div onclick="toggleNotificationBox(event)">
                     <i class="fa-solid fa-bell"></i>
@@ -273,7 +258,7 @@
                         <!-- سيتم إضافة الإشعارات هنا برمجياً -->
                     </div>
 
-                    <button id="enable-notifications-btn" class="btn-submit" style="margin-top: 10px; padding: 8px; font-size: 0.85rem; background: var(--accent);" onclick="requestNotificationPermission()">تفعيل الإشعارات</button>
+                    <button id="enable-notifications-btn" class="btn-submit" style="margin-top: 10px; padding: 8px; font-size: 0.85rem; background: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; transition: 0.2s;" onclick="requestNotificationPermission()">تفعيل الإشعارات</button>
                 </div>
             </div>
 
@@ -310,7 +295,6 @@
             <div class="slider-container" id="latest-products-slider"></div>
         </div>
         
-        <!-- شريط الأقسام المتاحة الجديد -->
         <div class="section-title-ribbon" style="font-weight: bold; color: var(--bg-dark-blue); margin-bottom: 10px; font-size: 1.1rem;">
             <i class="fa-solid fa-layer-group"></i> الأقسام المتاحة
         </div>
@@ -358,8 +342,6 @@
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778299201/w0q9f0y45z3hspjmo9wa.png" alt="قسم الأدوات الدراسية والمكتبية - Gam3a Store" loading="lazy">
                 <h3>أدوات دراسية</h3>
             </div>
-            
-            <!-- الأقسام الجديدة المضافة هنا -->
             <div class="category-card" onclick="openCategory('مواد غذائية')">
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778297762/kn4wf5jwk4tyqmewiyel.png" alt="قسم مواد غذائية - Gam3a Store" loading="lazy">
                 <h3>مواد غذائية</h3>
@@ -368,8 +350,6 @@
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778297750/zlkeup1gwhe4obz9k1ph.png" alt="قسم هدايا - Gam3a Store" loading="lazy">
                 <h3>هدايا</h3>
             </div>
-            <!-- نهاية الأقسام الجديدة -->
-
             <div class="category-card" onclick="openCategory('ادوات منزلية')">
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778298017/rrrozqeadq8fc3xpvsrr.png" alt="قسم الأدوات المنزلية - Gam3a Store" loading="lazy">
                 <h3>أدوات منزلية</h3>
@@ -455,17 +435,13 @@
             </div>
         </div>
 
-        <!-- قسم الإحصائيات (الزيارات والمتصلين) -->
         <div style="display: flex; justify-content: center; gap: 40px; margin-top: 20px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 15px;">
-            
-            <!-- إجمالي الزيارات -->
             <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
                 <i class="fa-solid fa-users" style="font-size: 1.4rem; color: var(--silver);"></i>
                 <span style="font-size: 0.75rem; color: #cbd5e1;">إجمالي الزيارات</span>
                 <strong id="total-visits-count" style="font-size: 1.2rem; color: #fff;">...</strong>
             </div>
 
-            <!-- المتصلين الآن -->
             <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
                 <div style="position: relative; display: inline-block;">
                     <i class="fa-solid fa-user" style="font-size: 1.4rem; color: var(--silver);"></i>
@@ -474,7 +450,6 @@
                 <span style="font-size: 0.75rem; color: #cbd5e1;">المتصلين الآن</span>
                 <strong id="online-users-count" style="font-size: 1.2rem; color: #2ecc71;">...</strong>
             </div>
-
         </div>
 
         <div class="social-links">
@@ -610,8 +585,8 @@
                     const targetProduct = window.products.find(x => String(x.shortCode) === String(sharedCode));
                     if (targetProduct) {
                         window.historyStack = ['home', 'details'];
-                        window.safeReplaceState('home', "/"); // 1. نزرع الرئيسية في الخلفية
-                        window.safePushState('details', `/p/${sharedCode}`); // 2. نضع المنتج فوقها
+                        window.safeReplaceState('home', "/"); 
+                        window.safePushState('details', `/p/${sharedCode}`); 
                         try {
                             window.openProduct(targetProduct.id, false);
                             return;
@@ -627,8 +602,8 @@
                     }
                     if (targetAdminId) {
                         window.historyStack = ['home', 'profile'];
-                        window.safeReplaceState('home', "/"); // 1. نزرع الرئيسية في الخلفية
-                        window.safePushState('profile', `/m/${marketerCode}`); // 2. نضع المسوق فوقها
+                        window.safeReplaceState('home', "/"); 
+                        window.safePushState('profile', `/m/${marketerCode}`); 
                         try {
                             window.openProfile(targetAdminId, false);
                             return;
@@ -656,7 +631,6 @@
             }
         }
 
-        // جلب المنتجات المتاحة فقط (التي لم يتم إخفاؤها) لتخفيف الضغط على هاتف العميل
         const activeProductsQuery = query(collection(db, "ghosn_products"), where("hidden", "==", false));
 
         onSnapshot(activeProductsQuery, (querySnapshot) => {
@@ -664,13 +638,12 @@
             productsLoaded = true;
             checkAndInit();
 
-            // تحديث الشاشة فقط إذا كنا في صفحة تعتمد على البيانات لمنع التشنج
             if (!isInitialLoad) {
                 const currentPage = window.historyStack[window.historyStack.length - 1];
                 if (currentPage === 'home') window.renderHomeSlider();
                 if (currentPage === 'category') {
                     const container = document.getElementById('category-products');
-                    if(container) container.innerHTML = ''; // تفريغ القديم
+                    if(container) container.innerHTML = ''; 
                     window.catIndex = 0;
                     window.loadMoreCategoryProducts(); 
                 }
@@ -736,19 +709,16 @@
             
             if (bgVideo && bgImg) {
                 if (pageId !== 'home') {
-                    // إيقاف الفيديو وإخفاؤه تماماً وإظهار الصورة لتخفيف الضغط
                     bgVideo.pause(); 
                     bgVideo.style.display = 'none'; 
                     bgImg.style.display = 'block'; 
                 } else {
-                    // عند الرجوع للرئيسية يرجع الفيديو يشتغل
                     bgImg.style.display = 'none';
                     bgVideo.style.display = 'block';
                     bgVideo.play().catch(e=>{}); 
                 }
             }
 
-            // النزول للمكان المحفوظ فوراً بعد بناء الشاشة لمنع القفز واللاج
             if (isBack && window.scrollPositions[pageId] !== undefined) {
                 setTimeout(() => {
                     window.scrollTo({ top: window.scrollPositions[pageId], behavior: 'instant' });
@@ -770,7 +740,6 @@
             if(pageId === 'home') window.renderHomeSlider();
             if(pageId === 'cart') window.renderCart();
 
-            // تفريغ الرامات من صور المنتج لو العميل خرج للرئيسية أو الأقسام فقط (استثنينا السلة)
             if (pageId === 'home' || pageId === 'category') {
                 const detailsContent = document.getElementById('product-details-content');
                 if (detailsContent) {
@@ -778,19 +747,17 @@
                 }
             }
 
-            // إعادة بناء صفحة المنتج فوراً إذا تم تفريغها مسبقاً والمستخدم ضغط رجوع
             if (pageId === 'details' && window.currentViewedProductId) {
                 const detailsContent = document.getElementById('product-details-content');
                 if (detailsContent && detailsContent.innerHTML.trim() === '') {
                     window.openProduct(window.currentViewedProductId, false);
                 }
             }
-
-        } // <--- القوس ده بتاع قفلة الدالة لازم يكون هنا في الآخر خالص
+        } 
 
         window.goBackSafe = function() {
             if (window.historyStack.length > 1) {
-                window.history.back(); // هذا يجعل المتصفح يرجع خطوة للخلف ويحافظ على الرابط الصحيح
+                window.history.back(); 
             } else {
                 window.resetAndNavigate('home');
             }
@@ -915,8 +882,7 @@
                     <div class="card-info">
                         <div class="title-price-row">
                             <h3>${p.name}</h3>
-                            <span
-class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-weight: normal;">ج.م</span></span>
+                            <span class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-weight: normal;">ج.م</span></span>
                         </div>
                         <div class="card-type-row">
                             <div>${typeText}</div>
@@ -1035,7 +1001,6 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
                     const absScroll = Math.abs(sliderElement.scrollLeft);
                     const index = Math.round(absScroll / sliderElement.clientWidth);
                     
-                    // استهداف النقاط بشكل مباشر وآمن بدون البحث في كل الـ DOM لمنع اللاج
                     const dotsContainer = sliderElement.parentElement.nextElementSibling;
                     if (dotsContainer && dotsContainer.classList.contains('slider-dots')) {
                         const dots = dotsContainer.children;
@@ -1116,7 +1081,6 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.custom-select-wrapper')) {
                 document.querySelectorAll('.custom-select-list').forEach(el => el.classList.remove('show'));
-                // تصفير عداد الإشعارات عند إغلاق الصندوق
                 const badge = document.getElementById('notification-badge');
                 if(badge && badge.style.display !== 'none') {
                     badge.style.display = 'none';
@@ -1244,7 +1208,7 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
                 } catch(e) { console.error("Date error:", e); }
             }
 
-            let imgsArray = p.images && p.images.length > 0 ? p.images.slice(0, 7) : [p.img];
+            let imgsArray = p.images && p.images.length > 0 ? p.images.slice(0, 7) :[p.img];
             let sliderHtml = imgsArray.map((imgSrc, index) => `<img src="${window.optimizeImage(imgSrc, 600)}" ${index === 0 ? 'decoding="sync"' : 'loading="lazy" decoding="async"'} onclick="openLightbox('${window.optimizeImage(imgSrc, 700, true)}')">`).join('');
             let dotsHtml = imgsArray.map((_, i) => `<span class="dot ${i===0 ? 'active' : ''}"></span>`).join('');
             let safeSizes = p.sizes ||[];
@@ -1740,15 +1704,12 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
             }
         }
 
- // --- نظام صندوق الإشعارات الجديد (بدون مراقبة أو لاج) ---
         const messaging = getMessaging(app);
 
-        // تحميل الإشعارات السابقة من ذاكرة الهاتف
         window.savedNotifications = JSON.parse(localStorage.getItem('gam3a_notifications')) ||[];
 
-        // 1. إصلاح اسم الـ ID الخاص بعداد الإشعارات
         window.updateNotificationBadge = function() {
-            const badge = document.getElementById('notification-badge'); // تم التصحيح هنا
+            const badge = document.getElementById('notification-badge'); 
             const unread = window.savedNotifications.filter(n => !n.read).length;
             if (badge) {
                 badge.innerText = unread;
@@ -1765,7 +1726,6 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
                 return;
             }
 
-            // ترتيب من الأحدث للأقدم
             let sorted = [...window.savedNotifications].reverse();
             list.innerHTML = sorted.map(n => `
                 <div style="background:${n.read ? 'var(--bg-main)' : '#e8f4fd'}; padding:10px; border-radius:8px; border:1px solid ${n.read ? 'var(--border-light)' : 'var(--accent)'}; text-align:right;">
@@ -1776,21 +1736,26 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
             `).join('');
         }
 
-        // 2. إصلاح اسم الـ ID الخاص بالصندوق وطريقة الفتح
+        // تم التعديل هنا لربط الدالة وإظهار/إخفاء الزر بناءً على الصلاحيات
         window.toggleNotificationBox = async function(e) {
-            if(e) e.stopPropagation(); // لمنع إغلاق الصندوق تلقائياً
+            if(e) e.stopPropagation(); 
 
-            const box = document.getElementById('notification-dropdown'); // تم التصحيح هنا
+            const box = document.getElementById('notification-dropdown'); 
             
             if (!box.classList.contains('show')) {
-                box.classList.add('show'); // استخدام الـ Class بدلا من style.display
+                box.classList.add('show'); 
 
-                // طلب الإذن لو العميل لسه معملش سماح (تظهر رسالة المتصفح الافتراضية)
-                if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-                    await requestNotificationPermission();
+                const btn = document.getElementById('enable-notifications-btn');
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    if (btn) btn.style.display = 'none'; // إخفاء الزر لو الصلاحية موجودة مسبقاً
+                } else if (btn) {
+                    btn.style.display = 'block'; // إظهاره لو لم يوافق العميل بعد
                 }
 
-                // تحديد كل الإشعارات كمقروءة بمجرد فتح الصندوق
+                if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+                    await window.requestNotificationPermission();
+                }
+
                 window.savedNotifications.forEach(n => n.read = true);
                 localStorage.setItem('gam3a_notifications', JSON.stringify(window.savedNotifications));
                 window.updateNotificationBadge();
@@ -1800,15 +1765,29 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
             }
         }
 
-        // 3. إضافة دالة إغلاق الصندوق (التي كانت ناقصة الخاصة بزر الـ X)
         window.closeNotificationBox = function() {
             const box = document.getElementById('notification-dropdown');
             if(box) box.classList.remove('show');
         }
 
-        async function requestNotificationPermission() {
+        // الدالة الجديدة المربوطة بالـ window
+        window.requestNotificationPermission = async function() {
             try {
-                if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
+                const btn = document.getElementById('enable-notifications-btn');
+                if(btn) btn.innerText = "جاري التفعيل...";
+
+                if (!('Notification' in window)) {
+                    window.showToast("متصفحك لا يدعم الإشعارات", "#e74c3c");
+                    if(btn) btn.innerText = "تفعيل الإشعارات";
+                    return;
+                }
+
+                if (!('serviceWorker' in navigator)) {
+                    window.showToast("متصفحك لا يدعم Service Worker", "#e74c3c");
+                    if(btn) btn.innerText = "تفعيل الإشعارات";
+                    return;
+                }
+
                 const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
                 const permission = await Notification.requestPermission();
 
@@ -1828,10 +1807,17 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
                             createdAt: Date.now()
                         }, { merge: true });
                         window.showToast("تم تفعيل الإشعارات بنجاح!", "#2ecc71");
+                        if(btn) btn.style.display = 'none';
                     }
+                } else if (permission === 'denied') {
+                    window.showToast("لقد قمت برفض الإشعارات من المتصفح", "#e74c3c");
+                    if(btn) btn.innerText = "تم الرفض";
                 }
             } catch (error) {
-                console.warn('تنبيه الإشعارات:', error);
+                console.error('تنبيه الإشعارات:', error);
+                window.showToast("حدث خطأ أثناء التفعيل", "#e74c3c");
+                const btn = document.getElementById('enable-notifications-btn');
+                if(btn) btn.innerText = "تفعيل الإشعارات";
             }
         }
 
@@ -1839,7 +1825,6 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
             const title = payload.notification.title || "إشعار جديد";
             const body = payload.notification.body || "";
 
-            // حفظ الإشعار الجديد في ذاكرة الهاتف
             window.savedNotifications.push({
                 title: title,
                 body: body,
@@ -1847,7 +1832,6 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
                 read: false
             });
 
-            // الاحتفاظ بآخر 50 إشعار فقط لتوفير المساحة
             if(window.savedNotifications.length > 50) {
                 window.savedNotifications.shift();
             }
@@ -1859,7 +1843,6 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
             window.showToast(`🔔 ${title}: ${body}`, "#9b59b6");
         });
 
-        // تهيئة الإشعارات عند فتح الموقع
         window.updateNotificationBadge();
         window.renderNotifications();
 
