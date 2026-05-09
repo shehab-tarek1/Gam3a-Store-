@@ -240,15 +240,6 @@
     </script>
 </head>
 <body>
-<!-- رسالة الإشعارات الذكية -->
-    <div id="smart-notification-prompt" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--bg-dark-blue); color: white; padding: 15px; border-radius: 15px; z-index: 10000; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center; border: 1px solid rgba(255,255,255,0.1);">
-        <i class="fa-solid fa-bell" style="color: #f1c40f; font-size: 1.5rem; margin-bottom: 10px;"></i>
-        <p style="font-size: 0.85rem; margin-bottom: 15px; line-height: 1.5;">هل ترغب في تفعيل الإشعارات لمعرفة أحدث العروض والمنتجات المضافة للمتجر؟</p>
-        <div style="display: flex; gap: 10px; justify-content: center;">
-            <button onclick="acceptSmartNotification()" style="background: #2ecc71; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; font-size: 0.85rem;">تفعيل</button>
-            <button onclick="dismissSmartNotification()" style="background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; font-size: 0.85rem;">ليس الآن</button>
-        </div>
-    </div>
 
     <div id="global-loader">
         <div class="spinner"></div>
@@ -262,8 +253,32 @@
             <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/w_600,h_600,c_fill,q_auto,f_auto/v1777862797/lbshj6jfcheyuehidf7l.jpg" class="logo-img" alt="Logo">
             <div class="site-name">gam3a store</div>
         </div>
-        <div class="header-left">
-            <div class="cart-icon" onclick="navigate('cart')">
+        <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
+            
+            <!-- جرس الإشعارات الجديد -->
+            <div class="cart-icon custom-select-wrapper" style="margin: 0;">
+                <div onclick="toggleNotificationBox(event)">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="cart-count" id="notification-badge" style="display: none; background: #f39c12;">0</span>
+                </div>
+                
+                <!-- صندوق الإشعارات المنسدل -->
+                <div id="notification-dropdown" class="custom-select-list" style="width: 260px; left: 0; right: auto; top: 130%; padding: 10px; cursor: default; box-shadow: 0 10px 30px rgba(0,0,0,0.2);" onclick="event.stopPropagation()">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding-bottom: 8px; margin-bottom: 8px;">
+                        <strong style="color: var(--bg-dark-blue); font-size: 0.95rem;"><i class="fa-solid fa-bell" style="color: #f39c12;"></i> الإشعارات</strong>
+                        <i class="fa-solid fa-xmark" style="cursor: pointer; color: var(--text-muted); font-size: 1.2rem; padding: 0 5px;" onclick="closeNotificationBox()"></i>
+                    </div>
+                    
+                    <div id="notification-list" style="max-height: 250px; overflow-y: auto; font-size: 0.8rem; color: var(--text-dark); display: flex; flex-direction: column; gap: 8px;">
+                        <!-- سيتم إضافة الإشعارات هنا برمجياً -->
+                    </div>
+
+                    <button id="enable-notifications-btn" class="btn-submit" style="margin-top: 10px; padding: 8px; font-size: 0.85rem; background: var(--accent);" onclick="requestNotificationPermission()">تفعيل الإشعارات</button>
+                </div>
+            </div>
+
+            <!-- السلة القديمة -->
+            <div class="cart-icon" onclick="navigate('cart')" style="margin: 0;">
                 <i class="fa-solid fa-cart-shopping"></i>
                 <span class="cart-count" id="cart-count-badge">0</span>
             </div>
@@ -1101,6 +1116,12 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.custom-select-wrapper')) {
                 document.querySelectorAll('.custom-select-list').forEach(el => el.classList.remove('show'));
+                // تصفير عداد الإشعارات عند إغلاق الصندوق
+                const badge = document.getElementById('notification-badge');
+                if(badge && badge.style.display !== 'none') {
+                    badge.style.display = 'none';
+                    badge.innerText = '0';
+                }
             }
         });
 
@@ -1723,58 +1744,11 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
         const messaging = getMessaging(app);
 
         async function requestNotificationPermission() {
-            try {
-                // التأكد من دعم المتصفح للإشعارات (مهم للـ APK)
-                if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
-
-                const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-                
-                const permission = await Notification.requestPermission();
-                
-                if (permission === 'granted') {
-                    await navigator.serviceWorker.ready;
-
-                    const currentToken = await getToken(messaging, { 
-                        vapidKey: 'BMWdIiAsx9-L-msgleE9e19DVCXKtst9Bs0T4VHtaaUTddKOMSpjHImOmC9i980_rffeE061vi-jxWlqpGISArU',
-                        serviceWorkerRegistration: registration 
-                    });
-
-                    if (currentToken) {
-                        // حفظ فوري في اللوكال ستوريدج لمنع التكرار نهائياً حتى لو الداتابيز اتأخرت
-                        localStorage.setItem('fcm_token_saved', 'true');
-                        
-                        const tokenRef = doc(db, "fcm_tokens", currentToken);
-                        await setDoc(tokenRef, {
-                            token: currentToken,
-                            device: navigator.userAgent,
-                            createdAt: Date.now()
-                        }, { merge: true });
-                    }
-                }
-            } catch (error) {
-                console.warn('تنبيه الإشعارات:', error);
-            }
-        }
-
-        onMessage(messaging, (payload) => {
-            window.showToast(`🔔 ${payload.notification.title}: ${payload.notification.body}`, "#9b59b6");
-        });
-
-        // دوال التحكم في الرسالة الذكية
-        window.dismissSmartNotification = function() {
-            localStorage.setItem('fcm_prompt_dismissed', 'true');
-            document.getElementById('smart-notification-prompt').style.display = 'none';
-        }
-
-        window.acceptSmartNotification = function() {
-            document.getElementById('smart-notification-prompt').style.display = 'none';
-            localStorage.setItem('fcm_prompt_dismissed', 'true'); // حتى لا تظهر مرة أخرى
-            requestNotificationPermission(); // استدعاء دالة فايربيز الأصلية
-        }
-
-        // إظهار الرسالة الذكية بعد 5 ثواني بدلاً من النافذة الافتراضية المزعجة
-        setTimeout(() => {
-            // التحقق: إذا لم يرفضها المستخدم سابقاً، ولم يفعلها سابقاً، والمتصفح يدعم الإشعارات
+            // --- نظام صندوق الإشعارات (بدون مراقبة أو لاج) ---
+        const messaging = getMessaging(app);
+        
+        // تحميل الإشعارات السابقة من ذاكرة الهاتف
+        window.savedNotifications = JSON.parse(localStorage.getItem('gam3a_notifications')) ||
             if (!localStorage.getItem('fcm_token_saved') && !localStorage.getItem('fcm_prompt_dismissed')) {
                 if ('Notification' in window && Notification.permission === 'default') {
                     // إظهار التصميم الجميل بدلاً من نافذة المتصفح/الـ APK
