@@ -16,44 +16,89 @@ const messaging = firebase.messaging();
 
 // استقبال الإشعارات والموقع مغلق (في الخلفية)
 messaging.onBackgroundMessage(function(payload) {
-    const notificationTitle = payload.notification.title;
+    console.log('[firebase-messaging-sw.js] Received background message ', payload);
+    const notificationTitle = payload.notification?.title || "إشعار جديد من متجر الجامعة";
     const notificationOptions = {
-        body: payload.notification.body,
+        body: payload.notification?.body,
         icon: '/icon-192x192.png',
         badge: '/icon-144x144.png',
-        click_action: 'https://gam3a-store.vercel.app/'
+        // توجيه المستخدم للموقع عند الضغط على الإشعار
+        data: { click_action: 'https://gam3a-store.vercel.app/' } 
     };
     self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
+// التعامل مع الضغط على الإشعار لفتح الموقع
+self.addEventListener('notificationclick', function(event) {
+    event.notification.close();
+    event.waitUntil(
+        clients.openWindow(event.notification.data.click_action || '/')
+    );
+});
+
 // --- نظام تسريع الموقع (Caching) ---
-const CACHE_NAME = 'gam3a-store-cache-v1';
+// قم بتغيير رقم الإصدار هنا (مثلاً v2) كلما قمت بتحديث كبير في ملفات HTML/CSS
+const CACHE_NAME = 'gam3a-store-cache-v1'; 
 const STATIC_ASSETS =[
     '/',
     '/index.html',
+    '/manifest.json', // مهم جداً حفظ المانيفست في الكاش
     '/icon-192x192.png',
     '/icon-512x512.png'
 ];
 
-// حفظ الملفات الأساسية عند التثبيت
+// 1. حفظ الملفات الأساسية عند التثبيت
 self.addEventListener('install', (event) => {
-    event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS)));
+    self.skipWaiting(); // يجبر المتصفح على تفعيل النسخة الجديدة فوراً
+    event.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
+    );
 });
 
-// جلب الملفات من الكاش لتسريع الموقع، وتحديثها في الخلفية
+// 2. مسح الكاش القديم عند تفعيل إصدار جديد (مهم جداً لكي لا يعلق الموقع على نسخة قديمة)
+self.addEventListener('activate', (event) => {
+    event.waitUntil(
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames.map((cacheName) => {
+                    if (cacheName !== CACHE_NAME) {
+                        console.log('حذف الكاش القديم:', cacheName);
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        })
+    );
+    self.clients.claim(); // السيطرة على كل الصفحات المفتوحة وتطبيق التحديث
+});
+
+// 3. جلب الملفات من الكاش لتسريع الموقع، وتحديثها في الخلفية
 self.addEventListener('fetch', (event) => {
-    // استثناء طلبات قاعدة البيانات (عشان المنتجات تتحدث لحظياً)
-    if (event.request.method !== 'GET' || event.request.url.includes('firestore.googleapis.com')) return;
+    // استثناء طلبات قاعدة البيانات، و إحصائيات جوجل، وأي طلب غير GET
+    if (event.request.method !== 'GET' || 
+        event.request.url.includes('firestore.googleapis.com') ||
+        event.request.url.includes('google-analytics.com')) {
+        return;
+    }
 
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
             const fetchPromise = fetch(event.request).then((networkResponse) => {
-                caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, networkResponse.clone());
-                });
+                // التأكد من أن الاستجابة صالحة قبل تخزينها
+                if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+                    const responseToCache = networkResponse.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseToCache);
+                    });
+                }
                 return networkResponse;
-            }).catch(() => cachedResponse); // لو النت فاصل يفتح من الكاش
-            return cachedResponse || fetchPromise;
+            }).catch(() => {
+                // في حالة انقطاع الإنترنت، نعتمد كلياً على الكاش
+                return cachedResponse;
+            });
+
+            // نعرض الكاش فوراً (إن وُجد) لسرعة العرض، بينما يتم جلب الأحدث في الخلفية
+            return cachedResponse || fetchPromise; 
         })
     );
 });
