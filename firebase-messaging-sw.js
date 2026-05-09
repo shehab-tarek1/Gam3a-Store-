@@ -37,8 +37,8 @@ self.addEventListener('notificationclick', function(event) {
 });
 
 // --- نظام تسريع الموقع (Caching) ---
-// قم بتغيير رقم الإصدار هنا (مثلاً v2) كلما قمت بتحديث كبير في ملفات HTML/CSS
-const CACHE_NAME = 'gam3a-store-cache-v2';
+// قم بتغيير رقم الإصدار هنا (مثلاً v8) كلما قمت بتحديث كبير في ملفات HTML/CSS
+const CACHE_NAME = 'gam3a-store-cache-v8';
 const STATIC_ASSETS = [
     '/',
     '/index.html',
