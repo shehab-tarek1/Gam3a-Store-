@@ -1579,50 +1579,50 @@ if(p.whatsapp) {
         window.updateCartBadge();
 
 // --- نظام الإحصائيات (الزيارات والمتصلين) ---
-        async function initVisitorStats() {
+        function initVisitorStats() {
             // 1. نظام المتصلين الحقيقي (باستخدام Realtime Database مجاناً)
-            const visitorId = Math.random().toString(36).substring(2, 15); // كود فريد لكل زائر
+            const visitorId = Math.random().toString(36).substring(2, 15); 
             const myConnectionsRef = ref(rtdb, `online_users/${visitorId}`);
             const connectedRef = ref(rtdb, '.info/connected');
 
-            // مراقبة حالة اتصال العميل
             onValue(connectedRef, (snap) => {
                 if (snap.val() === true) {
-                    // لما العميل يفتح الموقع، ضيفه في قائمة المتصلين
                     set(myConnectionsRef, true);
-                    // لما العميل يقفل الموقع أو النت يفصل، احذفه فوراً من المتصلين
                     onDisconnect(myConnectionsRef).remove();
                 }
             });
 
-            // حساب عدد المتصلين الفعلي وعرضه في الفوتر
             const onlineUsersRef = ref(rtdb, 'online_users');
             onValue(onlineUsersRef, (snap) => {
-                const count = snap.size; // عدد المتصلين الحقيقي
+                const count = snap.size; 
                 document.getElementById('online-users-count').innerText = count || 1;
             });
 
             // 2. جلب إجمالي الزيارات من Firestore
             const statsRef = doc(db, "gam3a_settings", "visitor_stats");
-            try {
-                const snap = await getDoc(statsRef);
-                if (!snap.exists()) {
-                    await setDoc(statsRef, { totalVisits: 0 }); 
+            
+            // تشغيل المستمع فوراً لعرض الرقم بدون أي انتظار
+            onSnapshot(statsRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    document.getElementById('total-visits-count').innerText = docSnap.data().totalVisits;
+                } else {
+                    document.getElementById('total-visits-count').innerText = "0";
                 }
+            }, (error) => {
+                console.error("Snapshot Error:", error);
+            });
 
-                if (!localStorage.getItem('gam3a_visited')) {
-                    localStorage.setItem('gam3a_visited', 'true');
-                    await updateDoc(statsRef, { totalVisits: increment(1) });
-                }
-
-                onSnapshot(statsRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        document.getElementById('total-visits-count').innerText = docSnap.data().totalVisits;
+            // تسجيل الزيارة الجديدة في الخلفية (بدون await لمنع اللاج)
+            if (!localStorage.getItem('gam3a_visited')) {
+                localStorage.setItem('gam3a_visited', 'true');
+                
+                getDoc(statsRef).then(snap => {
+                    if (!snap.exists()) {
+                        setDoc(statsRef, { totalVisits: 1 });
+                    } else {
+                        updateDoc(statsRef, { totalVisits: increment(1) });
                     }
-                });
-            } catch (error) {
-                console.error("Stats Error:", error);
-                document.getElementById('total-visits-count').innerText = "0";
+                }).catch(err => console.error("Update Error:", err));
             }
         }
 
