@@ -1745,13 +1745,14 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
 
         // تحميل الإشعارات السابقة من ذاكرة الهاتف
         window.savedNotifications = JSON.parse(localStorage.getItem('gam3a_notifications')) ||[];
-        
+
+        // 1. إصلاح اسم الـ ID الخاص بعداد الإشعارات
         window.updateNotificationBadge = function() {
-            const badge = document.getElementById('notif-count-badge');
+            const badge = document.getElementById('notification-badge'); // تم التصحيح هنا
             const unread = window.savedNotifications.filter(n => !n.read).length;
             if (badge) {
                 badge.innerText = unread;
-                badge.style.display = unread > 0 ? 'block' : 'none';
+                badge.style.display = unread > 0 ? 'inline-block' : 'none';
             }
         }
 
@@ -1775,11 +1776,15 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
             `).join('');
         }
 
-        window.toggleNotificationBox = async function() {
-            const box = document.getElementById('notification-box');
-            if (box.style.display === 'none') {
-                box.style.display = 'block';
-                
+        // 2. إصلاح اسم الـ ID الخاص بالصندوق وطريقة الفتح
+        window.toggleNotificationBox = async function(e) {
+            if(e) e.stopPropagation(); // لمنع إغلاق الصندوق تلقائياً
+
+            const box = document.getElementById('notification-dropdown'); // تم التصحيح هنا
+            
+            if (!box.classList.contains('show')) {
+                box.classList.add('show'); // استخدام الـ Class بدلا من style.display
+
                 // طلب الإذن لو العميل لسه معملش سماح (تظهر رسالة المتصفح الافتراضية)
                 if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
                     await requestNotificationPermission();
@@ -1791,25 +1796,22 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
                 window.updateNotificationBadge();
                 window.renderNotifications();
             } else {
-                box.style.display = 'none';
+                box.classList.remove('show');
             }
         }
 
-        // إغلاق الصندوق عند الضغط في أي مكان بالخارج
-        document.addEventListener('click', function(e) {
-            const container = document.getElementById('bell-icon-container');
-            const box = document.getElementById('notification-box');
-            if (container && box && !container.contains(e.target)) {
-                box.style.display = 'none';
-            }
-        });
+        // 3. إضافة دالة إغلاق الصندوق (التي كانت ناقصة الخاصة بزر الـ X)
+        window.closeNotificationBox = function() {
+            const box = document.getElementById('notification-dropdown');
+            if(box) box.classList.remove('show');
+        }
 
         async function requestNotificationPermission() {
             try {
                 if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
                 const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
                 const permission = await Notification.requestPermission();
-                
+
                 if (permission === 'granted') {
                     await navigator.serviceWorker.ready;
                     const currentToken = await getToken(messaging, { 
@@ -1836,7 +1838,7 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
         onMessage(messaging, (payload) => {
             const title = payload.notification.title || "إشعار جديد";
             const body = payload.notification.body || "";
-            
+
             // حفظ الإشعار الجديد في ذاكرة الهاتف
             window.savedNotifications.push({
                 title: title,
@@ -1844,14 +1846,14 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
                 time: Date.now(),
                 read: false
             });
-            
+
             // الاحتفاظ بآخر 50 إشعار فقط لتوفير المساحة
             if(window.savedNotifications.length > 50) {
                 window.savedNotifications.shift();
             }
-            
+
             localStorage.setItem('gam3a_notifications', JSON.stringify(window.savedNotifications));
-            
+
             window.updateNotificationBadge();
             window.renderNotifications();
             window.showToast(`🔔 ${title}: ${body}`, "#9b59b6");
