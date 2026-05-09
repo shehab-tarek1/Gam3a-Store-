@@ -221,8 +221,34 @@
             .slider-container .inner-product-card { width: calc(33.333% - 8px); }
         }
     </style>
+<!-- كود SEO الذكي (يقرأه جوجل فقط ولا يظهر للزوار) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Gam3a Store",
+      "alternateName": "متجر الجامعة",
+      "url": "https://gam3a-store.vercel.app/",
+      "description": "أحدث المنتجات بأفضل الأسعار لطلاب كلية التجارة جامعة الزقازيق وجميع المحافظات.",
+      "author": {
+        "@type": "Person",
+        "name": "شهاب طارق صلاح",
+        "jobTitle": "مطور ومالك الموقع"
+      },
+      "keywords": "شهاب طارق صلاح, متجر الجامعة, كلية التجارة جامعة الزقازيق, ملابس, اكسسوارات"
+    }
+    </script>
 </head>
 <body>
+<!-- رسالة الإشعارات الذكية -->
+    <div id="smart-notification-prompt" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--bg-dark-blue); color: white; padding: 15px; border-radius: 15px; z-index: 10000; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+        <i class="fa-solid fa-bell" style="color: #f1c40f; font-size: 1.5rem; margin-bottom: 10px;"></i>
+        <p style="font-size: 0.85rem; margin-bottom: 15px; line-height: 1.5;">هل ترغب في تفعيل الإشعارات لمعرفة أحدث العروض والمنتجات المضافة للمتجر؟</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button onclick="acceptSmartNotification()" style="background: #2ecc71; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; font-size: 0.85rem;">تفعيل</button>
+            <button onclick="dismissSmartNotification()" style="background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; font-size: 0.85rem;">ليس الآن</button>
+        </div>
+    </div>
 
     <div id="global-loader">
         <div class="spinner"></div>
@@ -437,10 +463,10 @@
         </div>
 
         <div class="social-links">
-            <a href="https://www.instagram.com/shehab_tarek1?igsh=c282OXltYXNuazc0" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://www.facebook.com/share/1Cg3HN4uMZ/" target="_blank"><i class="fa-brands fa-facebook"></i></a>
-            <a href="https://www.tiktok.com/@shehab_tarek_1?_r=1&_t=ZS-964Le6R1we7" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
-            <a href="https://wa.me/201206244875" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="https://www.instagram.com/shehab_tarek1?igsh=c282OXltYXNuazc0" target="_blank" title="حساب شهاب طارق صلاح على انستجرام" aria-label="حساب شهاب طارق صلاح على انستجرام"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.facebook.com/share/1Cg3HN4uMZ/" target="_blank" title="حساب شهاب طارق صلاح على فيسبوك" aria-label="حساب شهاب طارق صلاح على فيسبوك"><i class="fa-brands fa-facebook"></i></a>
+            <a href="https://www.tiktok.com/@shehab_tarek_1?_r=1&_t=ZS-964Le6R1we7" target="_blank" title="حساب شهاب طارق صلاح على تيك توك" aria-label="حساب شهاب طارق صلاح على تيك توك"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://wa.me/201206244875" target="_blank" title="تواصل مع شهاب طارق صلاح عبر واتساب" aria-label="تواصل مع شهاب طارق صلاح عبر واتساب"><i class="fa-brands fa-whatsapp"></i></a>
         </div>
     </footer>
 
@@ -1734,16 +1760,26 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
             window.showToast(`🔔 ${payload.notification.title}: ${payload.notification.body}`, "#9b59b6");
         });
 
-        // تأخير الطلب لـ 5 ثواني عشان الموقع يفتح براحته الأول بدون أي لاج
-        setTimeout(() => {
-            // لو التوكن محفوظ والإذن متوافق عليه، متعملش أي حاجة خالص (وده بيمنع اللاج والتكرار)
-            if (Notification.permission === 'granted' && localStorage.getItem('fcm_token_saved')) {
-                return; 
-            }
+        // دوال التحكم في الرسالة الذكية
+        window.dismissSmartNotification = function() {
+            localStorage.setItem('fcm_prompt_dismissed', 'true');
+            document.getElementById('smart-notification-prompt').style.display = 'none';
+        }
 
-            // لو المتصفح بيدعم الإشعارات ولسه مش محفوظ، اطلب الإذن
-            if ('Notification' in window && Notification.permission !== 'denied') {
-                requestNotificationPermission();
+        window.acceptSmartNotification = function() {
+            document.getElementById('smart-notification-prompt').style.display = 'none';
+            localStorage.setItem('fcm_prompt_dismissed', 'true'); // حتى لا تظهر مرة أخرى
+            requestNotificationPermission(); // استدعاء دالة فايربيز الأصلية
+        }
+
+        // إظهار الرسالة الذكية بعد 5 ثواني بدلاً من النافذة الافتراضية المزعجة
+        setTimeout(() => {
+            // التحقق: إذا لم يرفضها المستخدم سابقاً، ولم يفعلها سابقاً، والمتصفح يدعم الإشعارات
+            if (!localStorage.getItem('fcm_token_saved') && !localStorage.getItem('fcm_prompt_dismissed')) {
+                if ('Notification' in window && Notification.permission === 'default') {
+                    // إظهار التصميم الجميل بدلاً من نافذة المتصفح/الـ APK
+                    document.getElementById('smart-notification-prompt').style.display = 'block';
+                }
             }
         }, 5000);
 
