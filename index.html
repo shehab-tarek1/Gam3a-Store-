@@ -715,11 +715,11 @@
             if(pageId === 'home') window.renderHomeSlider();
             if(pageId === 'cart') window.renderCart();
 
-            // تنظيف الذاكرة (Garbage Collection): مسح تفاصيل المنتج لو العميل خرج منه
-            if (pageId !== 'details') {
+            // تفريغ الرامات من صور المنتج لو العميل خرج للرئيسية أو الأقسام أو السلة
+            if (pageId === 'home' || pageId === 'category' || pageId === 'cart') {
                 const detailsContent = document.getElementById('product-details-content');
                 if (detailsContent) {
-                    detailsContent.innerHTML = ''; // تدمير الصور والبيانات القديمة لتحرير الرامات
+                    detailsContent.innerHTML = ''; // تدمير الصور والبيانات القديمة
                 }
             }
 
