@@ -38,11 +38,13 @@ self.addEventListener('notificationclick', function(event) {
 
 // --- نظام تسريع الموقع (Caching) ---
 // قم بتغيير رقم الإصدار هنا (مثلاً v2) كلما قمت بتحديث كبير في ملفات HTML/CSS
-const CACHE_NAME = 'gam3a-store-cache-v2'; // قمنا بتغييره لـ v2 لفرض التحديث
-const STATIC_ASSETS =[
+const CACHE_NAME = 'gam3a-store-cache-v2';
+const STATIC_ASSETS = [
     '/',
     '/index.html',
-    '/manifest.json', // مهم جداً حفظ المانيفست في الكاش
+    '/privacy.html',
+    '/manifest.json',
+    '/icon-144x144.png',
     '/icon-192x192.png',
     '/icon-512x512.png'
 ];
