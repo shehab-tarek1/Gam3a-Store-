@@ -569,7 +569,8 @@
                     const targetProduct = window.products.find(x => String(x.shortCode) === String(sharedCode));
                     if (targetProduct) {
                         window.historyStack = ['home', 'details'];
-                        window.safeReplaceState('details', `/p/${sharedCode}`);
+                        window.safeReplaceState('home', "/"); // 1. نزرع الرئيسية في الخلفية
+                        window.safePushState('details', `/p/${sharedCode}`); // 2. نضع المنتج فوقها
                         try {
                             window.openProduct(targetProduct.id, false);
                             return;
@@ -585,14 +586,14 @@
                     }
                     if (targetAdminId) {
                         window.historyStack = ['home', 'profile'];
-                        window.safeReplaceState('profile', `/m/${marketerCode}`);
+                        window.safeReplaceState('home', "/"); // 1. نزرع الرئيسية في الخلفية
+                        window.safePushState('profile', `/m/${marketerCode}`); // 2. نضع المسوق فوقها
                         try {
                             window.openProfile(targetAdminId, false);
                             return;
                         } catch(e) { console.error(e); }
                     }
                 }
-
                 window.resetAndNavigate('home');
             } else if (!isInitialLoad) {
                 const currentPage = window.historyStack[window.historyStack.length - 1];
