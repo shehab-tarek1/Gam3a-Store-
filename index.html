@@ -1740,24 +1740,128 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
             }
         }
 
-        // --- نظام الإشعارات المحسن (بدون لاج أو تكرار) ---
+ // --- نظام صندوق الإشعارات الجديد (بدون مراقبة أو لاج) ---
         const messaging = getMessaging(app);
+
+        // تحميل الإشعارات السابقة من ذاكرة الهاتف
+        window.savedNotifications = JSON.parse(localStorage.getItem('gam3a_notifications')) ||[];
+        
+        window.updateNotificationBadge = function() {
+            const badge = document.getElementById('notif-count-badge');
+            const unread = window.savedNotifications.filter(n => !n.read).length;
+            if (badge) {
+                badge.innerText = unread;
+                badge.style.display = unread > 0 ? 'block' : 'none';
+            }
+        }
+
+        window.renderNotifications = function() {
+            const list = document.getElementById('notification-list');
+            if (!list) return;
+
+            if (window.savedNotifications.length === 0) {
+                list.innerHTML = '<p style="text-align:center; font-size:0.8rem; color:var(--text-muted); margin:10px 0;">لا توجد إشعارات حالياً.</p>';
+                return;
+            }
+
+            // ترتيب من الأحدث للأقدم
+            let sorted = [...window.savedNotifications].reverse();
+            list.innerHTML = sorted.map(n => `
+                <div style="background:${n.read ? 'var(--bg-main)' : '#e8f4fd'}; padding:10px; border-radius:8px; border:1px solid ${n.read ? 'var(--border-light)' : 'var(--accent)'}; text-align:right;">
+                    <strong style="display:block; font-size:0.85rem; color:var(--bg-dark-blue); margin-bottom:4px;">${n.title}</strong>
+                    <p style="font-size:0.75rem; color:var(--text-dark); margin:0; line-height:1.4;">${n.body}</p>
+                    <span style="font-size:0.65rem; color:var(--silver); margin-top:5px; display:block;">${new Date(n.time).toLocaleString('ar-EG')}</span>
+                </div>
+            `).join('');
+        }
+
+        window.toggleNotificationBox = async function() {
+            const box = document.getElementById('notification-box');
+            if (box.style.display === 'none') {
+                box.style.display = 'block';
+                
+                // طلب الإذن لو العميل لسه معملش سماح (تظهر رسالة المتصفح الافتراضية)
+                if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+                    await requestNotificationPermission();
+                }
+
+                // تحديد كل الإشعارات كمقروءة بمجرد فتح الصندوق
+                window.savedNotifications.forEach(n => n.read = true);
+                localStorage.setItem('gam3a_notifications', JSON.stringify(window.savedNotifications));
+                window.updateNotificationBadge();
+                window.renderNotifications();
+            } else {
+                box.style.display = 'none';
+            }
+        }
+
+        // إغلاق الصندوق عند الضغط في أي مكان بالخارج
+        document.addEventListener('click', function(e) {
+            const container = document.getElementById('bell-icon-container');
+            const box = document.getElementById('notification-box');
+            if (container && box && !container.contains(e.target)) {
+                box.style.display = 'none';
+            }
+        });
 
         async function requestNotificationPermission() {
-            // --- نظام صندوق الإشعارات (بدون مراقبة أو لاج) ---
-        const messaging = getMessaging(app);
-        
-        // تحميل الإشعارات السابقة من ذاكرة الهاتف
-        window.savedNotifications = JSON.parse(localStorage.getItem('gam3a_notifications')) ||
-            if (!localStorage.getItem('fcm_token_saved') && !localStorage.getItem('fcm_prompt_dismissed')) {
-                if ('Notification' in window && Notification.permission === 'default') {
-                    // إظهار التصميم الجميل بدلاً من نافذة المتصفح/الـ APK
-                    document.getElementById('smart-notification-prompt').style.display = 'block';
-                }
-            }
-        }, 5000);
+            try {
+                if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
+                const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+                const permission = await Notification.requestPermission();
+                
+                if (permission === 'granted') {
+                    await navigator.serviceWorker.ready;
+                    const currentToken = await getToken(messaging, { 
+                        vapidKey: 'BMWdIiAsx9-L-msgleE9e19DVCXKtst9Bs0T4VHtaaUTddKOMSpjHImOmC9i980_rffeE061vi-jxWlqpGISArU',
+                        serviceWorkerRegistration: registration 
+                    });
 
-        initVisitorStats();
+                    if (currentToken) {
+                        localStorage.setItem('fcm_token_saved', 'true');
+                        const tokenRef = doc(db, "fcm_tokens", currentToken);
+                        await setDoc(tokenRef, {
+                            token: currentToken,
+                            device: navigator.userAgent,
+                            createdAt: Date.now()
+                        }, { merge: true });
+                        window.showToast("تم تفعيل الإشعارات بنجاح!", "#2ecc71");
+                    }
+                }
+            } catch (error) {
+                console.warn('تنبيه الإشعارات:', error);
+            }
+        }
+
+        onMessage(messaging, (payload) => {
+            const title = payload.notification.title || "إشعار جديد";
+            const body = payload.notification.body || "";
+            
+            // حفظ الإشعار الجديد في ذاكرة الهاتف
+            window.savedNotifications.push({
+                title: title,
+                body: body,
+                time: Date.now(),
+                read: false
+            });
+            
+            // الاحتفاظ بآخر 50 إشعار فقط لتوفير المساحة
+            if(window.savedNotifications.length > 50) {
+                window.savedNotifications.shift();
+            }
+            
+            localStorage.setItem('gam3a_notifications', JSON.stringify(window.savedNotifications));
+            
+            window.updateNotificationBadge();
+            window.renderNotifications();
+            window.showToast(`🔔 ${title}: ${body}`, "#9b59b6");
+        });
+
+        // تهيئة الإشعارات عند فتح الموقع
+        window.updateNotificationBadge();
+        window.renderNotifications();
+
+        initVisitorStats(); 
 
     </script>
 </body>
