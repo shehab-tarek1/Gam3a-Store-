@@ -43,6 +43,12 @@
     <style>
         :root { --bg-main: #f4f6f9; --bg-surface: #ffffff; --bg-dark-blue: #0f1c2e; --text-light: #f8f9fa; --text-dark: #2d3436; --text-muted: #636e72; --border-light: #dfe6e9; --accent: #0984e3; --silver: #b2bec3; --radius: 20px; --shadow: 0 8px 20px rgba(0,0,0,0.06); }
 
+        /* جعل أحجام النصوص تتأقلم مع الهواتف تلقائياً */
+        html { font-size: 16px; }
+        @media (max-width: 400px) {
+            html { font-size: 14px; } /* تصغير الخطوط بنسبة متناسبة للهواتف الصغيرة */
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; -webkit-font-smoothing: antialiased; }
 
@@ -89,7 +95,7 @@
             transform: translateZ(0);
             backface-visibility: hidden;
         }
-        .category-card img { width: 100%; height: 145px; object-fit: cover; object-position: center; display: block;}
+        .category-card img { width: 100%; aspect-ratio: 4/3; height: auto; object-fit: cover; object-position: center; display: block;}
         .category-card h3 { background-color: var(--bg-dark-blue); color: var(--text-light); padding: 6px; font-size: 0.8rem; margin: 0;} 
 
         .gender-ribbon { position: absolute; top: 10px; right: 10px; background: rgba(255, 255, 255, 0.95); border-radius: 8px; padding: 4px 8px; font-size: 0.55rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 5; border: 1px solid var(--border-light); color: var(--text-dark); line-height: 1.2; }
@@ -110,13 +116,15 @@
             content-visibility: auto; 
             contain-intrinsic-size: 250px; 
         }
-        .inner-product-card .img-container { position: relative; width: 100%; height: 145px; background: #ffffff; }
-        .inner-product-card img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; border-bottom: 1px solid var(--border-light); transition: opacity 0.3s;} 
+        /* توحيد أحجام صور البطاقات */
+        .inner-product-card .img-container { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #ffffff; }
+        .inner-product-card img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; border-bottom: 1px solid var(--border-light); transition: opacity 0.3s;} 
 
         .card-info { padding: 10px; text-align: right; }
-        .title-price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .title-price-row h3 { font-size: 0.8rem; color: var(--text-dark); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 65%; font-weight: bold; }
-        .product-price-badge { font-size: 0.85rem; font-weight: bold; color: var(--accent); margin: 0; }
+        .title-price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; gap: 8px; }
+        /* تعديل العنوان ليتناسب مع اللغة والمساحة */
+        .title-price-row h3 { font-size: 0.8rem; color: var(--text-dark); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; text-align: start; font-weight: bold; }
+        .product-price-badge { font-size: 0.85rem; font-weight: bold; color: var(--accent); margin: 0; white-space: nowrap; }
 
         .card-type-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .card-type-text { font-size: 0.7rem; color: var(--text-muted); font-weight: bold; }
@@ -155,7 +163,9 @@
         .details-image-wrapper { width: 100%; max-width: 300px; margin: 0 auto 10px auto; overflow: hidden; position: relative;}
         .details-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border-light); -webkit-overflow-scrolling: touch; position: relative; }
         .details-slider::-webkit-scrollbar { display: none; }
-        .details-slider img { flex: 0 0 100%; width: 300px; height: 300px; object-fit: contain; object-position: center; background: var(--bg-surface); scroll-snap-align: center; }
+        /* توحيد أحجام صور السلايدر في صفحة التفاصيل */
+        .details-slider img { flex: 0 0 100%; width: 100%; aspect-ratio: 1 / 1; height: auto; object-fit: cover; object-position: center; background: var(--bg-surface); scroll-snap-align: center; }
+        
         .slider-dots { display: flex; justify-content: center; gap: 6px; margin-top: 10px; margin-bottom: 15px;}
         .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--silver); transition: 0.2s; }
         .dot.active { background: var(--bg-dark-blue); transform: scale(1.2); }
@@ -192,7 +202,6 @@
         .custom-select-item { padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.9rem; color: var(--text-dark); }
         .custom-select-item:active { background: var(--bg-main); color: var(--accent); }
 
-        /* تأثير اللمبة الخضراء للمتصلين (محسن للأداء) */
         @keyframes pulse-green { 0% { transform: scale(0.95); opacity: 1; } 70% { transform: scale(1.5); opacity: 0; } 100% { transform: scale(0.95); opacity: 0; } }
         .online-dot { position: absolute; top: -2px; right: -4px; width: 10px; height: 10px; background: #2ecc71; border-radius: 50%; border: 2px solid var(--bg-dark-blue); }
         .online-dot::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 50%; background: #2ecc71; animation: pulse-green 1.5s infinite; }
@@ -239,30 +248,21 @@
             <div class="site-name">gam3a store</div>
         </div>
         <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
-            
-            <!-- جرس الإشعارات -->
             <div class="cart-icon custom-select-wrapper" style="margin: 0;">
                 <div onclick="toggleNotificationBox(event)">
                     <i class="fa-solid fa-bell"></i>
                     <span class="cart-count" id="notification-badge" style="display: none; background: #f39c12;">0</span>
                 </div>
-                
-                <!-- صندوق الإشعارات المنسدل -->
                 <div id="notification-dropdown" class="custom-select-list" style="width: 260px; left: 0; right: auto; top: 130%; padding: 10px; cursor: default; box-shadow: 0 10px 30px rgba(0,0,0,0.2);" onclick="event.stopPropagation()">
                     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding-bottom: 8px; margin-bottom: 8px;">
                         <strong style="color: var(--bg-dark-blue); font-size: 0.95rem;"><i class="fa-solid fa-bell" style="color: #f39c12;"></i> الإشعارات</strong>
                         <i class="fa-solid fa-xmark" style="cursor: pointer; color: var(--text-muted); font-size: 1.2rem; padding: 0 5px;" onclick="closeNotificationBox()"></i>
                     </div>
-                    
                     <div id="notification-list" style="max-height: 250px; overflow-y: auto; font-size: 0.8rem; color: var(--text-dark); display: flex; flex-direction: column; gap: 8px;">
-                        <!-- سيتم إضافة الإشعارات هنا برمجياً -->
                     </div>
-
                     <button id="enable-notifications-btn" class="btn-submit" style="margin-top: 10px; padding: 8px; font-size: 0.85rem; background: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; transition: 0.2s;" onclick="requestNotificationPermission()">تفعيل الإشعارات</button>
                 </div>
             </div>
-
-            <!-- السلة القديمة -->
             <div class="cart-icon" onclick="navigate('cart')" style="margin: 0;">
                 <i class="fa-solid fa-cart-shopping"></i>
                 <span class="cart-count" id="cart-count-badge">0</span>
@@ -453,16 +453,17 @@
         </div>
 
         <div class="social-links">
-            <a href="https://www.instagram.com/shehab_tarek1?igsh=c282OXltYXNuazc0" target="_blank" title="حساب شهاب طارق صلاح على انستجرام" aria-label="حساب شهاب طارق صلاح على انستجرام"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://www.facebook.com/share/1Cg3HN4uMZ/" target="_blank" title="حساب شهاب طارق صلاح على فيسبوك" aria-label="حساب شهاب طارق صلاح على فيسبوك"><i class="fa-brands fa-facebook"></i></a>
-            <a href="https://www.tiktok.com/@shehab_tarek_1?_r=1&_t=ZS-964Le6R1we7" target="_blank" title="حساب شهاب طارق صلاح على تيك توك" aria-label="حساب شهاب طارق صلاح على تيك توك"><i class="fa-brands fa-tiktok"></i></a>
-            <a href="https://wa.me/201206244875" target="_blank" title="تواصل مع شهاب طارق صلاح عبر واتساب" aria-label="تواصل مع شهاب طارق صلاح عبر واتساب"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="https://www.instagram.com/shehab_tarek1?igsh=c282OXltYXNuazc0" target="_blank" title="حساب شهاب طارق صلاح على انستجرام"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.facebook.com/share/1Cg3HN4uMZ/" target="_blank" title="حساب شهاب طارق صلاح على فيسبوك"><i class="fa-brands fa-facebook"></i></a>
+            <a href="https://www.tiktok.com/@shehab_tarek_1?_r=1&_t=ZS-964Le6R1we7" target="_blank" title="حساب شهاب طارق صلاح على تيك توك"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://wa.me/201206244875" target="_blank" title="تواصل مع شهاب طارق صلاح عبر واتساب"><i class="fa-brands fa-whatsapp"></i></a>
         </div>
     </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, setDoc, updateDoc, increment, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        /* تحديث الاستيرادات هنا لإضافة المسرّع (الكاش) و limit */
+        import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, onSnapshot, addDoc, doc, getDoc, setDoc, updateDoc, increment, query, where, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getDatabase, ref, onValue, onDisconnect, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
 
@@ -477,22 +478,21 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        
+        /* تفعيل المُسرع: استبدال getFirestore بـ initializeFirestore مع الكاش المحلي */
+        const db = initializeFirestore(app, {
+            localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
+        });
+
         const rtdb = getDatabase(app); 
 
-        // --- الكود الجديد لتسجيل الـ Service Worker تلقائياً بمجرد فتح الموقع ---
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/firebase-messaging-sw.js')
-                .then((registration) => {
-                    console.log('تم تسجيل Service Worker بنجاح:', registration.scope);
-                })
-                .catch((error) => {
-                    console.error('فشل تسجيل Service Worker:', error);
-                });
+                .then((registration) => { console.log('تم تسجيل Service Worker بنجاح'); })
+                .catch((error) => { console.error('فشل تسجيل Service Worker:', error); });
             });
         }
-        // ------------------------------------------------------------------------
 
         window.products =[];
         window.admins = {}; 
@@ -645,7 +645,12 @@
             }
         }
 
-        const activeProductsQuery = query(collection(db, "ghosn_products"), where("hidden", "==", false));
+        /* تعديل المسرّع: تحديد جلب أحدث 200 منتج فقط لتوفير التكلفة والرامات */
+        const activeProductsQuery = query(
+            collection(db, "ghosn_products"), 
+            where("hidden", "==", false),
+            limit(200) /* يمنع انهيار الهاتف في حالة وجود آلاف المنتجات */
+        );
 
         onSnapshot(activeProductsQuery, (querySnapshot) => {
             window.products = querySnapshot.docs.map(doc => ({ id: doc.id, firebaseId: doc.id, ...doc.data() }));
@@ -888,14 +893,15 @@
             let genderBadge = p.targetGender ? `<span class="card-gender-badge">${p.targetGender}</span>` : '';
             let typeText = `<span class="card-type-text">النوع: ${p.subType ? p.subType : p.category}</span>`;
 
+            /* تم إضافة dir="auto" هنا لحل مشكلة اتجاه النصوص */
             return `
                 <a href="/p/${p.shortCode}" class="inner-product-card" onclick="event.preventDefault(); openProduct('${p.id}')" style="text-decoration: none; color: inherit; display: block;">
                     ${discountBadge}
                     <div class="share-icon" onclick="event.preventDefault(); shareProduct(event, '${p.id}')" title="مشاركة المنتج"><i class="fa-solid fa-share-nodes"></i></div>   
-<div class="img-container"><img src="${displayImg}" alt="${p.name} - كود ${p.shortCode}" class="${imgClass}" loading="lazy" decoding="async">${outOfStockBadge}</div>
+                    <div class="img-container"><img src="${displayImg}" alt="${p.name} - كود ${p.shortCode}" class="${imgClass}" loading="lazy" decoding="async">${outOfStockBadge}</div>
                     <div class="card-info">
                         <div class="title-price-row">
-                            <h3>${p.name}</h3>
+                            <h3 dir="auto">${p.name}</h3>
                             <span class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-weight: normal;">ج.م</span></span>
                         </div>
                         <div class="card-type-row">
@@ -903,7 +909,7 @@
                             <div>${genderBadge}</div>
                         </div>
                         ${colorCirclesHTML}
-                        <p class="card-desc-snippet">${p.description}</p>
+                        <p class="card-desc-snippet" dir="auto">${p.description}</p>
                     </div>
                 </a>
             `;
@@ -1129,7 +1135,7 @@
 
             const profileContent = document.getElementById('profile-content');
             document.getElementById('profile-products-title').innerText = `منتجات المسوق: ${admin.name}`;
-            let bioHtml = admin.bio ? `<div style="width: 100%; margin-top: 5px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; white-space: pre-wrap;">${admin.bio}</div>` : '';
+            let bioHtml = admin.bio ? `<div style="width: 100%; margin-top: 5px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; white-space: pre-wrap;" dir="auto">${admin.bio}</div>` : '';
 
             profileContent.innerHTML = `
                 <div class="details-image-wrapper">
@@ -1383,7 +1389,7 @@
 
                     <div class="info-bar" style="align-items: flex-start;">
                         <div>
-                            <strong style="font-size:0.95rem; display:block; margin-bottom:5px;">${p.name}</strong> 
+                            <strong style="font-size:0.95rem; display:block; margin-bottom:5px;" dir="auto">${p.name}</strong> 
                             <span style="color:var(--accent); font-weight:bold; font-size:1.1rem;">${p.price} ج.م</span>
                         </div>
                         <div style="text-align: left; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
@@ -1397,7 +1403,7 @@
 
                     <div class="options-section">
                         <div style="font-weight:bold; font-size:0.9rem; color:var(--text-dark); margin-bottom: 8px;"><i class="fa-solid fa-file-lines" style="color:var(--accent);"></i> تفاصيل المنتج:</div>
-                        <p style="font-size:0.85rem; color:var(--text-muted); line-height: 1.6; margin: 0; white-space: pre-wrap;">${p.description}</p>
+                        <p style="font-size:0.85rem; color:var(--text-muted); line-height: 1.6; margin: 0; white-space: pre-wrap;" dir="auto">${p.description}</p>
                     </div>
 
                     ${publisherBarHTML}
@@ -1520,7 +1526,7 @@
                 <div class="info-bar" style="margin-bottom:12px; padding: 10px;">
                     <img src="${displayImg}" style="width:50px; height:50px; border-radius:10px; object-fit:cover; border: 1px solid var(--border-light);">
                     <div style="flex:1; margin: 0 12px;">
-                        <strong style="font-size:0.9rem;">${item.name}</strong><br>
+                        <strong style="font-size:0.9rem;" dir="auto">${item.name}</strong><br>
                         <small style="color:var(--text-muted); font-size:0.75rem;">${item.selColor ? `لون: ${item.selColor} | ` : ''}${item.selSize ? `مقاس: ${item.selSize} | ` : ''}<strong style="color:var(--bg-dark-blue)">العدد: ${item.selQty}</strong></small><br>
                         <span style="color:var(--accent); font-weight:bold; font-size:0.85rem;">${itemTotal} ج.م</span>
                     </div>
@@ -1750,7 +1756,6 @@
             `).join('');
         }
 
-        // تم التعديل هنا لربط الدالة وإظهار/إخفاء الزر بناءً على الصلاحيات
         window.toggleNotificationBox = async function(e) {
             if(e) e.stopPropagation(); 
 
@@ -1761,9 +1766,9 @@
 
                 const btn = document.getElementById('enable-notifications-btn');
                 if ('Notification' in window && Notification.permission === 'granted') {
-                    if (btn) btn.style.display = 'none'; // إخفاء الزر لو الصلاحية موجودة مسبقاً
+                    if (btn) btn.style.display = 'none';
                 } else if (btn) {
-                    btn.style.display = 'block'; // إظهاره لو لم يوافق العميل بعد
+                    btn.style.display = 'block';
                 }
 
                 if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
@@ -1784,7 +1789,6 @@
             if(box) box.classList.remove('show');
         }
 
-        // الدالة الجديدة المربوطة بالـ window
         window.requestNotificationPermission = async function() {
             try {
                 const btn = document.getElementById('enable-notifications-btn');
