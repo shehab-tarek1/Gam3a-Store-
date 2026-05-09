@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم | gam3a store</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- مكتبة قص الصور -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
@@ -340,8 +340,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        // تم إضافة onSnapshot لعمل تحديث لحظي للبيانات
-        import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // تم إضافة query و where هنا لفلترة المنتجات بذكاء
+        import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, setDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -414,7 +414,7 @@
             window.currentCropIndex = index;
             const item = window.productImages[index];
             const img = document.getElementById('cropper-image');
-            
+
             img.crossOrigin = "anonymous"; 
 
             if (item instanceof File) {
@@ -428,7 +428,7 @@
                 }
                 img.src = rawUrl;
             }
-            
+
             document.getElementById('cropper-modal').style.display = 'flex';
 
             if(window.currentCropper) window.currentCropper.destroy();
@@ -444,7 +444,7 @@
                 });
             }
         }
-                 
+
         window.closeCropper = function() {
             document.getElementById('cropper-modal').style.display = 'none';
             if(window.currentCropper) window.currentCropper.destroy();
@@ -547,7 +547,6 @@
             document.querySelectorAll('.mini-select-list').forEach(el => el.classList.remove('show'));
         }
 
-        // تم إضافة الأقسام الجديدة وتحديث القديمة المنسية
         const categorySubTypes = {
             "ملابس رجالي":["تيشرت", "قميص", "بولو", "سويت شيرت", "هودي", "جاكيت", "بلوفر", "بنطلون جينز", "بنطلون جابردين", "سويت بانتس", "شورت", "طقم كامل", "ملابس داخلية", "ملابس سباحة"],
             "ملابس حريمي":["تيشرت", "بلوزة", "قميص", "فستان", "عباية", "جيبة", "سويت شيرت", "هودي", "جاكيت", "كارديجان", "بنطلون جينز", "بنطلون قماش", "ليجن", "طقم كامل", "ملابس داخلية", "ملابس سباحة"],
@@ -644,7 +643,7 @@
 
             window.productImages.forEach((item, index) => {
                 let url = item instanceof File ? URL.createObjectURL(item) : window.optimizeImage(item, 100);
-                
+
                 let borderStyle = window.productCropData[index] ? "3px solid #2ecc71" : "1px solid var(--border-light)";
 
                 let selectedColor = '';
@@ -684,7 +683,7 @@
             });
         }
 
-        // دالة إعداد التحديث اللحظي بدلاً من الجلب لمرة واحدة
+        // دالة إعداد التحديث اللحظي (تم إصلاحها لتقليل استهلاك البيانات)
         function setupRealtimeListeners() {
             // 1. التحديث اللحظي لبيانات المسوقين
             unsubscribeAdmins = onSnapshot(collection(db, "gam3a_admins"), (snapshot) => {
@@ -702,21 +701,25 @@
                         window.currentUserShortCode = data.shortCode;
                     }
                 });
-                
+
                 // تحديث واجهة المنتجات إذا كانت محملة بالفعل لتعكس تغييرات صورة/اسم المسوق
                 if (window.products.length > 0) window.renderAdminProducts();
             });
 
-            // 2. التحديث اللحظي للمنتجات
-            unsubscribeProducts = onSnapshot(collection(db, "ghosn_products"), (snapshot) => {
-                let allProducts = snapshot.docs.map(doc => ({ firebaseId: doc.id, ...doc.data() }));
-                const masterAdminId = "XIarwijEVRSX7S8HY3qZIedH5qW2";
+            // 2. التحديث اللحظي للمنتجات (الجزئية التي تم تعديلها هنا)
+            const masterAdminId = "XIarwijEVRSX7S8HY3qZIedH5qW2";
+            let productsQuery;
 
-                if (window.currentUserUid === masterAdminId) {
-                    window.products = allProducts;
-                } else {
-                    window.products = allProducts.filter(p => p.adminId === window.currentUserUid);
-                }
+            if (window.currentUserUid === masterAdminId) {
+                // إذا كان الماستر، اجلب كل المنتجات
+                productsQuery = collection(db, "ghosn_products");
+            } else {
+                // إذا كان مسوق عادي، اجلب منتجاته هو فقط عبر الـ query (يوفر 99% من استهلاك الرامات والفاتورة)
+                productsQuery = query(collection(db, "ghosn_products"), where("adminId", "==", window.currentUserUid));
+            }
+
+            unsubscribeProducts = onSnapshot(productsQuery, (snapshot) => {
+                window.products = snapshot.docs.map(doc => ({ firebaseId: doc.id, ...doc.data() }));
 
                 // ترتيب من الأحدث للأقدم
                 window.products.sort((a, b) => {
@@ -746,7 +749,7 @@
 
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('admin-content').style.display = 'block';
-                
+
                 // تشغيل المراقب اللحظي
                 setupRealtimeListeners();
             } else {
@@ -754,7 +757,7 @@
                 window.currentUserShortCode = null;
                 document.getElementById('login-screen').style.display = 'flex';
                 document.getElementById('admin-content').style.display = 'none';
-                
+
                 // إيقاف المراقب اللحظي عند تسجيل الخروج لعدم استهلاك الموارد
                 if(unsubscribeProducts) unsubscribeProducts();
                 if(unsubscribeAdmins) unsubscribeAdmins();
@@ -983,7 +986,7 @@
             if (!price) { showToast("يرجى ملء حقل 'السعر'", "error"); return; }
             if (!category) { showToast("يرجى اختيار 'القسم'", "error"); return; }
             if (!qty) { showToast("يرجى ملء حقل 'الكمية المتاحة بالمخزن'", "error"); return; }
-            
+
             if (!window.editingId && window.productImages.length === 0) { showToast("يرجى إرفاق 'صورة واحدة على الأقل'", "error"); return; }
 
             document.getElementById('btn-submit').style.display = 'none';
@@ -996,11 +999,11 @@
             try {
                 if (window.productImages.length > 0) {
                     loadingMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري معالجة ورفع الصور...';
-                    
+
                     for (let i = 0; i < window.productImages.length; i++) {
                         let item = window.productImages[i];
                         let url = "";
-                        
+
                         if (item instanceof File) {
                             url = await uploadToCloudinary(item);
                         } else {
@@ -1132,7 +1135,7 @@
             document.getElementById('p-isOffer').checked = false; document.getElementById('p-discount').value = '';
             document.getElementById('p-whatsapp').value = '';
             document.getElementById('image-preview-container').innerHTML = '';
-            
+
             window.productImages =[];
             window.productCropData = {};
 
