@@ -1635,37 +1635,47 @@ if(p.whatsapp) {
         const messaging = getMessaging(app);
 
         async function requestNotificationPermission() {
-            try {
-                // تسجيل الـ Service Worker
-                if ('serviceWorker' in navigator) {
-                    await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-                }
+    try {
+        if ('serviceWorker' in navigator) {
+            // انتظر حتى يتم تسجيل الـ Service Worker بالكامل
+            const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+            console.log('Service Worker registered!');
 
-                // طلب الإذن من المستخدم
-                const permission = await Notification.requestPermission();
-                
-                if (permission === 'granted') {
-                    // جلب التوكن باستخدام مفتاح VAPID الخاص بك
-                    const currentToken = await getToken(messaging, { 
-                        vapidKey: 'eXdgudoB2fXLs-PmqEgExsyZqEE_BP3071qYONhUH2U' 
-                    });
+            // طلب الإذن
+            const permission = await Notification.requestPermission();
+            
+            if (permission === 'granted') {
+                // التأكد من أن الـ Service Worker في حالة نشطة تماماً
+                await navigator.serviceWorker.ready;
 
-                    if (currentToken) {
-                        // حفظ التوكن في قاعدة البيانات
-                        const tokenRef = doc(db, "fcm_tokens", currentToken);
-                        await setDoc(tokenRef, {
-                            token: currentToken,
-                            device: navigator.userAgent,
-                            createdAt: Date.now()
-                        }, { merge: true });
-                        
-                        localStorage.setItem('fcm_token_saved', 'true');
-                    }
+                // جلب التوكن
+                const currentToken = await getToken(messaging, { 
+                    vapidKey: 'BMWdIiAsx9-L-msgleE9e19DVCXKtst9Bs0T4VHtaaUTddKOMSpjHImOmC9i980_rffeE061vi-jxWlqpGISArU',
+                    serviceWorkerRegistration: registration // تمرير الـ registration هنا يحل مشاكل كثيرة
+                });
+
+                if (currentToken) {
+                    console.log("Token generated:", currentToken);
+                    
+                    // حفظ التوكن في Firestore
+                    const tokenRef = doc(db, "fcm_tokens", currentToken);
+                    await setDoc(tokenRef, {
+                        token: currentToken,
+                        device: navigator.userAgent,
+                        createdAt: Date.now()
+                    }, { merge: true });
+                    
+                    localStorage.setItem('fcm_token_saved', 'true');
+                    console.log("Token saved to Firestore!");
+                } else {
+                    console.warn('No registration token available.');
                 }
-            } catch (error) {
-                console.error('خطأ في تفعيل الإشعارات:', error);
             }
         }
+    } catch (error) {
+        console.error('خطأ في تفعيل الإشعارات:', error);
+    }
+}
 
         // استقبال الإشعارات والموقع مفتوح (في الواجهة)
         onMessage(messaging, (payload) => {
