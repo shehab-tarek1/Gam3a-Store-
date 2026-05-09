@@ -38,7 +38,7 @@ self.addEventListener('notificationclick', function(event) {
 
 // --- نظام تسريع الموقع (Caching) ---
 // قم بتغيير رقم الإصدار هنا (مثلاً v2) كلما قمت بتحديث كبير في ملفات HTML/CSS
-const CACHE_NAME = 'gam3a-store-cache-v1'; 
+const CACHE_NAME = 'gam3a-store-cache-v2'; // قمنا بتغييره لـ v2 لفرض التحديث
 const STATIC_ASSETS =[
     '/',
     '/index.html',
@@ -83,7 +83,13 @@ self.addEventListener('fetch', (event) => {
 
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
-            const fetchPromise = fetch(event.request).then((networkResponse) => {
+            // إذا وجدنا الملف في الكاش، نعرضه
+            if (cachedResponse) {
+                return cachedResponse;
+            }
+
+            // إذا لم يكن في الكاش، نحاول جلبه من الإنترنت
+            return fetch(event.request).then((networkResponse) => {
                 // التأكد من أن الاستجابة صالحة قبل تخزينها
                 if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
                     const responseToCache = networkResponse.clone();
@@ -93,12 +99,12 @@ self.addEventListener('fetch', (event) => {
                 }
                 return networkResponse;
             }).catch(() => {
-                // في حالة انقطاع الإنترنت، نعتمد كلياً على الكاش
-                return cachedResponse;
+                // 🌟 الحل الجوهري لـ PWABuilder 🌟
+                // في حالة انقطاع الإنترنت وفشل جلب الصفحة المطلوبة، نعرض الصفحة الرئيسية المخزنة كبديل
+                if (event.request.mode === 'navigate') {
+                    return caches.match('/'); 
+                }
             });
-
-            // نعرض الكاش فوراً (إن وُجد) لسرعة العرض، بينما يتم جلب الأحدث في الخلفية
-            return cachedResponse || fetchPromise; 
         })
     );
 });
