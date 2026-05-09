@@ -16,13 +16,12 @@ const messaging = firebase.messaging();
 
 // استقبال الإشعارات والموقع مغلق (في الخلفية)
 messaging.onBackgroundMessage(function(payload) {
-    console.log('[firebase-messaging-sw.js] Received background message ', payload);
+    console.log('[SW] Received background message ', payload);
     const notificationTitle = payload.notification?.title || "إشعار جديد من متجر الجامعة";
     const notificationOptions = {
         body: payload.notification?.body,
         icon: '/icon-192x192.png',
         badge: '/icon-144x144.png',
-        // توجيه المستخدم للموقع عند الضغط على الإشعار
         data: { click_action: 'https://gam3a-store.vercel.app/' } 
     };
     self.registration.showNotification(notificationTitle, notificationOptions);
@@ -36,10 +35,12 @@ self.addEventListener('notificationclick', function(event) {
     );
 });
 
-// --- نظام تسريع الموقع (Caching) ---
-// قم بتغيير رقم الإصدار هنا (مثلاً v2) كلما قمت بتحديث كبير في ملفات HTML/CSS
-const CACHE_NAME = 'gam3a-store-cache-v2';
-const STATIC_ASSETS = [
+// --- نظام تسريع الموقع المتقدم (Advanced Caching) ---
+const STATIC_CACHE = 'gam3a-static-v3'; // للملفات الأساسية
+const DYNAMIC_IMAGE_CACHE = 'gam3a-images-v1'; // لصور المنتجات
+const MAX_CACHED_IMAGES = 150; // الحد الأقصى للصور في الكاش (لحماية رامات ومساحة الهاتف)
+
+const STATIC_ASSETS =[
     '/',
     '/index.html',
     '/privacy.html',
@@ -49,63 +50,87 @@ const STATIC_ASSETS = [
     '/icon-512x512.png'
 ];
 
-// 1. حفظ الملفات الأساسية عند التثبيت
+// دالة ذكية لحذف الصور القديمة إذا زادت عن الحد الأقصى
+const limitCacheSize = (name, size) => {
+    caches.open(name).then(cache => {
+        cache.keys().then(keys => {
+            if (keys.length > size) {
+                cache.delete(keys[0]).then(() => limitCacheSize(name, size));
+            }
+        });
+    });
+};
+
+// 1. التثبيت
 self.addEventListener('install', (event) => {
-    self.skipWaiting(); // يجبر المتصفح على تفعيل النسخة الجديدة فوراً
+    self.skipWaiting();
     event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
+        caches.open(STATIC_CACHE).then((cache) => cache.addAll(STATIC_ASSETS))
     );
 });
 
-// 2. مسح الكاش القديم عند تفعيل إصدار جديد (مهم جداً لكي لا يعلق الموقع على نسخة قديمة)
+// 2. التفعيل ومسح الكاش القديم
 self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME) {
-                        console.log('حذف الكاش القديم:', cacheName);
-                        return caches.delete(cacheName);
-                    }
-                })
+        caches.keys().then(keys => {
+            return Promise.all(keys
+                .filter(key => key !== STATIC_CACHE && key !== DYNAMIC_IMAGE_CACHE)
+                .map(key => caches.delete(key))
             );
         })
     );
-    self.clients.claim(); // السيطرة على كل الصفحات المفتوحة وتطبيق التحديث
+    self.clients.claim();
 });
 
-// 3. جلب الملفات من الكاش لتسريع الموقع، وتحديثها في الخلفية
+// 3. معالجة الطلبات (السر الحقيقي للأداء)
 self.addEventListener('fetch', (event) => {
-    // استثناء طلبات قاعدة البيانات، و إحصائيات جوجل، وأي طلب غير GET
-    if (event.request.method !== 'GET' || 
-        event.request.url.includes('firestore.googleapis.com') ||
-        event.request.url.includes('google-analytics.com')) {
+    const req = event.request;
+    const url = req.url;
+
+    // استثناء طلبات قواعد البيانات، الفيديوهات، والـ API (لا تقم بتخزينها أبداً)
+    if (req.method !== 'GET' || 
+        url.includes('firestore.googleapis.com') || 
+        url.includes('firebaseio.com') || 
+        url.includes('google-analytics.com') ||
+        url.endsWith('.mp4')) {
         return;
     }
 
-    event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            // إذا وجدنا الملف في الكاش، نعرضه
-            if (cachedResponse) {
-                return cachedResponse;
-            }
+    // --- استراتيجية 1: لصور المنتجات (Cloudinary & Pexels) ---
+    // Cache First, Fallback to Network
+    if (url.includes('res.cloudinary.com') || url.includes('images.pexels.com') || req.destination === 'image') {
+        event.respondWith(
+            caches.match(req).then(cachedRes => {
+                return cachedRes || fetch(req).then(networkRes => {
+                    // التأكد من أن الصورة صالحة (حتى لو كانت Cross-Origin)
+                    if (networkRes && (networkRes.status === 200 || networkRes.status === 0)) {
+                        const responseClone = networkRes.clone();
+                        caches.open(DYNAMIC_IMAGE_CACHE).then(cache => {
+                            cache.put(req, responseClone);
+                            limitCacheSize(DYNAMIC_IMAGE_CACHE, MAX_CACHED_IMAGES); // تطبيق حد الرامات
+                        });
+                    }
+                    return networkRes;
+                });
+            })
+        );
+        return;
+    }
 
-            // إذا لم يكن في الكاش، نحاول جلبه من الإنترنت
-            return fetch(event.request).then((networkResponse) => {
-                // التأكد من أن الاستجابة صالحة قبل تخزينها
-                if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-                    const responseToCache = networkResponse.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, responseToCache);
-                    });
-                }
-                return networkResponse;
-            }).catch(() => {
-                // 🌟 الحل الجوهري لـ PWABuilder 🌟
-                // في حالة انقطاع الإنترنت وفشل جلب الصفحة المطلوبة، نعرض الصفحة الرئيسية المخزنة كبديل
-                if (event.request.mode === 'navigate') {
-                    return caches.match('/'); 
-                }
+    // --- استراتيجية 2: لملفات الموقع الأساسية (HTML) ---
+    // Network First, Fallback to Cache (ليحصل المستخدم على أحدث تعديلات برمجية دائماً)
+    event.respondWith(
+        fetch(req).then(networkRes => {
+            if (networkRes && networkRes.status === 200) {
+                const responseClone = networkRes.clone();
+                caches.open(STATIC_CACHE).then(cache => cache.put(req, responseClone));
+            }
+            return networkRes;
+        }).catch(() => {
+            // في حالة انقطاع الإنترنت، جلب الصفحة من الكاش
+            return caches.match(req).then(cachedRes => {
+                if (cachedRes) return cachedRes;
+                if (req.mode === 'navigate') return caches.match('/'); // صفحة الطوارئ
             });
         })
     );
