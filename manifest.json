@@ -1,7 +1,7 @@
 {
   "name": "Gam3a Store",
   "short_name": "Gam3a Store",
-  "description": "تم التطوير بواسطة شهاب طارق صلاح طالب بكلية التجارة جامعة الزقازيق",
+  "description": "المطور شهاب طارق صلاح طالب بكلية التجارة جامعة الزقازيق",
   "start_url": "/",
   "id": "622006",
   "display": "standalone",
@@ -11,16 +11,8 @@
   "dir": "rtl",
   "lang": "ar",
   "scope": "/",
-  "display_override": [
-    "window-controls-overlay",
-    "minimal-ui"
-  ],
-  "categories": [
-    "shopping",
-    "business",
-    "social",
-    "education"
-  ],
+  "categories": ["shopping", "business", "social", "education"],
+  "display_override": ["window-controls-overlay", "minimal-ui"],
   "icons": [
     {
       "src": "/icon-144x144.png",
@@ -44,24 +36,7 @@
     {
       "name": "سياسة الخصوصية",
       "url": "/privacy.html",
-      "icons": [
-        {
-          "src": "/icon-192x192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "شروط الاستخدام",
-      "url": "/terms.html",
-      "icons": [
-        {
-          "src": "/icon-192x192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
+      "icons": [{"src": "/icon-192x192.png", "sizes": "192x192"}]
     }
   ],
   "screenshots": [
@@ -70,26 +45,53 @@
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "واجهة التطبيق على الموبايل"
+      "label": "Mobile View"
     },
     {
       "src": "/screenshot-desktop.png",
       "sizes": "1920x1080",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "واجهة التطبيق على الكمبيوتر"
+      "label": "Desktop View"
     }
+  ],
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "file_handlers": [
+    {
+      "action": "/",
+      "accept": {
+        "text/*": [".txt"]
+      }
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+gam3a",
+      "url": "/?type=%s"
+    }
+  ],
+  "widgets": [
+    {
+      "name": "Gam3a Widget",
+      "description": "تابع عروض Gam3a Store",
+      "tag": "gam3a-widget",
+      "ms_ac_template": "widget-template.json",
+      "icons": [{"src": "/icon-192x192.png", "sizes": "192x192", "type": "image/png"}],
+      "screenshots": [{"src": "/screenshot-mobile.png", "sizes": "1080x1920", "label": "Widget View"}]
+    }
+  ],
+  "note_taking": {
+    "new_note_url": "/index.html"
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "scope_extensions": [
+    {"origin": "https://gam3a-store.vercel.app"}
   ],
   "prefer_related_applications": false,
   "related_applications": [],
-  "iarc_rating_id": "e5814b2d-e97c-47fc-9104-58a369bd6543",
-  "share_target": {
-    "action": "/share-target",
-    "method": "GET",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
-  }
+  "iarc_rating_id": "e5814b2d-e97c-47fc-9104-58a369bd6543"
 }
