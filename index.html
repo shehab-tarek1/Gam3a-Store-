@@ -409,8 +409,8 @@
             <p><i class="fa-solid fa-location-dot" style="color: var(--accent); margin-left: 5px;"></i> العنوان: الزقازيق</p>
             <p style="margin-top: 5px;"><i class="fa-solid fa-user-tie" style="color: var(--accent); margin-left: 5px;"></i> المطور: Shehab Tarek</p>
             <div style="margin-top: 10px; display: flex; justify-content: center; gap: 15px;">
-                <a href="privacy.html" style="color: #cbd5e1; text-decoration: none; border-bottom: 1px solid #cbd5e1;">سياسة الخصوصية</a>
-                <a href="terms.html" style="color: #cbd5e1; text-decoration: none; border-bottom: 1px solid #cbd5e1;">شروط الاستخدام</a>
+                <a href="privacy.html" target="_blank" style="color: #cbd5e1; text-decoration: none; border-bottom: 1px solid #cbd5e1;">سياسة الخصوصية</a>
+                <a href="terms.html" target="_blank" style="color: #cbd5e1; text-decoration: none; border-bottom: 1px solid #cbd5e1;">شروط الاستخدام</a>
             </div>
         </div>
 
@@ -565,9 +565,35 @@
                 if (path.startsWith('/p/')) sharedCode = path.replace('/p/', '').split('/')[0];
                 if (path.startsWith('/m/')) marketerCode = path.replace('/m/', '').split('/')[0];
 
-                window.safeReplaceState('home', "/");
-
                 if (sharedCode) {
+                    const targetProduct = window.products.find(x => String(x.shortCode) === String(sharedCode));
+                    if (targetProduct) {
+                        window.historyStack =['home', 'details'];
+                        window.safeReplaceState('details', `/p/${sharedCode}`);
+                        try {
+                            window.openProduct(targetProduct.id, false);
+                            return;
+                        } catch(e) { console.error(e); }
+                    }
+                } else if (marketerCode) {
+                    let targetAdminId = null;
+                    for (const [uid, adminData] of Object.entries(window.admins)) {
+                        if (String(adminData.shortCode) === String(marketerCode)) {
+                            targetAdminId = uid;
+                            break;
+                        }
+                    }
+                    if (targetAdminId) {
+                        window.historyStack = ['home', 'profile'];
+                        window.safeReplaceState('profile', `/m/${marketerCode}`);
+                        try {
+                            window.openProfile(targetAdminId, false);
+                            return;
+                        } catch(e) { console.error(e); }
+                    }
+                }
+
+                window.resetAndNavigate('home');
                     const targetProduct = window.products.find(x => String(x.shortCode) === String(sharedCode));
                     if (targetProduct) {
                         window.historyStack = ['home', 'details'];
@@ -664,10 +690,10 @@
             window.navigateUI(pageId);
         }
 
-        window.navigate = function(pageId, pushToHistory = true) {
+        window.navigate = function(pageId, pushToHistory = true, url = "/") {
             if(pushToHistory && window.historyStack[window.historyStack.length - 1] !== pageId) {
                 window.historyStack.push(pageId);
-                window.safePushState(pageId, "/");
+                window.safePushState(pageId, url);
             }
             window.navigateUI(pageId);
         }
@@ -730,11 +756,19 @@
             if(pageId === 'home') window.renderHomeSlider();
             if(pageId === 'cart') window.renderCart();
 
-            // تفريغ الرامات من صور المنتج لو العميل خرج للرئيسية أو الأقسام أو السلة
-            if (pageId === 'home' || pageId === 'category' || pageId === 'cart') {
+            // تفريغ الرامات من صور المنتج لو العميل خرج للرئيسية أو الأقسام فقط (استثنينا السلة)
+            if (pageId === 'home' || pageId === 'category') {
                 const detailsContent = document.getElementById('product-details-content');
                 if (detailsContent) {
-                    detailsContent.innerHTML = ''; // تدمير الصور والبيانات القديمة
+                    detailsContent.innerHTML = ''; 
+                }
+            }
+
+            // إعادة بناء صفحة المنتج فوراً إذا تم تفريغها مسبقاً والمستخدم ضغط رجوع
+            if (pageId === 'details' && window.currentViewedProductId) {
+                const detailsContent = document.getElementById('product-details-content');
+                if (detailsContent && detailsContent.innerHTML.trim() === '') {
+                    window.openProduct(window.currentViewedProductId, false);
                 }
             }
 
@@ -742,10 +776,7 @@
 
         window.goBackSafe = function() {
             if (window.historyStack.length > 1) {
-                window.historyStack.pop(); 
-                let previousPage = window.historyStack[window.historyStack.length - 1]; 
-                window.navigateUI(previousPage, true);
-                window.safeReplaceState(previousPage, "/"); 
+                window.history.back(); // هذا يجعل المتصفح يرجع خطوة للخلف ويحافظ على الرابط الصحيح
             } else {
                 window.resetAndNavigate('home');
             }
@@ -1128,7 +1159,7 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
             const loader = document.getElementById('profile-loader');
             container.innerHTML = '';
 
-            if (pushHistory) window.navigate('profile');
+            if (pushHistory) window.navigate('profile', true, `/m/${admin.shortCode}`);
             else window.navigateUI('profile');
 
             setTimeout(() => {
@@ -1384,7 +1415,7 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
                     ${orderSectionHTML}
                 `;
             }
-            if(pushToHistory) window.navigate('details');
+            if(pushToHistory) window.navigate('details', true, `/p/${p.shortCode}`);
             else window.navigateUI('details');
         }
 
