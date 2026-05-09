@@ -2,6 +2,7 @@ module.exports = async (req, res) => {
     const type = req.query.type;
     const code = req.query.code;
 
+    // إخبار المتصفح/الكاش أن النتيجة تعتمد على نوع الزائر (بوت أو إنسان)
     res.setHeader('Vary', 'User-Agent');
 
     if (!code) {
@@ -10,21 +11,23 @@ module.exports = async (req, res) => {
     }
 
     const userAgent = (req.headers['user-agent'] || '').toLowerCase();
-    const isBot = /bot|facebook|whatsapp|telegram|viber|skype|twitter|discord|linkedin/i.test(userAgent);
+    // توسيع قائمة البوتات لضمان عمل المشاركة على جميع المنصات
+    const isBot = /bot|facebook|whatsapp|telegram|viber|skype|twitter|discord|linkedin|slack|pinterest|applebot/i.test(userAgent);
 
+    // توجيه الزوار العاديين فوراً لتطبيق الموقع الأساسي
     if (!isBot) {
         const redirectUrl = type === 'product' ? `/?p=${code}` : `/?m=${code}`;
         res.writeHead(302, { 'Location': redirectUrl, 'Cache-Control': 'no-store' });
         return res.end();
     }
 
+    // إعدادات جلب البيانات من فايربيز (للبوتات فقط)
     const projectId = 'marketing-e9fdf';
     const collectionName = type === 'product' ? 'ghosn_products' : 'gam3a_admins';
 
     const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents:runQuery`;
 
     try {
-
         const response = await fetch(firestoreUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -54,191 +57,136 @@ module.exports = async (req, res) => {
         let title, desc, imageUrl, siteUrl;
 
         if (type === 'product') {
-
             // عنوان المنتج
             title = fields.name?.stringValue || 'gam3a store';
 
-            const price =
-                fields.price?.integerValue ||
-                fields.price?.doubleValue ||
-                '';
-
+            const price = fields.price?.integerValue || fields.price?.doubleValue || '';
             if (price) {
                 title += ` | ${price} ج.م`;
             }
 
-            title += ` | ك: ${code}`;
+            title += ` | كود: ${code}`;
 
             // وصف المنتج
-            let productDesc =
-                fields.description?.stringValue ||
-                'تسوق أحدث المنتجات.';
+            let productDesc = fields.description?.stringValue || 'تشكيلة رائعة بأفضل الأسعار. تسوق الآن من gam3a store.';
 
             // رقم التواصل
-            let phone =
-                fields.whatsapp?.stringValue || '';
+            let phone = fields.whatsapp?.stringValue || '';
+            let adminId = fields.adminId?.stringValue || '';
 
-            let adminId =
-                fields.adminId?.stringValue || '';
-
-            // لو مفيش رقم خاص بالمنتج
+            // جلب رقم المسوق إذا لم يكن هناك رقم مخصص للمنتج
             if (!phone && adminId) {
                 try {
-
-                    const adminUrl =
-                        `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/gam3a_admins/${adminId}`;
-
+                    const adminUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/gam3a_admins/${adminId}`;
                     const adminRes = await fetch(adminUrl);
-
                     const adminData = await adminRes.json();
-
-                    phone =
-                        adminData.fields?.phone?.stringValue || '';
-
+                    phone = adminData.fields?.phone?.stringValue || '';
                 } catch (e) {
                     console.error('Error fetching admin phone:', e);
                 }
             }
 
-            // رقم افتراضي
+            // رقم المتجر الافتراضي
             if (!phone) {
                 phone = '201206244875';
             }
 
-            // تحويل 20 -> 0
+            // تحويل 20 إلى 0 لتنسيق الرقم المصري محلياً
             if (phone.startsWith('20')) {
                 phone = '0' + phone.substring(2);
             }
 
-            // الوصف النهائي
-            desc = `الوصف: ${productDesc}\n\nللطلب تواصل مع: ${phone}`;
+            desc = `الوصف: ${productDesc}\n\nللطلب تواصل واتساب على: ${phone}`;
 
             // الصورة
-            imageUrl =
-                fields.images?.arrayValue?.values?.[0]?.stringValue ||
-                fields.img?.stringValue ||
-                '';
-
+            imageUrl = fields.images?.arrayValue?.values?.[0]?.stringValue || fields.img?.stringValue || '';
             siteUrl = `https://${req.headers.host}/p/${code}`;
 
         } else {
-
             // بروفايل المسوق
-            title =
-                `معرض منتجات المسوق: ${fields.name?.stringValue || 'gam3a store'}`;
+            title = `منتجات المسوق: ${fields.name?.stringValue || 'gam3a store'}`;
 
-            let phone =
-                fields.phone?.stringValue || '';
-
+            let phone = fields.phone?.stringValue || '';
             if (phone.startsWith('20')) {
                 phone = '0' + phone.substring(2);
             }
 
-            const bio =
-                fields.bio?.stringValue || '';
+            const bio = fields.bio?.stringValue || '';
+            desc = bio ? `${bio}\n\nللتواصل واتساب: ${phone}` : `للتواصل واتساب: ${phone}`;
 
-            desc = bio
-                ? `${bio}\n\nللتواصل: ${phone}`
-                : `للتواصل: ${phone}`;
-
-            imageUrl =
-                fields.image?.stringValue || '';
-
+            imageUrl = fields.image?.stringValue || '';
             siteUrl = `https://${req.headers.host}/m/${code}`;
         }
 
-        // تحسين صور Cloudinary + دعم crop
-        if (imageUrl.includes('cloudinary.com')) {
-
-            // استخراج crop من الرابط
-            const cropMatch =
-                imageUrl.match(/#crop=([^&]+)/);
-
+        // --- تحسين صور Cloudinary ودعم القص (Crop) بشكل آمن 100% ---
+        if (imageUrl.includes('res.cloudinary.com') && imageUrl.includes('/upload/')) {
             let cropTransform = '';
+            let cleanUrl = imageUrl;
 
-            // لو فيه crop محفوظ
-            if (cropMatch && cropMatch[1]) {
-                cropTransform =
-                    `c_crop,${cropMatch[1]}/`;
+            // لو فيه crop محفوظ من الفرونت إند
+            if (imageUrl.includes('#crop=')) {
+                const parts = imageUrl.split('#crop=');
+                cleanUrl = parts[0];
+                cropTransform = 'c_crop,' + parts[1] + '/';
             }
 
-            // حذف #crop من الرابط
-            imageUrl =
-                imageUrl.split('#')[0];
+            let parts = cleanUrl.split('/upload/');
+            let rawEnd = parts[1];
+            
+            // تنظيف الرابط من أي فلاتر قديمة للحفاظ على جودة واسم الصورة
+            let versionMatch = rawEnd.match(/(v\d+\/.*)/);
+            if (versionMatch) {
+                rawEnd = versionMatch[1]; 
+            } else {
+                let splitSlash = rawEnd.split('/');
+                rawEnd = splitSlash[splitSlash.length - 1]; 
+            }
 
-            // تطبيق التحويلات الجديدة
-            imageUrl = imageUrl.replace(
-                /\/upload\/(?:[a-zA-Z0-9_,-]+\/)?/,
-                `/upload/${cropTransform}w_900,q_auto,f_auto/`
-            );
+            // تجميع الرابط الجديد للبوتات بجودة واضحة وبحجم مناسب لـ Open Graph (1200x630 هو الحجم القياسي)
+            imageUrl = `${parts[0]}/upload/${cropTransform}c_limit,w_1200,q_auto,f_auto/${rawEnd}`;
         }
 
         const botHtml = `
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-
-<meta charset="UTF-8">
-
-<title>${title}</title>
-
-<meta property="og:type" content="website" />
-
-<meta property="og:title" content="${title}" />
-
-<meta property="og:description" content="${desc}" />
-
-<meta property="og:image" content="${imageUrl}" />
-
-<meta property="og:image:secure_url" content="${imageUrl}" />
-
-<meta property="og:image:type" content="image/jpeg" />
-
-<meta property="og:image:width" content="900" />
-
-<meta property="og:image:height" content="900" />
-
-<meta property="og:site_name" content="Ghosn STORE" />
-
-<meta property="og:url" content="${siteUrl}" />
-
-<meta name="twitter:card" content="summary_large_image" />
-
-<meta name="twitter:title" content="${title}" />
-
-<meta name="twitter:description" content="${desc}" />
-
-<meta name="twitter:image" content="${imageUrl}" />
-
+    <meta charset="UTF-8">
+    <title>${title}</title>
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="${title}" />
+    <meta property="og:description" content="${desc}" />
+    <meta property="og:image" content="${imageUrl}" />
+    <meta property="og:image:secure_url" content="${imageUrl}" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="gam3a store" />
+    <meta property="og:url" content="${siteUrl}" />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${title}" />
+    <meta name="twitter:description" content="${desc}" />
+    <meta name="twitter:image" content="${imageUrl}" />
 </head>
-<body></body>
+<body>
+    <script>
+        // إعادة توجيه إضافية في حال فتح البوت للصفحة بالخطأ
+        window.location.href = "${type === 'product' ? `/?p=${code}` : `/?m=${code}`}";
+    </script>
+</body>
 </html>
 `;
 
-        res.setHeader(
-            'Content-Type',
-            'text/html; charset=utf-8'
-        );
-
-        res.setHeader(
-            'Cache-Control',
-            'public, max-age=3600'
-        );
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        // كاش للبوتات لمدة ساعة لتخفيف الضغط على قاعدة البيانات
+        res.setHeader('Cache-Control', 'public, max-age=3600'); 
 
         return res.status(200).send(botHtml);
 
     } catch (error) {
-
-        console.error(
-            'Share preview error:',
-            error
-        );
-
-        res.writeHead(302, {
-            'Location': '/',
-            'Cache-Control': 'no-store'
-        });
-
+        console.error('Share preview error:', error);
+        res.writeHead(302, { 'Location': '/', 'Cache-Control': 'no-store' });
         return res.end();
     }
 };
