@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.vercel.gam3a_store.twa",
+        "sha256_cert_fingerprints": ["1A:6E:25:73:7C:D2:B5:0B:14:A4:77:D3:A8:8F:3C:A0:26:CD:62:A2:D9:89:AD:3A:61:84:13:74:2C:E0:5E:90"]
+      }
+    }]
