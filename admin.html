@@ -260,6 +260,7 @@
                             <i class="fa-solid fa-chevron-down"></i>
                         </div>
                         <div class="custom-select-list" id="cat-dropdown">
+                            <!-- الأقسام القديمة والجديدة -->
                             <div class="custom-select-item" onclick="selectAdminOption('p-category', 'cat-display', 'ملابس رجالي', true)">ملابس رجالي</div>
                             <div class="custom-select-item" onclick="selectAdminOption('p-category', 'cat-display', 'ملابس حريمي', true)">ملابس حريمي</div>
                             <div class="custom-select-item" onclick="selectAdminOption('p-category', 'cat-display', 'أحذية', true)">أحذية</div>
@@ -270,6 +271,8 @@
                             <div class="custom-select-item" onclick="selectAdminOption('p-category', 'cat-display', 'العناية الشخصية للحريم', true)">العناية الشخصية للحريم</div>
                             <div class="custom-select-item" onclick="selectAdminOption('p-category', 'cat-display', 'مستحضرات التجميل', true)">مستحضرات التجميل</div>
                             <div class="custom-select-item" onclick="selectAdminOption('p-category', 'cat-display', 'ادوات دراسية', true)">ادوات دراسية</div>
+                            <div class="custom-select-item" onclick="selectAdminOption('p-category', 'cat-display', 'مواد غذائية', true)">مواد غذائية</div>
+                            <div class="custom-select-item" onclick="selectAdminOption('p-category', 'cat-display', 'هدايا', true)">هدايا</div>
                             <div class="custom-select-item" onclick="selectAdminOption('p-category', 'cat-display', 'ادوات منزلية', true)">ادوات منزلية</div>
                             <div class="custom-select-item" onclick="selectAdminOption('p-category', 'cat-display', 'سكن الطلاب', true)">سكن الطلاب</div>
                         </div>
@@ -337,7 +340,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // تم إضافة onSnapshot لعمل تحديث لحظي للبيانات
+        import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -364,7 +368,11 @@
         window.currentUserUid = null; 
         window.currentUserShortCode = null; 
 
-        // --- نظام إدارة الصور المتقدم (جديد وقديم) ---
+        // متغيرات التحديث اللحظي
+        let unsubscribeProducts = null;
+        let unsubscribeAdmins = null;
+
+        // --- نظام إدارة الصور المتقدم ---
         window.productImages =[]; 
         window.productCropData = {}; 
         window.currentCropper = null;
@@ -412,7 +420,6 @@
             if (item instanceof File) {
                 img.src = URL.createObjectURL(item);
             } else {
-                // استدعاء الصورة الأصلية بالكامل (بدون تصغير) لضمان دقة القص
                 let rawUrl = item.split('#crop=')[0]; 
                 if(rawUrl.includes('/upload/')) {
                     let parts = rawUrl.split('/upload/');
@@ -428,7 +435,7 @@
 
             img.onload = function() {
                 window.currentCropper = new Cropper(img, {
-                    aspectRatio: 170 / 160, // نسبة مستطيل تتطابق مع مقاس البطاقة في الموقع
+                    aspectRatio: 170 / 160, 
                     viewMode: 1, 
                     dragMode: 'move',
                     autoCropArea: 1,
@@ -540,6 +547,7 @@
             document.querySelectorAll('.mini-select-list').forEach(el => el.classList.remove('show'));
         }
 
+        // تم إضافة الأقسام الجديدة وتحديث القديمة المنسية
         const categorySubTypes = {
             "ملابس رجالي":["تيشرت", "قميص", "بولو", "سويت شيرت", "هودي", "جاكيت", "بلوفر", "بنطلون جينز", "بنطلون جابردين", "سويت بانتس", "شورت", "طقم كامل", "ملابس داخلية", "ملابس سباحة"],
             "ملابس حريمي":["تيشرت", "بلوزة", "قميص", "فستان", "عباية", "جيبة", "سويت شيرت", "هودي", "جاكيت", "كارديجان", "بنطلون جينز", "بنطلون قماش", "ليجن", "طقم كامل", "ملابس داخلية", "ملابس سباحة"],
@@ -547,10 +555,14 @@
             "العناية الشخصية للرجال":["العناية بالوجه", "العناية بالشعر", "العناية بالجسم", "العناية باللحية", "الحلاقة وإزالة الشعر", "مزيلات العرق والعطور الشخصية"],
             "العناية الشخصية للحريم":["العناية بالوجه", "العناية بالشعر", "العناية بالجسم", "العناية بالبشرة", "العناية بالأظافر", "إزالة الشعر", "مزيلات العرق والعطور الشخصية"],
             "برفانات":["عطر ميني", "عطر فرنسي", "عطر شرقي", "عود", "بودي سبلاش"],
-            "أحذية":["رياضي", "كاجوال", "كلاسيك", "سليبر/شبشب", "بوت/هاف بوت"],
+            "أحذية":["رياضي", "كلاسيك", "كاجوال", "سليبر/شبشب", "بوت/هاف بوت"],
             "اكسسورات رجالي":["ساعات", "محفظة", "حزام", "سلسلة", "خاتم", "نظارة شمسية"],
             "اكسسورات حريمي":["حلق", "سلسلة", "إسورة", "خاتم", "شنط", "نظارة شمسية"],
-            "ادوات دراسية":["كراسات", "أقلام", "أدوات هندسية", "أدوات تنظيم", "شنط مدرسية"]
+            "ادوات دراسية":["كراسات","روايات"٫"أقلام", "أدوات هندسية", "أدوات تنظيم", "شنط مدرسية"],
+            "مواد غذائية":["خضروات", "فواكه", "لحوم ودواجن", "بقوليات", "معلبات", "ألبان وأجبان", "حلويات ومخبوزات", "مشروبات"],
+            "هدايا":["هدايا زواج", "هدايا خطوبة", "هدايا أعياد ميلاد", "هدايا أطفال", "هدايا تخرج", "هدايا عيد الحب", "بوكسات هدايا شاملة", "هدايا مخصصة"],
+            "ادوات منزلية":["أدوات مطبخ", "ديكورات", "مفروشات", "منظفات", "أجهزة كهربائية صغيرة"],
+            "سكن الطلاب":["أثاث مستعمل", "أثاث جديد", "أجهزة كهربائية", "مراتب ومفروشات", "أدوات مطبخ للسكن"]
         };
 
         const availableColors =["أسود", "أبيض", "كحلي", "رصاصي", "رمادي", "أحمر", "نبيتي", "أزرق", "لبني", "أخضر", "زيتي", "أصفر", "مسطردة", "جملي", "بيج", "بني", "هافان", "كشمير", "وردي (بينك)", "فوشيا", "بنفسجي", "موف", "برتقالي", "ذهبي", "فضي", "متعدد الألوان"];
@@ -609,7 +621,8 @@
                 sizesGroup.style.display = 'block';
             }
 
-            const noColorCats =['ادوات دراسية', 'سكن الطلاب', 'العناية الشخصية للرجال', 'العناية الشخصية للحريم', 'مستحضرات التجميل'];
+            // منع ظهور اختيار الألوان في الأقسام التي لا تتطلب ذلك
+            const noColorCats =['ادوات دراسية', 'سكن الطلاب', 'العناية الشخصية للرجال', 'العناية الشخصية للحريم', 'مستحضرات التجميل', 'مواد غذائية', 'هدايا'];
             if (!noColorCats.includes(cat)) {
                 let colorHtml = `<div class="multi-select-header" onclick="document.getElementById('dynamic-color-list').classList.toggle('show')"><i class="fa-solid fa-palette"></i> اختر الألوان المتاحة <i class="fa-solid fa-chevron-down"></i></div>`;
                 colorHtml += `<div class="multi-select-list" id="dynamic-color-list">`;
@@ -671,6 +684,52 @@
             });
         }
 
+        // دالة إعداد التحديث اللحظي بدلاً من الجلب لمرة واحدة
+        function setupRealtimeListeners() {
+            // 1. التحديث اللحظي لبيانات المسوقين
+            unsubscribeAdmins = onSnapshot(collection(db, "gam3a_admins"), (snapshot) => {
+                window.admins = {};
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    // تحديث الأكواد القصيرة إن لم تكن موجودة
+                    if (!data.shortCode) {
+                        const newCode = generateAdminCode();
+                        updateDoc(doc(db, "gam3a_admins", docSnap.id), { shortCode: newCode });
+                        data.shortCode = newCode;
+                    }
+                    window.admins[docSnap.id] = data;
+                    if(data.uid === window.currentUserUid) {
+                        window.currentUserShortCode = data.shortCode;
+                    }
+                });
+                
+                // تحديث واجهة المنتجات إذا كانت محملة بالفعل لتعكس تغييرات صورة/اسم المسوق
+                if (window.products.length > 0) window.renderAdminProducts();
+            });
+
+            // 2. التحديث اللحظي للمنتجات
+            unsubscribeProducts = onSnapshot(collection(db, "ghosn_products"), (snapshot) => {
+                let allProducts = snapshot.docs.map(doc => ({ firebaseId: doc.id, ...doc.data() }));
+                const masterAdminId = "XIarwijEVRSX7S8HY3qZIedH5qW2";
+
+                if (window.currentUserUid === masterAdminId) {
+                    window.products = allProducts;
+                } else {
+                    window.products = allProducts.filter(p => p.adminId === window.currentUserUid);
+                }
+
+                // ترتيب من الأحدث للأقدم
+                window.products.sort((a, b) => {
+                    let dateA = a.createdAt || a.id || 0;
+                    let dateB = b.createdAt || b.id || 0;
+                    return dateB - dateA;
+                });
+
+                // إعادة رسم المنتجات تلقائياً بدون تفعيل من المستخدم
+                window.renderAdminProducts();
+            });
+        }
+
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 window.currentUserUid = user.uid;
@@ -687,12 +746,18 @@
 
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('admin-content').style.display = 'block';
-                fetchProducts();
+                
+                // تشغيل المراقب اللحظي
+                setupRealtimeListeners();
             } else {
                 window.currentUserUid = null;
                 window.currentUserShortCode = null;
                 document.getElementById('login-screen').style.display = 'flex';
                 document.getElementById('admin-content').style.display = 'none';
+                
+                // إيقاف المراقب اللحظي عند تسجيل الخروج لعدم استهلاك الموارد
+                if(unsubscribeProducts) unsubscribeProducts();
+                if(unsubscribeAdmins) unsubscribeAdmins();
             }
         });
 
@@ -770,7 +835,6 @@
                 }, { merge: true });
 
                 showToast("تم تحديث بياناتك بنجاح!", "success");
-                await fetchProducts(); 
                 cancelEditProfile();
             } catch (e) {
                 showToast("حدث خطأ: " + e.message, "error");
@@ -867,47 +931,6 @@
             }
         }
 
-        async function fetchProducts() {
-            try {
-                const adminsSnapshot = await getDocs(collection(db, "gam3a_admins"));
-                window.admins = {};
-
-                for (const docSnap of adminsSnapshot.docs) {
-                    const data = docSnap.data();
-                    if (!data.shortCode) {
-                        const newCode = generateAdminCode();
-                        await updateDoc(doc(db, "gam3a_admins", docSnap.id), { shortCode: newCode });
-                        data.shortCode = newCode;
-                    }
-                    window.admins[docSnap.id] = data;
-                    if(data.uid === window.currentUserUid) {
-                        window.currentUserShortCode = data.shortCode; 
-                    }
-                }
-
-                const querySnapshot = await getDocs(collection(db, "ghosn_products"));
-                let allProducts = querySnapshot.docs.map(doc => ({ firebaseId: doc.id, ...doc.data() }));
-
-                const masterAdminId = "XIarwijEVRSX7S8HY3qZIedH5qW2";
-
-                if (window.currentUserUid === masterAdminId) {
-                    window.products = allProducts;
-                } else {
-                    window.products = allProducts.filter(p => p.adminId === window.currentUserUid);
-                }
-
-                window.products.sort((a, b) => {
-                    let dateA = a.createdAt || a.id || 0;
-                    let dateB = b.createdAt || b.id || 0;
-                    return dateB - dateA;
-                });
-
-                window.renderAdminProducts();
-            } catch (error) {
-                console.error("خطأ في جلب البيانات:", error);
-            }
-        }
-
         function generateShortCode() { return String(Math.floor(Math.random() * 1000) + 1).padStart(4, '0'); }
 
         window.toggleDiscount = function() {
@@ -984,7 +1007,6 @@
                             url = item.split('#crop=')[0];
                         }
 
-                        // دمج إحداثيات القص الجديدة، أو الحفاظ على القديمة لو لم تتغير
                         if (window.productCropData[i]) {
                             url += `#crop=${window.productCropData[i]}`;
                         } else if (typeof item === 'string' && item.includes('#crop=')) {
@@ -1030,7 +1052,6 @@
                     showToast("تم رفع وإضافة المنتج بنجاح!", "success");
                     window.clearForm();
                 }
-                fetchProducts(); 
             } catch (e) {
                 console.error(e);
                 if (e.message.includes("Missing or insufficient permissions")) {
@@ -1079,7 +1100,7 @@
                 if(p.sizes) document.querySelectorAll('.size-checkbox').forEach(cb => cb.checked = p.sizes.includes(cb.value));
                 if(p.colors) document.querySelectorAll('.color-checkbox').forEach(cb => cb.checked = p.colors.includes(cb.value));
 
-                window.productImages = p.images ? [...p.images] : (p.img ? [p.img] :[]);
+                window.productImages = p.images ? [...p.images] : (p.img ?[p.img] :[]);
                 window.productCropData = {};
                 window.renderImagePreviews();
 
@@ -1162,7 +1183,7 @@
         window.toggleHide = async function(firebaseId, currentStatus) {
             const productRef = doc(db, "ghosn_products", firebaseId);
             await updateDoc(productRef, { hidden: !currentStatus });
-            fetchProducts();
+            // تم حذف استدعاء الجلب هنا لأن onSnapshot يقوم بتحديث الشاشة فوراً
             showToast(currentStatus ? "تم إرجاع المنتج لحالة (متاح)" : "تم تعيين المنتج كـ (نفذ)", "success");
         }
 
@@ -1177,7 +1198,7 @@
 
         window.confirmDelete = async function(firebaseId) {
             await deleteDoc(doc(db, "ghosn_products", firebaseId));
-            fetchProducts();
+            // تم حذف استدعاء الجلب هنا لأن onSnapshot يقوم بتحديث الشاشة فوراً
             showToast("تم حذف المنتج نهائياً", "success");
         }
     </script>
