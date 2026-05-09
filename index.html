@@ -170,6 +170,23 @@
         @keyframes pulse-green { 0% { transform: scale(0.95); opacity: 1; } 70% { transform: scale(1.5); opacity: 0; } 100% { transform: scale(0.95); opacity: 0; } }
         .online-dot { position: absolute; top: -2px; right: -4px; width: 10px; height: 10px; background: #2ecc71; border-radius: 50%; border: 2px solid var(--bg-dark-blue); }
         .online-dot::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 50%; background: #2ecc71; animation: pulse-green 1.5s infinite; }
+
+/* 1. إجبار السلايدر على الوقوف عند كل صورة/بطاقة وعدم الجريان */
+        .details-slider img, .slider-container .inner-product-card {
+            scroll-snap-stop: always;
+        }
+
+        /* 2. تعديل عرض التابلت (الشاشات الأكبر من 600 بكسل) */
+        @media (min-width: 600px) {
+            /* جعل شبكة الأقسام 3 بجوار بعض */
+            .categories-grid { grid-template-columns: repeat(3, 1fr); }
+            
+            /* بطاقة العروض تأخذ العرض بالكامل (3 عواميد) */
+            .category-card[style*="grid-column: span 2;"] { grid-column: span 3 !important; }
+            
+            /* جعل سلايدر المنتجات يعرض 3 بطاقات بجوار بعض */
+            .slider-container .inner-product-card { width: calc(33.333% - 8px); }
+        }
     </style>
 </head>
 <body>
@@ -266,6 +283,18 @@
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777901418/wjtnm2zeyafsshp3wqx6.png" alt="قسم الأدوات الدراسية والمكتبية - Gam3a Store" loading="lazy">
                 <h3>أدوات دراسية</h3>
             </div>
+            
+            <!-- الأقسام الجديدة المضافة هنا -->
+            <div class="category-card" onclick="openCategory('مواد غذائية')">
+                <img src="https://images.pexels.com/photos/1668246/pexels-photo-1668246.jpeg?auto=compress&cs=tinysrgb&w=400" alt="قسم مواد غذائية - Gam3a Store" loading="lazy">
+                <h3>مواد غذائية</h3>
+            </div>
+            <div class="category-card" onclick="openCategory('هدايا')">
+                <img src="https://images.pexels.com/photos/1666069/pexels-photo-1666069.jpeg?auto=compress&cs=tinysrgb&w=400" alt="قسم هدايا - Gam3a Store" loading="lazy">
+                <h3>هدايا</h3>
+            </div>
+            <!-- نهاية الأقسام الجديدة -->
+
             <div class="category-card" onclick="openCategory('ادوات منزلية')">
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777901438/pgwww9orwav8k1kqhfdv.png" alt="قسم الأدوات المنزلية - Gam3a Store" loading="lazy">
                 <h3>أدوات منزلية</h3>
@@ -1010,7 +1039,7 @@
             profileContent.innerHTML = `
                 <div class="details-image-wrapper">
                     <div class="details-slider">
-                        <img src="${window.optimizeImage(admin.image, 600)}" onclick="openLightbox('${window.optimizeImage(admin.image, 900, true)}')" style="object-fit: contain; background: var(--bg-surface);">
+                        <img src="${window.optimizeImage(admin.image, 600)}" onclick="openLightbox('${window.optimizeImage(admin.image, 700, true)}')" style="object-fit: contain; background: var(--bg-surface);">
                     </div>
                 </div>
                 <div class="info-bar" style="flex-direction: column; gap: 8px; align-items: stretch; margin-bottom: 25px;">
