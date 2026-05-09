@@ -1,7 +1,7 @@
 {
   "name": "Gam3a Store",
   "short_name": "Gam3a Store",
-  "description": "تسويق  كلية التجارة جامعة الزقازيق",
+  "description": "تم التطوير بواسطة شهاب طارق صلاح طالب بكلية التجارة جامعة الزقازيق",
   "start_url": "/",
   "id": "622006",
   "display": "standalone",
@@ -10,6 +10,11 @@
   "theme_color": "#ffffff",
   "dir": "rtl",
   "lang": "ar",
+  "scope": "/",
+  "display_override": [
+    "window-controls-overlay",
+    "minimal-ui"
+  ],
   "categories": [
     "shopping",
     "business",
@@ -74,5 +79,17 @@
       "form_factor": "wide",
       "label": "واجهة التطبيق على الكمبيوتر"
     }
-  ]
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "iarc_rating_id": "e5814b2d-e97c-47fc-9104-58a369bd6543",
+  "share_target": {
+    "action": "/share-target",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
 }
