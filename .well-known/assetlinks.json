@@ -3,6 +3,6 @@
       "target": {
         "namespace": "android_app",
         "package_name": "app.vercel.gam3a_store.twa",
-        "sha256_cert_fingerprints": ["19:2C:CD:BD:A9:EB:49:AD:50:60:23:54:15:5F:44:B3:F3:C2:8C:48:EF:D9:83:2B:CE:58:5B:E6:F8:CD:6D:EF"]
+        "sha256_cert_fingerprints": ["61:5F:2C:A8:12:44:4C:4D:4B:42:A2:16:2F:79:77:C9:26:F3:1C:BF:C4:58:19:96:3A:96:43:5C:58:CE:62:1B"]
       }
     }]
