@@ -446,7 +446,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, setDoc, updateDoc, increment, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getDatabase, ref, onValue, onDisconnect, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
 
@@ -616,10 +616,25 @@
             }
         }
 
-        onSnapshot(collection(db, "ghosn_products"), (querySnapshot) => {
+        // جلب المنتجات المتاحة فقط (التي لم يتم إخفاؤها) لتخفيف الضغط على هاتف العميل
+        const activeProductsQuery = query(collection(db, "ghosn_products"), where("hidden", "==", false));
+
+        onSnapshot(activeProductsQuery, (querySnapshot) => {
             window.products = querySnapshot.docs.map(doc => ({ id: doc.id, firebaseId: doc.id, ...doc.data() }));
             productsLoaded = true;
             checkAndInit();
+
+            // تحديث الشاشة فقط إذا كنا في صفحة تعتمد على البيانات لمنع التشنج
+            if (!isInitialLoad) {
+                const currentPage = window.historyStack[window.historyStack.length - 1];
+                if (currentPage === 'home') window.renderHomeSlider();
+                if (currentPage === 'category') {
+                    const container = document.getElementById('category-products');
+                    if(container) container.innerHTML = ''; // تفريغ القديم
+                    window.catIndex = 0;
+                    window.loadMoreCategoryProducts(); 
+                }
+            }
         }, (error) => console.error("خطأ في المنتجات:", error));
 
         onSnapshot(collection(db, "gam3a_admins"), (querySnapshot) => {
@@ -1374,7 +1389,9 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
         }
 
         window.updateOrderTotal = function(price, qty) {
-            let total = price * (parseInt(qty) || 1);
+            let parsedQty = parseInt(qty);
+            if (isNaN(parsedQty) || parsedQty < 1) parsedQty = 1;
+            let total = price * parsedQty;
             const displayEl = document.getElementById('order-total-display');
             if(displayEl) displayEl.innerText = `${total} ج.م`;
         }
@@ -1384,9 +1401,11 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
             let size = document.getElementById('order-size') ? document.getElementById('order-size').value : '';
             let color = document.getElementById('order-color') ? document.getElementById('order-color').value : '';
             let qtyInput = document.getElementById('order-qty');
-            let qty = qtyInput ? parseInt(qtyInput.value) : 1;
+            
+            let qty = parseInt(qtyInput ? qtyInput.value : 1);
+            if (isNaN(qty) || qty < 1) qty = 1;
 
-            if (isNaN(qty) || qty < 1 || qty > p.qty) { alert("كمية غير متاحة!"); return; }
+            if (qty > p.qty) { alert("الكمية المطلوبة أكبر من المتاح في المخزن!"); return; }
 
             let selectedImg = p.img;
             if(p.imageColorsMapping && color) {
@@ -1405,7 +1424,9 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
             let size = document.getElementById('order-size') ? document.getElementById('order-size').value : '';
             let color = document.getElementById('order-color') ? document.getElementById('order-color').value : '';
             let qtyInput = document.getElementById('order-qty');
-            let qty = qtyInput ? parseInt(qtyInput.value) : 1;
+            
+            let qty = parseInt(qtyInput ? qtyInput.value : 1);
+            if (isNaN(qty) || qty < 1) qty = 1;
 
             let cName = document.getElementById('order-customer-name').value.trim();
             let cPhone = document.getElementById('order-customer-phone').value.trim();
@@ -1415,7 +1436,7 @@ class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-wei
                 return;
             }
 
-            if (isNaN(qty) || qty < 1 || qty > p.qty) { alert("كمية غير متاحة!"); return; }
+            if (qty > p.qty) { alert("الكمية المطلوبة أكبر من المتاح في المخزن!"); return; }
 
             const baseUrl = window.location.href.split('?')[0].split('#')[0];
             const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
