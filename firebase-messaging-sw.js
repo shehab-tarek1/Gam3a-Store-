@@ -37,9 +37,9 @@ self.addEventListener('notificationclick', function(event) {
 });
 
 // --- نظام تسريع الموقع (Caching) ---
-// تم تغيير الإصدار لـ v9 عشان يمسح أي كاش قديم كان مسبب لاج
-const CACHE_NAME = 'gam3a-store-cache-v9';
-const STATIC_ASSETS =[
+// قم بتغيير رقم الإصدار هنا (مثلاً v2) كلما قمت بتحديث كبير في ملفات HTML/CSS
+const CACHE_NAME = 'gam3a-store-cache-v2';
+const STATIC_ASSETS = [
     '/',
     '/index.html',
     '/privacy.html',
@@ -76,10 +76,8 @@ self.addEventListener('activate', (event) => {
 
 // 3. جلب الملفات من الكاش لتسريع الموقع، وتحديثها في الخلفية
 self.addEventListener('fetch', (event) => {
-    // 🛑 مهم جداً: استثناء الفيديوهات وقواعد البيانات عشان متعملش لاج في تطبيق الـ APK
+    // استثناء طلبات قاعدة البيانات، و إحصائيات جوجل، وأي طلب غير GET
     if (event.request.method !== 'GET' || 
-        event.request.destination === 'video' ||
-        event.request.url.includes('video/upload') ||
         event.request.url.includes('firestore.googleapis.com') ||
         event.request.url.includes('google-analytics.com')) {
         return;
