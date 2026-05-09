@@ -1607,7 +1607,7 @@ if(p.whatsapp) {
             try {
                 const snap = await getDoc(statsRef);
                 if (!snap.exists()) {
-                    await setDoc(statsRef, { totalVisits: 1500 }); 
+                    await setDoc(statsRef, { totalVisits: 0 }); 
                 }
 
                 if (!localStorage.getItem('gam3a_visited')) {
@@ -1622,7 +1622,7 @@ if(p.whatsapp) {
                 });
             } catch (error) {
                 console.error("Stats Error:", error);
-                document.getElementById('total-visits-count').innerText = "1500+";
+                document.getElementById('total-visits-count').innerText = "0";
             }
         }
 
