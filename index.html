@@ -250,10 +250,10 @@
     <!-- الصفحة الرئيسية -->
     <main id="home" class="hidden">
         <div class="cover-video-section">
-            <!-- تمت إضافة poster وتقليل جودة الفيديو للـ eco لتسريع الأداء ومنع التقطيع أثناء النزول -->
-            <video autoplay muted loop playsinline disablepictureinpicture preload="metadata" poster="https://res.cloudinary.com/dsxrjmcxs/video/upload/w_700,q_auto,f_auto/v1777896277/zimedbjtjhpbcgxixvnr.jpg">
+            <video id="main-bg-video" autoplay muted loop playsinline disablepictureinpicture preload="metadata" poster="https://res.cloudinary.com/dsxrjmcxs/video/upload/w_700,q_auto,f_auto/v1777896277/zimedbjtjhpbcgxixvnr.jpg">
                 <source src="https://res.cloudinary.com/dsxrjmcxs/video/upload/w_700,q_auto:eco,f_auto/v1777896277/zimedbjtjhpbcgxixvnr.mp4" type="video/mp4">
             </video>
+            <img id="fallback-poster-img" src="https://res.cloudinary.com/dsxrjmcxs/video/upload/w_700,q_auto,f_auto/v1777896277/zimedbjtjhpbcgxixvnr.jpg" style="display: none; width: 100%; height: auto; max-height: 350px; object-fit: cover;">
         </div>
 
         <div class="slider-section">
@@ -674,12 +674,19 @@
             const targetPage = document.getElementById(pageId);
             if(targetPage) targetPage.classList.remove('hidden');
 
-            const bgVideo = document.querySelector('.cover-video-section video');
-            if (bgVideo) {
+            const bgVideo = document.getElementById('main-bg-video');
+            const bgImg = document.getElementById('fallback-poster-img');
+            
+            if (bgVideo && bgImg) {
                 if (pageId !== 'home') {
+                    // إيقاف الفيديو وإخفاؤه تماماً وإظهار الصورة لتخفيف الضغط
                     bgVideo.pause(); 
-                    window.videoPermanentlyStopped = true; 
-                } else if (pageId === 'home' && !window.videoPermanentlyStopped) {
+                    bgVideo.style.display = 'none'; 
+                    bgImg.style.display = 'block'; 
+                } else {
+                    // عند الرجوع للرئيسية يرجع الفيديو يشتغل
+                    bgImg.style.display = 'none';
+                    bgVideo.style.display = 'block';
                     bgVideo.play().catch(e=>{}); 
                 }
             }
@@ -1705,4 +1712,3 @@
     </script>
 </body>
 </html>
-
