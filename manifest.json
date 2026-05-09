@@ -1,7 +1,7 @@
 {
   "name": "Gam3a Store",
   "short_name": "Gam3a Store",
-  "description": "متجر شامل يجمع الطلاب كعملاء ومسوقين",
+  "description": "تسويق  كلية التجارة جامعة الزقازيق",
   "start_url": "/",
   "id": "622006",
   "display": "standalone",
@@ -10,13 +10,13 @@
   "theme_color": "#ffffff",
   "dir": "rtl",
   "lang": "ar",
-  "categories":[
+  "categories": [
     "shopping",
     "business",
     "social",
     "education"
   ],
-  "icons":[
+  "icons": [
     {
       "src": "/icon-144x144.png",
       "sizes": "144x144",
@@ -33,6 +33,46 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "سياسة الخصوصية",
+      "url": "/privacy.html",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "شروط الاستخدام",
+      "url": "/terms.html",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "واجهة التطبيق على الموبايل"
+    },
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "واجهة التطبيق على الكمبيوتر"
     }
   ]
 }
