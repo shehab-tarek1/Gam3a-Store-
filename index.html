@@ -398,6 +398,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getDatabase, ref, onValue, onDisconnect, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD4sIkw8Pj_yDc0TFEhKoWu9Y0VI5PHoco",
@@ -411,6 +412,7 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const rtdb = getDatabase(app); // تفعيل قاعدة البيانات اللحظية للمتصلين
 
         window.products =[];
         window.admins = {}; 
@@ -1578,42 +1580,49 @@ if(p.whatsapp) {
 
 // --- نظام الإحصائيات (الزيارات والمتصلين) ---
         async function initVisitorStats() {
+            // 1. نظام المتصلين الحقيقي (باستخدام Realtime Database مجاناً)
+            const visitorId = Math.random().toString(36).substring(2, 15); // كود فريد لكل زائر
+            const myConnectionsRef = ref(rtdb, `online_users/${visitorId}`);
+            const connectedRef = ref(rtdb, '.info/connected');
+
+            // مراقبة حالة اتصال العميل
+            onValue(connectedRef, (snap) => {
+                if (snap.val() === true) {
+                    // لما العميل يفتح الموقع، ضيفه في قائمة المتصلين
+                    set(myConnectionsRef, true);
+                    // لما العميل يقفل الموقع أو النت يفصل، احذفه فوراً من المتصلين
+                    onDisconnect(myConnectionsRef).remove();
+                }
+            });
+
+            // حساب عدد المتصلين الفعلي وعرضه في الفوتر
+            const onlineUsersRef = ref(rtdb, 'online_users');
+            onValue(onlineUsersRef, (snap) => {
+                const count = snap.size; // عدد المتصلين الحقيقي
+                document.getElementById('online-users-count').innerText = count || 1;
+            });
+
+            // 2. جلب إجمالي الزيارات من Firestore
             const statsRef = doc(db, "gam3a_settings", "visitor_stats");
-            
             try {
-                // 1. جلب أو إنشاء ملف الإحصائيات
                 const snap = await getDoc(statsRef);
                 if (!snap.exists()) {
-                    await setDoc(statsRef, { totalVisits: 1500 }); // رقم افتراضي للبداية
+                    await setDoc(statsRef, { totalVisits: 1500 }); 
                 }
 
-                // 2. تسجيل زيارة جديدة (لو العميل أول مرة يفتح الموقع)
                 if (!localStorage.getItem('gam3a_visited')) {
                     localStorage.setItem('gam3a_visited', 'true');
                     await updateDoc(statsRef, { totalVisits: increment(1) });
                 }
 
-                // 3. الاستماع المباشر لتحديث إجمالي الزيارات
                 onSnapshot(statsRef, (docSnap) => {
                     if (docSnap.exists()) {
                         document.getElementById('total-visits-count').innerText = docSnap.data().totalVisits;
                     }
                 });
-
-                // 4. محاكاة ذكية للمتصلين الآن (تتغير كل 15 ثانية بدون استهلاك قاعدة البيانات)
-                let baseOnline = Math.floor(Math.random() * 6) + 4; // رقم عشوائي بين 4 و 9
-                document.getElementById('online-users-count').innerText = baseOnline;
-                
-                setInterval(() => {
-                    let change = Math.floor(Math.random() * 3) - 1; // يزود 1، ينقص 1، أو يثبت
-                    baseOnline += change;
-                    if (baseOnline < 5) baseOnline = 2; // الحد الأدنى
-                    if (baseOnline > 1008) baseOnline = 18; // الحد الأقصى
-                    document.getElementById('online-users-count').innerText = baseOnline;
-                }, 15000);
-
             } catch (error) {
                 console.error("Stats Error:", error);
+                document.getElementById('total-visits-count').innerText = "1500+";
             }
         }
 
