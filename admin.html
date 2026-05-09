@@ -435,7 +435,7 @@
 
             img.onload = function() {
                 window.currentCropper = new Cropper(img, {
-                    aspectRatio: 215 / 205, 
+                    aspectRatio: 160 / 145, // المقاس الهندسي المطابق لبطاقة موقعك
                     viewMode: 1, 
                     dragMode: 'move',
                     autoCropArea: 1,
@@ -443,7 +443,6 @@
                     toggleDragModeOnDblclick: false,
                 });
             }
-        }
 
         window.closeCropper = function() {
             document.getElementById('cropper-modal').style.display = 'none';
