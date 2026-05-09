@@ -61,7 +61,6 @@
         .cart-icon { font-size: 1.3rem; color: var(--text-light); cursor: pointer; position: relative; transition: 0.1s; margin-left: 5px;}
         .cart-count { position: absolute; top: -6px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; font-size: 0.7rem; padding: 2px 6px; font-weight: bold;}
 
-        /* تم إزالة transition و opacity لمنع التلاشي واللاج */
         main { padding: 20px 15px; width: 100%; max-width: 800px; flex: 1; }
         .hidden { display: none !important; }
 
@@ -78,17 +77,15 @@
 
         .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px; }
 
-        /* تم إزالة will-change و transition لتخفيف اللاج */
         .category-card { position: relative; background-color: var(--bg-surface); border-radius: var(--radius); overflow: hidden; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; border: 1px solid var(--silver); }
         .category-card img { width: 100%; height: 145px; object-fit: cover; object-position: center; display: block;}
         .category-card h3 { background-color: var(--bg-dark-blue); color: var(--text-light); padding: 6px; font-size: 0.8rem; margin: 0;}
 
         .gender-ribbon { position: absolute; top: 10px; right: 10px; background: rgba(255, 255, 255, 0.95); border-radius: 8px; padding: 4px 8px; font-size: 0.55rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 5; border: 1px solid var(--border-light); color: var(--text-dark); line-height: 1.2; }
 
-        /* تم إزالة will-change و transition لتخفيف اللاج */
         .inner-product-card { position: relative; background: var(--bg-surface); border-radius: var(--radius); overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; border: 1px solid var(--silver); flex-shrink: 0; scroll-snap-align: start; }
         .inner-product-card .img-container { position: relative; width: 100%; height: 145px; background: #ffffff; }
-.inner-product-card img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; border-bottom: 1px solid var(--border-light); transition: opacity 0.3s;}
+        .inner-product-card img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; border-bottom: 1px solid var(--border-light); transition: opacity 0.3s;}
 
         .card-info { padding: 10px; text-align: right; }
         .title-price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
@@ -107,8 +104,8 @@
 
         .badge-discount { position: absolute; top: 6px; left: 6px; background-color: #e74c3c; color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.6rem; font-weight: bold; z-index: 5;}
 
-.badge-outofstock { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); background-color: #e74c3c; color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; z-index: 5; white-space: nowrap; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); border: none; pointer-events: none; letter-spacing: 0.5px; }
-.img-outofstock { opacity: 0.85; }
+        .badge-outofstock { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); background-color: #e74c3c; color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; z-index: 5; white-space: nowrap; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); border: none; pointer-events: none; letter-spacing: 0.5px; }
+        .img-outofstock { opacity: 0.85; }
 
         .slider-section { background-color: var(--bg-surface); padding: 10px 15px 10px 15px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 25px; border: 0.5px solid var(--silver);}
         .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 2px solid var(--border-light); padding-bottom: 6px;}
@@ -130,7 +127,6 @@
         .social-links a:active { transform: scale(0.9); }
 
         .details-image-wrapper { width: 100%; max-width: 300px; margin: 0 auto 10px auto; overflow: hidden; position: relative;}
-        /* تم إزالة scroll-behavior: smooth; لجعل تبديل الصور فورياً */
         .details-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border-light); -webkit-overflow-scrolling: touch; position: relative; }
         .details-slider::-webkit-scrollbar { display: none; }
         .details-slider img { flex: 0 0 100%; width: 300px; height: 300px; object-fit: contain; object-position: center; background: var(--bg-surface); scroll-snap-align: center; }
@@ -170,21 +166,10 @@
         .custom-select-item { padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.9rem; color: var(--text-dark); }
         .custom-select-item:active { background: var(--bg-main); color: var(--accent); }
 
-<div class="slider-section">
-            <div class="slider-header">
-                <h2>أحدث الإضافات</h2>
-                <div class="slider-nav">
-                    <div class="slider-arrow" onclick="scrollSlider('right')"><i class="fa-solid fa-chevron-right"></i></div>
-                    <div class="slider-arrow" onclick="scrollSlider('left')"><i class="fa-solid fa-chevron-left"></i></div>
-                </div>
-            </div>
-            <div class="slider-container" id="latest-products-slider"></div>
-        </div>
-
-        <div class="categories-grid">
-
-/* تأثير اللمبة الخضراء للمتصلين */
-        @keyframes pulse-green { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(46, 204, 113, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); } }
+        /* تأثير اللمبة الخضراء للمتصلين (محسن للأداء) */
+        @keyframes pulse-green { 0% { transform: scale(0.95); opacity: 1; } 70% { transform: scale(1.5); opacity: 0; } 100% { transform: scale(0.95); opacity: 0; } }
+        .online-dot { position: absolute; top: -2px; right: -4px; width: 10px; height: 10px; background: #2ecc71; border-radius: 50%; border: 2px solid var(--bg-dark-blue); }
+        .online-dot::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 50%; background: #2ecc71; animation: pulse-green 1.5s infinite; }
     </style>
 </head>
 <body>
@@ -232,12 +217,13 @@
             </div>
             <div class="slider-container" id="latest-products-slider"></div>
         </div>
-<!-- شريط الأقسام المتاحة الجديد -->
-        <div class="section-title-ribbon">
+        
+        <!-- شريط الأقسام المتاحة الجديد -->
+        <div class="section-title-ribbon" style="font-weight: bold; color: var(--bg-dark-blue); margin-bottom: 10px; font-size: 1.1rem;">
             <i class="fa-solid fa-layer-group"></i> الأقسام المتاحة
         </div>
 
-            <div class="categories-grid">
+        <div class="categories-grid">
             <div class="category-card" onclick="openCategory('ملابس رجالي')">
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777897969/qi3lscagmdzbrkvup5vf.png" alt="قسم ملابس رجالي - Gam3a Store" loading="lazy">
                 <h3>ملابس رجالي</h3>
@@ -379,7 +365,7 @@
             <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
                 <div style="position: relative; display: inline-block;">
                     <i class="fa-solid fa-user" style="font-size: 1.4rem; color: var(--silver);"></i>
-                    <span style="position: absolute; top: -2px; right: -4px; width: 10px; height: 10px; background: #2ecc71; border-radius: 50%; border: 2px solid var(--bg-dark-blue); animation: pulse-green 1.5s infinite;"></span>
+                    <span class="online-dot"></span>
                 </div>
                 <span style="font-size: 0.75rem; color: #cbd5e1;">المتصلين الآن</span>
                 <strong id="online-users-count" style="font-size: 1.2rem; color: #2ecc71;">...</strong>
@@ -399,8 +385,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getDatabase, ref, onValue, onDisconnect, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-        
-        // السطر الجديد الخاص بالإشعارات
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
 
         const firebaseConfig = {
@@ -415,7 +399,7 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const rtdb = getDatabase(app); // تفعيل قاعدة البيانات اللحظية للمتصلين
+        const rtdb = getDatabase(app); 
 
         window.products =[];
         window.admins = {}; 
@@ -426,13 +410,10 @@
 
         window.SELLER_PHONE = "201206244875";
         window.historyStack = ['home'];
-
         window.currentViewedProductId = null; 
-
         window.profileProducts =[];
         window.profileIndex = 0;
         window.PROFILE_BATCH_SIZE = 8; 
-
         window.sliderProducts =[];
         window.sliderIndex = 0;
         window.catProducts =[];
@@ -441,21 +422,15 @@
 
         window.optimizeImage = function(url, width, isLightbox = false) {
             if (!url || typeof url !== 'string') return '';
-            
             let cropParams = '';
             let cleanUrl = url;
-            
-            // استخراج إحداثيات الجزء اللي إنت حددته
             if (url.includes('#crop=')) {
                 const parts = url.split('#crop=');
                 cleanUrl = parts[0];
                 cropParams = 'c_crop,' + parts[1] + '/';
             }
-
             if (cleanUrl.includes('res.cloudinary.com') && cleanUrl.includes('/upload/')) {
                 let parts = cleanUrl.split('/upload/');
-                
-                // تنظيف الرابط من أي أوامر قديمة
                 let rawEnd = parts[1];
                 let versionMatch = rawEnd.match(/(v\d+\/.*)/);
                 if (versionMatch) {
@@ -464,23 +439,17 @@
                     let splitSlash = rawEnd.split('/');
                     rawEnd = splitSlash[splitSlash.length - 1]; 
                 }
-
                 let baseUrl = parts[0] + '/upload/';
-
                 if (isLightbox) {
-                    // عند الضغط على الصورة: تفتح الصورة الأصلية كاملة بكل أجزائها
                     return baseUrl + `c_limit,w_${width},q_auto,f_auto/` + rawEnd;
                 } else {
                     if (cropParams) {
-                        // في البطاقة من بره: السيرفر بيقص الجزء اللي إنت حددته بس ويبعته
                         return baseUrl + cropParams + `c_limit,w_${width},q_auto,f_auto/` + rawEnd;
                     } else {
-                        // لو صورة قديمة متحددتش: بيعرضها كاملة بدون زوم
                         return baseUrl + `c_limit,w_${width},q_auto,f_auto/` + rawEnd;
                     }
                 }
             }
-            
             if (cleanUrl.includes('images.pexels.com')) {
                 return cleanUrl.replace(/w=\d+/, `w=${width}`);
             }
@@ -624,46 +593,43 @@
             }
             window.navigateUI(pageId);
         }
-// --- تعديلات التنقل لحفظ مكان الشاشة وإلغاء اللاج والتلاشي ---
+
         window.scrollPositions = {};
-        window.videoPermanentlyStopped = false; // المتغير اللي هيفتكر إن الفيديو وقف
+        window.videoPermanentlyStopped = false; 
 
         window.navigateUI = function(pageId, isBack = false) {
             const pages =['home', 'category', 'details', 'cart', 'profile'];
 
-            // حفظ مكان الشاشة الحالي
             let currentVisible = pages.find(p => document.getElementById(p) && !document.getElementById(p).classList.contains('hidden'));
             if (currentVisible) {
                 window.scrollPositions[currentVisible] = window.scrollY || document.documentElement.scrollTop;
             }
 
-            // إخفاء كل الصفحات
             pages.forEach(p => {
                 const el = document.getElementById(p);
                 if(el) el.classList.add('hidden');
             });
 
-            // إظهار الصفحة المستهدفة
             const targetPage = document.getElementById(pageId);
             if(targetPage) targetPage.classList.remove('hidden');
 
-            // --- الإضافة الجديدة للتحكم في الفيديو ---
             const bgVideo = document.querySelector('.cover-video-section video');
             if (bgVideo) {
                 if (pageId !== 'home') {
-                    bgVideo.pause(); // يوقف الفيديو بمجرد الخروج من الرئيسية
-                    window.videoPermanentlyStopped = true; // يسجل إنه وقف ومش هيشتغل تاني
+                    bgVideo.pause(); 
+                    window.videoPermanentlyStopped = true; 
                 } else if (pageId === 'home' && !window.videoPermanentlyStopped) {
-                    bgVideo.play().catch(e=>{}); // يشتغل بس لو دي أول مرة يفتح الموقع
+                    bgVideo.play().catch(e=>{}); 
                 }
             }
-            // -----------------------------------------
 
-            // النزول للمكان المحفوظ فوراً بدون setTimeout لمنع اللاج
+            // النزول للمكان المحفوظ فوراً بعد بناء الشاشة لمنع القفز واللاج
             if (isBack && window.scrollPositions[pageId] !== undefined) {
-                window.scrollTo(0, window.scrollPositions[pageId]);
+                setTimeout(() => {
+                    window.scrollTo({ top: window.scrollPositions[pageId], behavior: 'instant' });
+                }, 10);
             } else {
-                window.scrollTo(0, 0);
+                window.scrollTo({ top: 0, behavior: 'instant' });
             }
 
             const footer = document.getElementById('main-footer');
@@ -684,7 +650,6 @@
             if (window.historyStack.length > 1) {
                 window.historyStack.pop(); 
                 let previousPage = window.historyStack[window.historyStack.length - 1]; 
-                // تمرير true يخبر الدالة أننا نعود للخلف لاسترجاع مكان النزول
                 window.navigateUI(previousPage, true);
                 window.safeReplaceState(previousPage, "/"); 
             } else {
@@ -695,7 +660,6 @@
         window.addEventListener('popstate', (e) => {
             if (e.state && e.state.page) {
                 if (window.historyStack.length > 1) window.historyStack.pop();
-                // تمرير true لأن إيماءة الرجوع في الهاتف تعتبر "رجوع للخلف"
                 window.navigateUI(e.state.page, true);
                 if(e.state.page === 'home') window.safeReplaceState('home', "/");
             } else {
@@ -703,7 +667,6 @@
                 window.safeReplaceState('home', "/");
             }
         });
-        // ----------------------------------------------------
 
         window.shareProduct = async function(event, id) {
             if(event) event.stopPropagation();
@@ -805,7 +768,6 @@
             let genderBadge = p.targetGender ? `<span class="card-gender-badge">${p.targetGender}</span>` : '';
             let typeText = `<span class="card-type-text">النوع: ${p.subType ? p.subType : p.category}</span>`;
 
-            // التعديل هنا: تحويل الكارت لـ <a> وإضافة alt للصورة وتصغير كلمة ج.م
             return `
                 <a href="/p/${p.shortCode}" class="inner-product-card" onclick="event.preventDefault(); openProduct('${p.id}')" style="text-decoration: none; color: inherit; display: block;">
                     ${discountBadge}
@@ -838,14 +800,12 @@
                 return;
             }
 
-            // ترتيب المنتجات من الأحدث للأقدم
             visibleProducts.sort((a, b) => {
                 let dateA = a.createdAt ? (a.createdAt.seconds || new Date(a.createdAt).getTime()) : 0;
                 let dateB = b.createdAt ? (b.createdAt.seconds || new Date(b.createdAt).getTime()) : 0;
                 return dateB - dateA;
             });
 
-            // أخذ أحدث 10 منتجات وعرضهم كلهم فوراً بدون تقطيع
             window.sliderProducts = visibleProducts.slice(0, 10);
             slider.innerHTML = window.sliderProducts.map(p => window.generateProductCardHTML(p)).join('');
         } 
@@ -934,8 +894,15 @@
                 window.requestAnimationFrame(() => {
                     const absScroll = Math.abs(sliderElement.scrollLeft);
                     const index = Math.round(absScroll / sliderElement.clientWidth);
-                    const dots = sliderElement.parentElement.parentElement.querySelectorAll('.dot');
-                    dots.forEach((dot, i) => { dot.classList.toggle('active', i === index); });
+                    
+                    // استهداف النقاط بشكل مباشر وآمن بدون البحث في كل الـ DOM لمنع اللاج
+                    const dotsContainer = sliderElement.parentElement.nextElementSibling;
+                    if (dotsContainer && dotsContainer.classList.contains('slider-dots')) {
+                        const dots = dotsContainer.children;
+                        for (let i = 0; i < dots.length; i++) {
+                            dots[i].classList.toggle('active', i === index);
+                        }
+                    }
                     ticking = false;
                 });
                 ticking = true;
@@ -989,7 +956,6 @@
                     if (slider) {
                         const targetImg = slider.querySelectorAll('img')[index];
                         if(targetImg) {
-                            // تم تغيير behavior إلى 'auto' لتظهر الصورة فوراً بدون تقاطع
                             slider.scrollTo({ left: targetImg.offsetLeft, behavior: 'auto' });
                         }
                     }
@@ -1027,14 +993,19 @@
             if(shareBtn) shareBtn.setAttribute('onclick', `shareProfile('${adminId}')`);
 
             let joinDate = "حديثاً";
-            if(admin.createdAt) {
-                let d = new Date(admin.createdAt);
-                joinDate = d.toLocaleDateString('ar-EG');
+            if (admin.createdAt) {
+                try {
+                    let d;
+                    if (admin.createdAt.toDate) { d = admin.createdAt.toDate(); }
+                    else if (admin.createdAt.seconds) { d = new Date(admin.createdAt.seconds * 1000); }
+                    else { d = new Date(admin.createdAt); }
+                    if (!isNaN(d)) joinDate = d.toLocaleDateString('ar-EG');
+                } catch(e) { console.error("Date error:", e); }
             }
 
             const profileContent = document.getElementById('profile-content');
             document.getElementById('profile-products-title').innerText = `منتجات المسوق: ${admin.name}`;
-                       let bioHtml = admin.bio ? `<div style="width: 100%; margin-top: 5px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; white-space: pre-wrap;">${admin.bio}</div>` : '';
+            let bioHtml = admin.bio ? `<div style="width: 100%; margin-top: 5px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; white-space: pre-wrap;">${admin.bio}</div>` : '';
 
             profileContent.innerHTML = `
                 <div class="details-image-wrapper">
@@ -1117,9 +1088,14 @@
             let pubDate = "أضيف حديثاً";
             if (p.createdAt) {
                 try {
-                    let d = p.createdAt.toDate ? p.createdAt.toDate() : new Date(p.createdAt);
-                    pubDate = d.toLocaleDateString('ar-EG') + ' - ' + d.toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
-                } catch(e) {}
+                    let d;
+                    if (p.createdAt.toDate) { d = p.createdAt.toDate(); }
+                    else if (p.createdAt.seconds) { d = new Date(p.createdAt.seconds * 1000); }
+                    else { d = new Date(p.createdAt); }
+                    if (!isNaN(d)) {
+                        pubDate = d.toLocaleDateString('ar-EG') + ' - ' + d.toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
+                    }
+                } catch(e) { console.error("Date error:", e); }
             }
 
             let imgsArray = p.images && p.images.length > 0 ? p.images.slice(0, 7) : [p.img];
@@ -1172,25 +1148,20 @@
 
             let isSoldOut = (p.hidden === true || p.qty <= 0);
 
-            // سحب رقم هاتف استلام الطلب
-let adminPhone = window.SELLER_PHONE;
-if(p.whatsapp) {
-    // الأولوية الأولى: الرقم المخصص الذي أضافه المسوق للمنتج
-    adminPhone = p.whatsapp;
-} else if (p.adminId && window.admins[p.adminId] && window.admins[p.adminId].phone) {
-    // الأولوية الثانية: رقم الهاتف الذي سجل به المسوق حسابه
-    adminPhone = window.admins[p.adminId].phone;
-    if(adminPhone.startsWith('01')) adminPhone = '20' + adminPhone.substring(1);
-}
+            let adminPhone = window.SELLER_PHONE;
+            if(p.whatsapp) {
+                adminPhone = p.whatsapp;
+            } else if (p.adminId && window.admins[p.adminId] && window.admins[p.adminId].phone) {
+                adminPhone = window.admins[p.adminId].phone;
+                if(adminPhone.startsWith('01')) adminPhone = '20' + adminPhone.substring(1);
+            }
 
             let orderSectionHTML = '';
             if (!isSoldOut) {
-                // تعديلات التصميم المصغر وإضافة الاسم ورقم الهاتف
                 orderSectionHTML = `
                 <div class="options-section" style="padding: 12px; border: 1px solid var(--border-light); overflow: visible;">
                     <div style="font-weight:bold; font-size:0.9rem; color:var(--bg-dark-blue); margin-bottom: 10px; border-bottom: 1px solid var(--border-light); padding-bottom: 5px;">تجهيز الطلب:</div>
                     
-                    <!-- صف بيانات العميل -->
                     <div style="display: flex; gap: 8px; margin-bottom: 10px;">
                         <div style="flex: 1;">
                             <label style="display:block; font-size:0.75rem; margin-bottom:4px; font-weight:bold; color:var(--text-dark);">الاسم:</label>
@@ -1202,7 +1173,6 @@ if(p.whatsapp) {
                         </div>
                     </div>
 
-                    <!-- صف المقاس واللون -->
                     <div style="display: flex; gap: 8px; margin-bottom: 10px;">
                         <div class="custom-select-wrapper" style="flex: 1; margin-bottom: 0; ${safeSizes.length ? '' : 'display:none;'}">
                             <label style="display:block; font-size:0.75rem; margin-bottom:4px; font-weight:bold; color:var(--text-dark);">المقاس:</label>
@@ -1223,7 +1193,6 @@ if(p.whatsapp) {
                         </div>
                     </div>
 
-                    <!-- صف الكمية والإجمالي -->
                     <div style="display: flex; gap: 8px; align-items: flex-end; margin-bottom: 15px;">
                         <div style="flex: 1;">
                             <label style="display:block; font-size:0.75rem; margin-bottom:4px; font-weight:bold; color:var(--text-dark);">الكمية المطلوبة:</label>
@@ -1258,9 +1227,14 @@ if(p.whatsapp) {
             if (p.adminId && window.admins[p.adminId]) {
                 const admin = window.admins[p.adminId];
                 let adminJoinDate = "حديثاً";
-                if(admin.createdAt) {
-                    let d = new Date(admin.createdAt);
-                    adminJoinDate = d.toLocaleDateString('ar-EG');
+                if (admin.createdAt) {
+                    try {
+                        let d;
+                        if (admin.createdAt.toDate) { d = admin.createdAt.toDate(); }
+                        else if (admin.createdAt.seconds) { d = new Date(admin.createdAt.seconds * 1000); }
+                        else { d = new Date(admin.createdAt); }
+                        if (!isNaN(d)) adminJoinDate = d.toLocaleDateString('ar-EG');
+                    } catch(e) { console.error("Date error:", e); }
                 }
 
                 publisherBarHTML = `
@@ -1341,7 +1315,6 @@ if(p.whatsapp) {
                 if(matchingUrl) selectedImg = matchingUrl;
             }
 
-            // تضمين رقم هاتف المسوق داخل العنصر في السلة
             window.cart.push({ ...p, selSize: size, selColor: color, selQty: qty, selImg: selectedImg, marketerPhone: adminPhone });
             try { localStorage.setItem('am_cart', JSON.stringify(window.cart)); } catch(e){}
             window.updateCartBadge(); 
@@ -1376,7 +1349,6 @@ if(p.whatsapp) {
             window.open(`https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-// دالة الاستفسار عن المنتج
         window.inquireProduct = function(id, adminPhone) {
             const p = window.products.find(x => String(x.id) === String(id));
             if (!p) return;
@@ -1454,12 +1426,10 @@ if(p.whatsapp) {
             window.showToast("تم إزالة المنتج من السلة", "#e74c3c"); 
         }
 
-        // دالة مساعدة لإرسال الواتساب (محدثة لتجميع المنتجات المتشابهة)
         window.sendWhatsApp = function(targetPhone, items, totalCartPrice, cName, cPhone) {
             const baseUrl = window.location.href.split('?')[0].split('#')[0];
             const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
 
-            // تجميع المنتجات المتشابهة (نفس الكود) مع بعض
             let groupedItems = {};
             items.forEach(item => {
                 if (!groupedItems[item.shortCode]) {
@@ -1491,14 +1461,12 @@ if(p.whatsapp) {
 
                 msg += `${counter}- ${g.name} (قسم: ${g.category})\n🔖 كود: ${g.shortCode}\n`;
 
-                // رص الألوان والمقاسات تحت بعض
                 g.variations.forEach(v => {
                     msg += ` 🔸 ${v.color ? `لون: ${v.color} ` : ''}${v.size ? `| مقاس: ${v.size} ` : ''}| عدد: ${v.qty}\n`;
                 });
 
                 msg += ` 💰 إجمالي الصنف: ${g.totalPrice} ج.م\n🔗 الرابط: ${productUrl}`;
 
-                // إضافة فاصل بين المنتجات المختلفة فقط
                 if (counter < keys.length) {
                     msg += `\n\n-----------------\n\n`;
                 }
@@ -1510,7 +1478,6 @@ if(p.whatsapp) {
             window.open(`https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // دالة مساعدة لإرسال طلب مقسم
         window.sendGroupWhatsApp = function(targetPhone) {
             let cName = document.getElementById('cart-customer-name').value.trim();
             let cPhone = document.getElementById('cart-customer-phone').value.trim();
@@ -1532,7 +1499,6 @@ if(p.whatsapp) {
                 return;
             }
 
-            // تجميع المنتجات حسب رقم المسوق
             let groups = {};
             window.cart.forEach((item) => {
                 let phone = item.marketerPhone || window.SELLER_PHONE;
@@ -1544,11 +1510,9 @@ if(p.whatsapp) {
             let phoneKeys = Object.keys(groups);
 
             if (phoneKeys.length === 1) {
-                // مسوق واحد فقط، إرسال مباشر
                 let phone = phoneKeys[0];
                 window.sendWhatsApp(phone, groups[phone].items, groups[phone].total, cName, cPhone);
             } else {
-                // أكثر من مسوق، إظهار واجهة التقسيم
                 let splitDiv = document.getElementById('split-orders-ui');
                 if(!splitDiv) return;
 
@@ -1581,9 +1545,7 @@ if(p.whatsapp) {
 
         window.updateCartBadge();
 
-// --- نظام الإحصائيات (الزيارات والمتصلين) ---
         function initVisitorStats() {
-            // 1. نظام المتصلين الحقيقي (باستخدام Realtime Database مجاناً)
             const visitorId = Math.random().toString(36).substring(2, 15); 
             const myConnectionsRef = ref(rtdb, `online_users/${visitorId}`);
             const connectedRef = ref(rtdb, '.info/connected');
@@ -1598,13 +1560,12 @@ if(p.whatsapp) {
             const onlineUsersRef = ref(rtdb, 'online_users');
             onValue(onlineUsersRef, (snap) => {
                 const count = snap.size; 
-                document.getElementById('online-users-count').innerText = count || 1;
+                const el = document.getElementById('online-users-count');
+                if(el) el.innerText = count || 1;
             });
 
-            // 2. جلب إجمالي الزيارات من Firestore
             const statsRef = doc(db, "gam3a_settings", "visitor_stats");
             
-            // تشغيل المستمع فوراً لعرض الرقم بدون أي انتظار
             onSnapshot(statsRef, (docSnap) => {
                 if (docSnap.exists()) {
                     document.getElementById('total-visits-count').innerText = docSnap.data().totalVisits;
@@ -1615,7 +1576,6 @@ if(p.whatsapp) {
                 console.error("Snapshot Error:", error);
             });
 
-            // تسجيل الزيارة الجديدة في الخلفية (بدون await لمنع اللاج)
             if (!localStorage.getItem('gam3a_visited')) {
                 localStorage.setItem('gam3a_visited', 'true');
                 
@@ -1629,70 +1589,58 @@ if(p.whatsapp) {
             }
         }
 
-        // تشغيل العدادات
-
-// --- نظام الإشعارات (Push Notifications) ---
         const messaging = getMessaging(app);
 
         async function requestNotificationPermission() {
-    try {
-        if ('serviceWorker' in navigator) {
-            // انتظر حتى يتم تسجيل الـ Service Worker بالكامل
-            const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-            console.log('Service Worker registered!');
+            try {
+                if ('serviceWorker' in navigator) {
+                    const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+                    console.log('Service Worker registered!');
 
-            // طلب الإذن
-            const permission = await Notification.requestPermission();
-            
-            if (permission === 'granted') {
-                // التأكد من أن الـ Service Worker في حالة نشطة تماماً
-                await navigator.serviceWorker.ready;
-
-                // جلب التوكن
-                const currentToken = await getToken(messaging, { 
-                    vapidKey: 'BMWdIiAsx9-L-msgleE9e19DVCXKtst9Bs0T4VHtaaUTddKOMSpjHImOmC9i980_rffeE061vi-jxWlqpGISArU',
-                    serviceWorkerRegistration: registration // تمرير الـ registration هنا يحل مشاكل كثيرة
-                });
-
-                if (currentToken) {
-                    console.log("Token generated:", currentToken);
+                    const permission = await Notification.requestPermission();
                     
-                    // حفظ التوكن في Firestore
-                    const tokenRef = doc(db, "fcm_tokens", currentToken);
-                    await setDoc(tokenRef, {
-                        token: currentToken,
-                        device: navigator.userAgent,
-                        createdAt: Date.now()
-                    }, { merge: true });
-                    
-                    localStorage.setItem('fcm_token_saved', 'true');
-                    console.log("Token saved to Firestore!");
-                } else {
-                    console.warn('No registration token available.');
+                    if (permission === 'granted') {
+                        await navigator.serviceWorker.ready;
+
+                        const currentToken = await getToken(messaging, { 
+                            vapidKey: 'BMWdIiAsx9-L-msgleE9e19DVCXKtst9Bs0T4VHtaaUTddKOMSpjHImOmC9i980_rffeE061vi-jxWlqpGISArU',
+                            serviceWorkerRegistration: registration 
+                        });
+
+                        if (currentToken) {
+                            console.log("Token generated:", currentToken);
+                            
+                            const tokenRef = doc(db, "fcm_tokens", currentToken);
+                            await setDoc(tokenRef, {
+                                token: currentToken,
+                                device: navigator.userAgent,
+                                createdAt: Date.now()
+                            }, { merge: true });
+                            
+                            localStorage.setItem('fcm_token_saved', 'true');
+                            console.log("Token saved to Firestore!");
+                        } else {
+                            console.warn('No registration token available.');
+                        }
+                    }
                 }
+            } catch (error) {
+                console.error('خطأ في تفعيل الإشعارات:', error);
             }
         }
-    } catch (error) {
-        console.error('خطأ في تفعيل الإشعارات:', error);
-    }
-}
 
-        // استقبال الإشعارات والموقع مفتوح (في الواجهة)
         onMessage(messaging, (payload) => {
             window.showToast(`🔔 ${payload.notification.title}: ${payload.notification.body}`, "#9b59b6");
         });
 
-        // التحقق من حالة الإشعارات عند فتح الموقع
         setTimeout(() => {
-            // لو العميل لسه مأخدش قرار، أو مسح الكاش بس الإذن لسه شغال
             if (Notification.permission === 'default' || (Notification.permission === 'granted' && !localStorage.getItem('fcm_token_saved'))) {
                 requestNotificationPermission();
             }
-        }, 3000); // تأخير 3 ثواني عشان الموقع يحمل براحته الأول
+        }, 3000); 
+
         initVisitorStats();
 
     </script>
-
-<script 
 </body>
 </html>
