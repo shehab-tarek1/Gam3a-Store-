@@ -568,7 +568,7 @@
                 if (sharedCode) {
                     const targetProduct = window.products.find(x => String(x.shortCode) === String(sharedCode));
                     if (targetProduct) {
-                        window.historyStack =['home', 'details'];
+                        window.historyStack = ['home', 'details'];
                         window.safeReplaceState('details', `/p/${sharedCode}`);
                         try {
                             window.openProduct(targetProduct.id, false);
@@ -586,34 +586,6 @@
                     if (targetAdminId) {
                         window.historyStack = ['home', 'profile'];
                         window.safeReplaceState('profile', `/m/${marketerCode}`);
-                        try {
-                            window.openProfile(targetAdminId, false);
-                            return;
-                        } catch(e) { console.error(e); }
-                    }
-                }
-
-                window.resetAndNavigate('home');
-                    const targetProduct = window.products.find(x => String(x.shortCode) === String(sharedCode));
-                    if (targetProduct) {
-                        window.historyStack = ['home', 'details'];
-                        window.safePushState('details', "/");
-                        try {
-                            window.openProduct(targetProduct.id, false);
-                            return;
-                        } catch(e) { console.error(e); }
-                    }
-                } else if (marketerCode) {
-                    let targetAdminId = null;
-                    for (const [uid, adminData] of Object.entries(window.admins)) {
-                        if (String(adminData.shortCode) === String(marketerCode)) {
-                            targetAdminId = uid;
-                            break;
-                        }
-                    }
-                    if (targetAdminId) {
-                        window.historyStack = ['home', 'profile'];
-                        window.safePushState('profile', "/");
                         try {
                             window.openProfile(targetAdminId, false);
                             return;
