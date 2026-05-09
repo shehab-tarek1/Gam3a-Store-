@@ -86,10 +86,9 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.08); 
             cursor: pointer; 
             border: 1px solid var(--silver);
-            /* الخصائص الـ 3 القادمة هي السحر الذي يمنع التقطيع واللاج */
+            /* تسريع كارت الشاشة بدون خنق الرامات */
             transform: translateZ(0);
             backface-visibility: hidden;
-            will-change: transform;
         }
         .category-card img { width: 100%; height: 145px; object-fit: cover; object-position: center; display: block;}
         .category-card h3 { background-color: var(--bg-dark-blue); color: var(--text-light); padding: 6px; font-size: 0.8rem; margin: 0;} 
@@ -110,10 +109,13 @@
             /* 1. منع جريان السلايدر وإجباره على الوقوف عند كل بطاقة */
             scroll-snap-stop: always; 
             
-            /* 2. تسريع كارت الشاشة (GPU) لمنع اللاج والتقطيع */
+            /* 2. تسريع كارت الشاشة بدون خنق الرامات */
             transform: translateZ(0);
             backface-visibility: hidden;
-            will-change: transform;
+
+            /* 3. السحر الجديد: مسح البطاقة من المعالج لو خرجت بره الشاشة (تنظيف الرامات تلقائياً) */
+            content-visibility: auto; 
+            contain-intrinsic-size: 250px; 
         }
         .inner-product-card .img-container { position: relative; width: 100%; height: 145px; background: #ffffff; }
         .inner-product-card img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; border-bottom: 1px solid var(--border-light); transition: opacity 0.3s;} 
@@ -712,7 +714,16 @@
 
             if(pageId === 'home') window.renderHomeSlider();
             if(pageId === 'cart') window.renderCart();
-        }
+
+            // تنظيف الذاكرة (Garbage Collection): مسح تفاصيل المنتج لو العميل خرج منه
+            if (pageId !== 'details') {
+                const detailsContent = document.getElementById('product-details-content');
+                if (detailsContent) {
+                    detailsContent.innerHTML = ''; // تدمير الصور والبيانات القديمة لتحرير الرامات
+                }
+            }
+
+        } // <--- القوس ده بتاع قفلة الدالة لازم يكون هنا في الآخر خالص
 
         window.goBackSafe = function() {
             if (window.historyStack.length > 1) {
@@ -839,12 +850,13 @@
             return `
                 <a href="/p/${p.shortCode}" class="inner-product-card" onclick="event.preventDefault(); openProduct('${p.id}')" style="text-decoration: none; color: inherit; display: block;">
                     ${discountBadge}
-                    <div class="share-icon" onclick="event.preventDefault(); shareProduct(event, '${p.id}')" title="مشاركة المنتج"><i class="fa-solid fa-share-nodes"></i></div>
-                    <div class="img-container"><img src="${displayImg}" alt="${p.name} - كود ${p.shortCode}" class="${imgClass}" loading="lazy">${outOfStockBadge}</div>
+                    <div class="share-icon" onclick="event.preventDefault(); shareProduct(event, '${p.id}')" title="مشاركة المنتج"><i class="fa-solid fa-share-nodes"></i></div>   
+<div class="img-container"><img src="${displayImg}" alt="${p.name} - كود ${p.shortCode}" class="${imgClass}" loading="lazy" decoding="async">${outOfStockBadge}</div>
                     <div class="card-info">
                         <div class="title-price-row">
                             <h3>${p.name}</h3>
-                            <span class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-weight: normal;">ج.م</span></span>
+                            <span
+class="product-price-badge">${p.price} <span style="font-size: 0.65rem; font-weight: normal;">ج.م</span></span>
                         </div>
                         <div class="card-type-row">
                             <div>${typeText}</div>
@@ -1167,9 +1179,8 @@
             }
 
             let imgsArray = p.images && p.images.length > 0 ? p.images.slice(0, 7) : [p.img];
-            let sliderHtml = imgsArray.map((imgSrc, index) => `<img src="${window.optimizeImage(imgSrc, 600)}" ${index === 0 ? '' : 'loading="lazy"'} onclick="openLightbox('${window.optimizeImage(imgSrc, 700, true)}')">`).join('');
+            let sliderHtml = imgsArray.map((imgSrc, index) => `<img src="${window.optimizeImage(imgSrc, 600)}" ${index === 0 ? 'decoding="sync"' : 'loading="lazy" decoding="async"'} onclick="openLightbox('${window.optimizeImage(imgSrc, 700, true)}')">`).join('');
             let dotsHtml = imgsArray.map((_, i) => `<span class="dot ${i===0 ? 'active' : ''}"></span>`).join('');
-
             let safeSizes = p.sizes ||[];
             let safeColors = p.colors ||[];
 
