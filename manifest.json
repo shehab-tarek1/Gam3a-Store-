@@ -1,7 +1,7 @@
 {
   "name": "Gam3a Store",
   "short_name": "Gam3a Store",
-  "description": "المطور شهاب طارق صلاح طالب بكلية التجارة جامعة الزقازيق",
+  "description": "متجر شامل يجمع الطلاب كعملاء ومسوقين لطلاب جامعة الزقازيق",
   "start_url": "/",
   "id": "622006",
   "display": "standalone",
@@ -12,7 +12,7 @@
   "lang": "ar",
   "scope": "/",
   "categories": ["shopping", "business", "social", "education"],
-  "display_override": ["window-controls-overlay", "minimal-ui"],
+  "display_override": ["tabbed", "window-controls-overlay", "minimal-ui"],
   "icons": [
     {
       "src": "/icon-144x144.png",
@@ -93,5 +93,14 @@
   ],
   "prefer_related_applications": false,
   "related_applications": [],
+  "share_target": {
+    "action": "/?share-target",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
   "iarc_rating_id": "e5814b2d-e97c-47fc-9104-58a369bd6543"
 }
