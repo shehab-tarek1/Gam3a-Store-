@@ -77,15 +77,46 @@
 
         .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px; }
 
-        .category-card { position: relative; background-color: var(--bg-surface); border-radius: var(--radius); overflow: hidden; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; border: 1px solid var(--silver); }
+        .category-card { 
+            position: relative; 
+            background-color: var(--bg-surface); 
+            border-radius: var(--radius); 
+            overflow: hidden; 
+            text-align: center; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08); 
+            cursor: pointer; 
+            border: 1px solid var(--silver);
+            /* الخصائص الـ 3 القادمة هي السحر الذي يمنع التقطيع واللاج */
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            will-change: transform;
+        }
         .category-card img { width: 100%; height: 145px; object-fit: cover; object-position: center; display: block;}
-        .category-card h3 { background-color: var(--bg-dark-blue); color: var(--text-light); padding: 6px; font-size: 0.8rem; margin: 0;}
+        .category-card h3 { background-color: var(--bg-dark-blue); color: var(--text-light); padding: 6px; font-size: 0.8rem; margin: 0;} 
 
         .gender-ribbon { position: absolute; top: 10px; right: 10px; background: rgba(255, 255, 255, 0.95); border-radius: 8px; padding: 4px 8px; font-size: 0.55rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 5; border: 1px solid var(--border-light); color: var(--text-dark); line-height: 1.2; }
 
-        .inner-product-card { position: relative; background: var(--bg-surface); border-radius: var(--radius); overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; border: 1px solid var(--silver); flex-shrink: 0; scroll-snap-align: start; }
+        .inner-product-card { 
+            position: relative; 
+            background: var(--bg-surface); 
+            border-radius: var(--radius); 
+            overflow: hidden; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08); 
+            cursor: pointer; 
+            border: 1px solid var(--silver); 
+            flex-shrink: 0; 
+            scroll-snap-align: start; 
+            
+            /* 1. منع جريان السلايدر وإجباره على الوقوف عند كل بطاقة */
+            scroll-snap-stop: always; 
+            
+            /* 2. تسريع كارت الشاشة (GPU) لمنع اللاج والتقطيع */
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            will-change: transform;
+        }
         .inner-product-card .img-container { position: relative; width: 100%; height: 145px; background: #ffffff; }
-        .inner-product-card img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; border-bottom: 1px solid var(--border-light); transition: opacity 0.3s;}
+        .inner-product-card img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; border-bottom: 1px solid var(--border-light); transition: opacity 0.3s;} 
 
         .card-info { padding: 10px; text-align: right; }
         .title-price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
@@ -219,8 +250,9 @@
     <!-- الصفحة الرئيسية -->
     <main id="home" class="hidden">
         <div class="cover-video-section">
-            <video autoplay muted loop playsinline disablepictureinpicture preload="metadata">
-                <source src="https://res.cloudinary.com/dsxrjmcxs/video/upload/w_700,q_auto,f_auto/v1777896277/zimedbjtjhpbcgxixvnr.mp4" type="video/mp4">
+            <!-- تمت إضافة poster وتقليل جودة الفيديو للـ eco لتسريع الأداء ومنع التقطيع أثناء النزول -->
+            <video autoplay muted loop playsinline disablepictureinpicture preload="metadata" poster="https://res.cloudinary.com/dsxrjmcxs/video/upload/w_700,q_auto,f_auto/v1777896277/zimedbjtjhpbcgxixvnr.jpg">
+                <source src="https://res.cloudinary.com/dsxrjmcxs/video/upload/w_700,q_auto:eco,f_auto/v1777896277/zimedbjtjhpbcgxixvnr.mp4" type="video/mp4">
             </video>
         </div>
 
@@ -1673,3 +1705,4 @@
     </script>
 </body>
 </html>
+
