@@ -45,29 +45,43 @@
 
 
     <style>
-        /* الوضع الفاتح (النهاري) */
+       /* الوضع الفاتح (النهاري) - التصميم الفاخر المتناغم مع الليل */
         :root { 
-            --bg-main: #f4f6f9; 
+            /* لون خلفية مريح جداً بلمسة خضراء فاتحة (Mint) بدلاً من الرمادي الباهت */
+            --bg-main: #f2f7f4; 
             --bg-surface: #ffffff; 
             --bg-dark-blue: #094229; 
-            --header-bg: radial-gradient(circle at 20% 0%, #135c3a 0%, #094229 60%), radial-gradient(circle at 80% 100%, #135c3a 0%, #094229 60%);
+            
+            /* هيدر غني وعميق يعكس الفخامة ويبرز اللوجو */
+            --header-bg: radial-gradient(circle at 10% 20%, #105938 0%, #06301e 100%);
+            
             --text-primary: #094229; 
-            --card-border: #dfe6e9; 
-            --input-border: #9ca3af; 
-            --border-width: 1px; /* تم التعديل لـ 1px في الوضع النهاري */
-            --line-accent: rgba(9, 66, 41, 0.2); /* زيتي شبه شفاف للخطوط الفاصلة */
+            
+            /* إطارات متناغمة مع لون المتجر وليس رمادياً */
+            --card-border: #dce5df; 
+            --input-border: #b5c4bc; 
+            --border-width: 1px; 
+            --line-accent: rgba(9, 66, 41, 0.12); 
             --price-color: #059669; 
-            --text-light: #f8f9fa; 
-            --text-dark: #2d3436; 
-            --text-muted: #636e72; 
-            --border-light: #dfe6e9; 
-            --accent: #0984e3; 
-            --silver: #b2bec3; 
+            
+            --text-light: #ffffff; 
+            /* نصوص بلون زيتي داكن جداً بدلاً من الأسود لراحة العين */
+            --text-dark: #1b2e24; 
+            --text-muted: #6b7a71; 
+            --border-light: #e6eee9; 
+            --accent: #10b981; 
+            --silver: #a3b3aa; 
             --radius: 20px; 
-            --shadow: 0 8px 20px rgba(0,0,0,0.06); 
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --glass-icon: #636e72;
-            --bg-pattern: none; 
+            
+            /* السر هنا: ظلال ملونة بلمسة خضراء زاهية بدلاً من الظل الأسود الكئيب */
+            --shadow: 0 10px 25px rgba(9, 66, 41, 0.08); 
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-icon: #094229;
+            
+            /* الباترن السحري: إضاءة خلفية ناعمة جداً تنقل فخامة الوضع الليلي للنهار */
+            --bg-pattern: radial-gradient(circle at 85% 15%, rgba(9, 66, 41, 0.06) 0%, transparent 55%), 
+                          radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.05) 0%, transparent 60%),
+                          radial-gradient(circle at 50% 50%, rgba(5, 150, 105, 0.02) 0%, transparent 65%); 
         }
         
         /* الوضع الليلي الفخم */
