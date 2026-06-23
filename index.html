@@ -62,7 +62,8 @@
             --input-border: #b5c4bc; 
             --border-width: 1px; 
             --line-accent: rgba(46, 204, 113, 0.35); /* أخضر فاتح شفاف للفواصل */
-            --price-color: #059669; 
+            --price-color: #dfb15b; /* 🏆 السعر ذهبي في الوضع النهاري */
+            --card-icon-color: var(--accent); /* الأيقونات بلون الأكسنت العادي في النهار */
             
             --text-light: #ffffff; 
             /* نصوص بلون زيتي داكن جداً بدلاً من الأسود لراحة العين */
@@ -94,8 +95,9 @@
             --card-border: #d1ecd9; 
             --input-border: #4b5563;
             --border-width: 0.43px; /* تم إعادة الإطار ليكون 0.43px في الليل */
-            --line-accent: #4ade80; 
-            --price-color: #2ecc71; 
+            --line-accent: rgba(46, 204, 113, 0.25); /* أخضر فاتح شفاف لليلي */
+            --price-color: #dfb15b; /* 🏆 السعر ذهبي في الوضع الليلي أيضاً */
+            --card-icon-color: #dfb15b; /* 🏆 الأيقونات ذهبية فخمة في الوضع الليلي */
             --text-light: #ffffff; 
             --text-dark: #ffffff; 
             --text-muted: #d1d5db; 
@@ -1213,10 +1215,18 @@
         }
 
 
-        // 🚀 دالة ذكية لتحديد أيقونة القسم برمز صغير جداً فخم ومناسب تلقائياً
+        // 🚀 دالة ذكية لتحديد أيقونة القسم بدقة تامة ومطابقة لكل المسميات
         window.getCategoryIcon = function(category) {
             if (!category) return 'fa-tag';
             const cat = category.trim();
+            
+            // روايات وكتب وقصص
+            if (cat.includes('رواية') || cat.includes('روايات') || cat.includes('كتاب') || cat.includes('كتب') || cat.includes('قصص') || cat.includes('دراسات')) return 'fa-book-open';
+            
+            // أدوات المطبخ والأدوات المنزلية
+            if (cat.includes('مطبخ') || cat.includes('أدوات منزلية') || cat.includes('منزلية') || cat.includes('حلل') || cat.includes('معالق') || cat.includes('شوك') || cat.includes('أطباق')) return 'fa-utensils';
+            
+            // باقي التصنيفات السابقة بدقة
             if (cat.includes('أحذية') || cat.includes('جزم') || cat.includes('كوتش') || cat.includes('شوز')) return 'fa-shoe-prints';
             if (cat.includes('برفان') || cat.includes('عطور') || cat.includes('عطر')) return 'fa-spray-can';
             if (cat.includes('اكسسور') || cat.includes('إكسسوار') || cat.includes('ساعة') || cat.includes('نظارة')) return 'fa-gem';
@@ -1226,7 +1236,7 @@
             if (cat.includes('دراسة') || cat.includes('ادوات دراسية') || cat.includes('مكتب') || cat.includes('قلم') || cat.includes('كشكول')) return 'fa-pencil';
             if (cat.includes('غذاء') || cat.includes('بيتي بايتس') || cat.includes('أكل') || cat.includes('طعام')) return 'fa-cookie-bite';
             if (cat.includes('هدايا') || cat.includes('هدية')) return 'fa-gift';
-            if (cat.includes('منزل') || cat.includes('بيت') || cat.includes('مطبخ')) return 'fa-couch';
+            if (cat.includes('منزل') || cat.includes('بيت')) return 'fa-couch';
             if (cat.includes('سكن') || cat.includes('مغترب')) return 'fa-bed';
             if (cat.includes('عروض') || cat.includes('عرض') || cat.includes('خصم')) return 'fa-percent';
             return 'fa-tag'; 
@@ -1249,10 +1259,10 @@
 
             let genderBadge = p.targetGender ? `<span class="card-gender-badge">${p.targetGender}</span>` : '';
             
-            // 🛠️ جلب اسم النوع وتحديد الأيقونة المناسبة له تلقائياً وعرضها بحجم صغير جداً وأنيق
+            // 🛠️ جلب اسم النوع وتحديد الأيقونة المناسبة له مع وضعها قبل كلمة "النوع:" وتلوينها بالذهبي لليلي
             let typeName = p.subType ? p.subType : p.category;
             let categoryIcon = window.getCategoryIcon(typeName);
-            let typeText = `<span class="card-type-text">النوع: <i class="fa-solid ${categoryIcon}" style="font-size: 0.65rem; margin-left: 3px; color: var(--accent); vertical-align: middle;"></i> ${typeName}</span>`;
+            let typeText = `<span class="card-type-text"><i class="fa-solid ${categoryIcon}" style="font-size: 0.65rem; margin-left: 4px; color: var(--card-icon-color); vertical-align: middle;"></i>النوع: ${typeName}</span>`;
 
             return `
                 <a href="/p/${p.shortCode}" class="inner-product-card" onclick="event.preventDefault(); openProduct('${p.id}')" style="text-decoration: none; color: inherit; display: block;">
