@@ -42,6 +42,10 @@
 
     <style>
         :root { --bg-main: #f4f6f9; --bg-surface: #ffffff; --bg-dark-blue: #0f1c2e; --text-light: #f8f9fa; --text-dark: #2d3436; --text-muted: #636e72; --border-light: #dfe6e9; --accent: #0984e3; --silver: #b2bec3; --radius: 20px; --shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        
+        /* الوضع الليلي */
+        :root.dark-theme { --bg-main: #121212; --bg-surface: #1e1e1e; --bg-dark-blue: #1f2937; --text-light: #f8f9fa; --text-dark: #e0e0e0; --text-muted: #a0aab2; --border-light: #374151; --silver: #4b5563; --shadow: 0 8px 20px rgba(0,0,0,0.3); }
+        .theme-toggle { cursor: pointer; font-size: 1.2rem; color: var(--text-light); transition: 0.3s; margin-left: 5px; display: flex; align-items: center;}
 
         /* جعل أحجام النصوص تتأقلم مع الهواتف تلقائياً */
         html { font-size: 16px; }
@@ -50,7 +54,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; -webkit-font-smoothing: antialiased; }
+        body { background-color: var(--bg-main); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; -webkit-font-smoothing: antialiased; transition: background-color 0.3s, color 0.3s; }
 
         #global-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .spinner { border: 4px solid var(--border-light); border-top: 4px solid var(--accent); border-radius: 50%; width: 40px; height: 40px; animation: spin 0.4s linear infinite; margin-bottom: 15px;}
@@ -117,7 +121,7 @@
             contain-intrinsic-size: 250px; 
         }
         /* توحيد أحجام صور البطاقات */
-        .inner-product-card .img-container { position: relative; width: 100%; aspect-ratio: 1 / 1; background: #ffffff; }
+        .inner-product-card .img-container { position: relative; width: 100%; aspect-ratio: 1 / 1; background: var(--bg-surface); }
         .inner-product-card img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; border-bottom: 1px solid var(--border-light); transition: opacity 0.3s;} 
 
         .card-info { padding: 10px; text-align: right; }
@@ -151,7 +155,7 @@
         .slider-container::-webkit-scrollbar { display: none; } 
         .slider-container .inner-product-card { width: calc(50% - 6px); }
 
-        .share-icon { position: absolute; top: 8px; right: 8px; background: rgba(255, 255, 255, 0.95); color: var(--bg-dark-blue); width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.15); z-index: 10; font-size: 0.7rem; transition: 0.2s; }
+        .share-icon { position: absolute; top: 8px; right: 8px; background: rgba(255, 255, 255, 0.95); color: var(--bg-dark-blue); width: 26px; height: 26px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.15); z-index: 10; font-size: 0.8rem; transition: 0.2s; }
         .share-icon:active { transform: scale(0.85); }
 
         footer { background-color: var(--bg-dark-blue); color: var(--text-light); border-radius: 25px; padding: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.15); margin: 10px auto 25px auto; width: calc(100% - 30px); max-width: 760px; border: 1px solid rgba(255,255,255,0.1); transform: translateZ(0);}
@@ -165,7 +169,7 @@
         .details-slider::-webkit-scrollbar { display: none; }
         /* توحيد أحجام صور السلايدر في صفحة التفاصيل */
         .details-slider img { flex: 0 0 100%; width: 100%; aspect-ratio: 1 / 1; height: auto; object-fit: cover; object-position: center; background: var(--bg-surface); scroll-snap-align: center; }
-        
+
         .slider-dots { display: flex; justify-content: center; gap: 6px; margin-top: 10px; margin-bottom: 15px;}
         .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--silver); transition: 0.2s; }
         .dot.active { background: var(--bg-dark-blue); transform: scale(1.2); }
@@ -181,7 +185,7 @@
         .publisher-bar { cursor: pointer; transition: 0.2s; border: 1px solid var(--border-light); background: var(--bg-surface); }
 
         .color-pill { cursor:pointer; display:flex; align-items:center; gap:4px; background:var(--bg-main); padding:3px 8px; border-radius:15px; border:1px solid var(--border-light); transition: 0.2s; }
-        .color-pill.active { border-color: var(--accent); background: #e3f2fd; box-shadow: 0 0 5px rgba(9, 132, 227, 0.3); }
+        .color-pill.active { border-color: var(--accent); background: rgba(9, 132, 227, 0.1); box-shadow: 0 0 5px rgba(9, 132, 227, 0.3); }
 
         .btn { width: 100%; padding: 12px; border: none; border-radius: 15px; font-size: 1rem; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; color: white; transition: 0.2s; margin-top: 15px;}
         .btn:active { transform: scale(0.98); }
@@ -189,7 +193,7 @@
         .btn-cart { background: var(--bg-surface); color: var(--bg-dark-blue); border: 2px solid var(--bg-dark-blue); }
         .btn-whatsapp { background: #25D366; }
 
-        .form-control { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border-light); font-size: 0.95rem; background: var(--bg-main); outline: none; transition: 0.2s;}
+        .form-control { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border-light); font-size: 0.95rem; background: var(--bg-main); color: var(--text-dark); outline: none; transition: 0.2s;}
         .form-control:focus { border-color: var(--accent); }
 
         .cart-total-box { background: var(--bg-dark-blue); color: white; padding: 10px; border-radius: 12px; text-align: center; font-size: 0.95rem; font-weight: bold; margin-top: 15px; box-shadow: var(--shadow);}
@@ -215,23 +219,17 @@
             .category-card[style*="grid-column: span 2;"] { grid-column: span 3 !important; }
             .slider-container .inner-product-card { width: calc(33.333% - 8px); }
         }
+
+        /* الإضافات الجديدة */
+        .skeleton { background: linear-gradient(90deg, var(--bg-main) 25%, var(--border-light) 50%, var(--bg-main) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: var(--radius); height: 250px; width: 100%; border: 1px solid var(--border-light); }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        
+        .flying-img { position: fixed; z-index: 999999; border-radius: 50%; object-fit: cover; transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0.8; box-shadow: var(--shadow); pointer-events: none; }
+        
+        .wishlist-icon { position: absolute; top: 8px; left: 40px; background: rgba(255, 255, 255, 0.95); color: var(--silver); width: 26px; height: 26px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.15); z-index: 10; font-size: 0.8rem; cursor: pointer; transition: 0.2s; }
+        .wishlist-icon.active { color: #e74c3c; animation: pop 0.3s; }
+        @keyframes pop { 50% { transform: scale(1.3); } }
     </style>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Gam3a Store",
-      "alternateName": "متجر الجامعة",
-      "url": "https://gam3a-store.vercel.app/",
-      "description": "أحدث المنتجات بأفضل الأسعار لطلاب كلية التجارة جامعة الزقازيق وجميع المحافظات.",
-      "author": {
-        "@type": "Person",
-        "name": "شهاب طارق صلاح",
-        "jobTitle": "مطور ومالك الموقع"
-      },
-      "keywords": "شهاب طارق صلاح, متجر الجامعة, كلية التجارة جامعة الزقازيق, ملابس, اكسسوارات"
-    }
-    </script>
 </head>
 <body>
 
@@ -248,6 +246,9 @@
             <div class="site-name">gam3a store</div>
         </div>
         <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
+            <div class="theme-toggle" onclick="toggleTheme()" title="تغيير المظهر">
+                <i class="fa-solid fa-moon" id="theme-icon"></i>
+            </div>
             <div class="cart-icon custom-select-wrapper" style="margin: 0;">
                 <div onclick="toggleNotificationBox(event)">
                     <i class="fa-solid fa-bell"></i>
@@ -294,7 +295,7 @@
             </div>
             <div class="slider-container" id="latest-products-slider"></div>
         </div>
-        
+
         <div class="section-title-ribbon" style="font-weight: bold; color: var(--bg-dark-blue); margin-bottom: 10px; font-size: 1.1rem;">
             <i class="fa-solid fa-layer-group"></i> الأقسام المتاحة
         </div>
@@ -373,9 +374,25 @@
                 <span id="category-title" class="top-title-text">القسم</span>
             </div>
         </div>
+        
+        <!-- التصفية والترتيب -->
+        <div class="info-bar" style="margin-bottom: 15px; padding: 5px 15px;">
+            <select id="sort-filter" onchange="applySort(this.value)" style="border: none; background: transparent; color: var(--text-dark); font-weight: bold; outline: none; width: 100%; font-size: 0.85rem;">
+                <option value="default">الترتيب الافتراضي</option>
+                <option value="price-low">السعر: من الأقل للأعلى</option>
+                <option value="price-high">السعر: من الأعلى للأقل</option>
+                <option value="newest">الأحدث إضافة</option>
+            </select>
+        </div>
+
         <div class="categories-grid" id="category-products"></div>
-        <div id="category-loader" style="text-align:center; padding: 20px; display:none;">
-            <div class="spinner" style="margin: 0 auto; width: 30px; height: 30px; border-width: 3px;"></div>
+        
+        <!-- Skeleton Loader -->
+        <div id="category-loader" style="display:none; width: 100%; padding: 15px 0;">
+            <div class="categories-grid">
+                <div class="skeleton"></div><div class="skeleton"></div>
+                <div class="skeleton"></div><div class="skeleton"></div>
+            </div>
         </div>
     </main>
 
@@ -462,7 +479,6 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        /* تحديث الاستيرادات هنا لإضافة المسرّع (الكاش) و limit */
         import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, onSnapshot, addDoc, doc, getDoc, setDoc, updateDoc, increment, query, where, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getDatabase, ref, onValue, onDisconnect, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
         import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
@@ -478,8 +494,7 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        
-        /* تفعيل المُسرع: استبدال getFirestore بـ initializeFirestore مع الكاش المحلي */
+
         const db = initializeFirestore(app, {
             localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
         });
@@ -494,24 +509,52 @@
             });
         }
 
-        window.products =[];
+        window.products = [];
         window.admins = {}; 
 
-        let initialCart =[];
-        try { initialCart = JSON.parse(localStorage.getItem('am_cart')) ||[]; } catch(e) {}
+        let initialCart = [];
+        try { initialCart = JSON.parse(localStorage.getItem('am_cart')) || []; } catch(e) {}
         window.cart = initialCart;
+        window.wishlist = JSON.parse(localStorage.getItem('am_wishlist')) || [];
 
         window.SELLER_PHONE = "201206244875";
         window.historyStack = ['home'];
         window.currentViewedProductId = null; 
-        window.profileProducts =[];
+        window.profileProducts = [];
         window.profileIndex = 0;
         window.PROFILE_BATCH_SIZE = 8; 
-        window.sliderProducts =[];
+        window.sliderProducts = [];
         window.sliderIndex = 0;
-        window.catProducts =[];
+        window.catProducts = [];
         window.catIndex = 0;
         window.CAT_BATCH_SIZE = 8;
+
+        // دالة الوضع الليلي
+        window.toggleTheme = function() {
+            const root = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            root.classList.toggle('dark-theme');
+            if (root.classList.contains('dark-theme')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark-theme');
+            setTimeout(() => { document.getElementById('theme-icon').classList.replace('fa-moon', 'fa-sun'); }, 100);
+        }
+
+        // دالة تحسين الأرشفة ومحركات البحث (SEO)
+        window.updateSEO = function(title, desc) {
+            document.title = title ? `${title} | Gam3a Store` : "gam3a store | متجر الجامعة";
+            let metaDesc = document.querySelector('meta[name="description"]');
+            if(metaDesc) metaDesc.setAttribute("content", desc ? desc : "تسوق أحدث المنتجات بأفضل الأسعار لطلاب الجامعة والمحافظات.");
+            let canonical = document.querySelector('link[rel="canonical"]');
+            if(canonical) canonical.setAttribute("href", window.location.href);
+        }
 
         window.optimizeImage = function(url, width, isLightbox = false) {
             if (!url || typeof url !== 'string') return '';
@@ -645,11 +688,10 @@
             }
         }
 
-        /* تعديل المسرّع: تحديد جلب أحدث 200 منتج فقط لتوفير التكلفة والرامات */
         const activeProductsQuery = query(
             collection(db, "ghosn_products"), 
             where("hidden", "==", false),
-            limit(200) /* يمنع انهيار الهاتف في حالة وجود آلاف المنتجات */
+            limit(200)
         );
 
         onSnapshot(activeProductsQuery, (querySnapshot) => {
@@ -708,7 +750,9 @@
         window.videoPermanentlyStopped = false; 
 
         window.navigateUI = function(pageId, isBack = false) {
-            const pages =['home', 'category', 'details', 'cart', 'profile'];
+            if(pageId === 'home') window.updateSEO('', '');
+
+            const pages = ['home', 'category', 'details', 'cart', 'profile'];
 
             let currentVisible = pages.find(p => document.getElementById(p) && !document.getElementById(p).classList.contains('hidden'));
             if (currentVisible) {
@@ -725,7 +769,7 @@
 
             const bgVideo = document.getElementById('main-bg-video');
             const bgImg = document.getElementById('fallback-poster-img');
-            
+
             if (bgVideo && bgImg) {
                 if (pageId !== 'home') {
                     bgVideo.pause(); 
@@ -855,8 +899,24 @@
             if(badge) badge.innerText = window.cart.length; 
         }
 
+        window.toggleWishlist = function(event, id) {
+            event.stopPropagation();
+            const icon = event.currentTarget;
+            const index = window.wishlist.indexOf(id);
+            if (index === -1) {
+                window.wishlist.push(id);
+                icon.classList.add('active');
+                window.showToast("تمت الإضافة للمفضلة", "#e74c3c");
+            } else {
+                window.wishlist.splice(index, 1);
+                icon.classList.remove('active');
+                window.showToast("تم الحذف من المفضلة", "#636e72");
+            }
+            localStorage.setItem('am_wishlist', JSON.stringify(window.wishlist));
+        }
+
         window.getOrderedColors = function(p) {
-            let orderedColors =[];
+            let orderedColors = [];
             if (p.images && p.imageColorsMapping) {
                 p.images.forEach(imgUrl => {
                     let color = p.imageColorsMapping[imgUrl];
@@ -893,11 +953,11 @@
             let genderBadge = p.targetGender ? `<span class="card-gender-badge">${p.targetGender}</span>` : '';
             let typeText = `<span class="card-type-text">النوع: ${p.subType ? p.subType : p.category}</span>`;
 
-            /* تم إضافة dir="auto" هنا لحل مشكلة اتجاه النصوص */
             return `
                 <a href="/p/${p.shortCode}" class="inner-product-card" onclick="event.preventDefault(); openProduct('${p.id}')" style="text-decoration: none; color: inherit; display: block;">
                     ${discountBadge}
-                    <div class="share-icon" onclick="event.preventDefault(); shareProduct(event, '${p.id}')" title="مشاركة المنتج"><i class="fa-solid fa-share-nodes"></i></div>   
+                    <div class="share-icon" onclick="event.preventDefault(); shareProduct(event, '${p.id}')" title="مشاركة المنتج"><i class="fa-solid fa-share-nodes"></i></div>
+                    <div class="wishlist-icon ${window.wishlist.includes(p.id) ? 'active' : ''}" onclick="event.preventDefault(); toggleWishlist(event, '${p.id}')" title="المفضلة"><i class="fa-solid fa-heart"></i></div>   
                     <div class="img-container"><img src="${displayImg}" alt="${p.name} - كود ${p.shortCode}" class="${imgClass}" loading="lazy" decoding="async">${outOfStockBadge}</div>
                     <div class="card-info">
                         <div class="title-price-row">
@@ -950,9 +1010,44 @@
             }
         }, { rootMargin: '100px' });
 
+        window.applySort = function(sortType) {
+            if(sortType === 'price-low') { window.catProducts.sort((a, b) => parseFloat(a.price) - parseFloat(b.price)); } 
+            else if(sortType === 'price-high') { window.catProducts.sort((a, b) => parseFloat(b.price) - parseFloat(a.price)); } 
+            else if(sortType === 'newest') {
+                window.catProducts.sort((a, b) => {
+                    let dateA = a.createdAt ? (a.createdAt.seconds || new Date(a.createdAt).getTime()) : 0;
+                    let dateB = b.createdAt ? (b.createdAt.seconds || new Date(b.createdAt).getTime()) : 0;
+                    return dateB - dateA;
+                });
+            } else {
+                const titleEl = document.getElementById('category-title');
+                let catName = titleEl ? titleEl.innerText.replace('قسم ', '') : '';
+                if(catName === 'عروض خاصة') catName = 'عروض';
+                
+                if(catName === 'عروض') {
+                    window.catProducts = window.products.filter(p => p.isOffer === true && p.category !== 'سكن الطلاب');
+                } else {
+                    window.catProducts = window.products.filter(p => {
+                        let match = (p.category === catName);
+                        if(catName === 'ملابس رجالي' && (p.category === 'ملابس رجالي' || p.category === 'رجالي')) match = true;
+                        if(catName === 'ملابس حريمي' && (p.category === 'ملابس حريمي' || p.category === 'حريمي')) match = true;
+                        return match;
+                    });
+                }
+            }
+            document.getElementById('category-products').innerHTML = '';
+            window.catIndex = 0;
+            window.loadMoreCategoryProducts();
+        }
+
         window.openCategory = function(catName, pushHistory = true) {
+            window.updateSEO(`قسم ${catName}`, `تصفح أفضل المنتجات في قسم ${catName} بأرخص الأسعار`);
+
             const titleEl = document.getElementById('category-title');
             if(titleEl) titleEl.innerText = catName === 'عروض' ? 'عروض خاصة' : "قسم " + catName;
+
+            const sortFilter = document.getElementById('sort-filter');
+            if(sortFilter) sortFilter.value = 'default';
 
             const container = document.getElementById('category-products');
             const loader = document.getElementById('category-loader');
@@ -1020,7 +1115,7 @@
                 window.requestAnimationFrame(() => {
                     const absScroll = Math.abs(sliderElement.scrollLeft);
                     const index = Math.round(absScroll / sliderElement.clientWidth);
-                    
+
                     const dotsContainer = sliderElement.parentElement.nextElementSibling;
                     if (dotsContainer && dotsContainer.classList.contains('slider-dots')) {
                         const dots = dotsContainer.children;
@@ -1212,6 +1307,8 @@
                 return;
             }
 
+            if(p) window.updateSEO(p.name, p.description.substring(0, 150));
+
             const shareBtn = document.getElementById('details-share-btn');
             if(shareBtn) shareBtn.setAttribute('onclick', `shareProduct(event, '${p.id}')`);
 
@@ -1228,11 +1325,11 @@
                 } catch(e) { console.error("Date error:", e); }
             }
 
-            let imgsArray = p.images && p.images.length > 0 ? p.images.slice(0, 7) :[p.img];
+            let imgsArray = p.images && p.images.length > 0 ? p.images.slice(0, 7) : [p.img];
             let sliderHtml = imgsArray.map((imgSrc, index) => `<img src="${window.optimizeImage(imgSrc, 600)}" ${index === 0 ? 'decoding="sync"' : 'loading="lazy" decoding="async"'} onclick="openLightbox('${window.optimizeImage(imgSrc, 700, true)}')">`).join('');
             let dotsHtml = imgsArray.map((_, i) => `<span class="dot ${i===0 ? 'active' : ''}"></span>`).join('');
-            let safeSizes = p.sizes ||[];
-            let safeColors = p.colors ||[];
+            let safeSizes = p.sizes || [];
+            let safeColors = p.colors || [];
 
             let sizeItems = safeSizes.map(s => `<div class="custom-select-item" onclick="selectCustomOption('size', '${s}')">${s}</div>`).join('');
             let colorItems = safeColors.map(c => `<div class="custom-select-item" onclick="selectColor('${c}', '${p.id}')">${c}</div>`).join('');
@@ -1418,6 +1515,20 @@
 
                     ${orderSectionHTML}
                 `;
+
+                // إضافة المنتجات ذات الصلة
+                let related = window.products.filter(x => x.category === p.category && String(x.id) !== String(p.id));
+                related = related.sort(() => 0.5 - Math.random()).slice(0, 4);
+                
+                if(related.length > 0) {
+                    let relatedHtml = related.map(rp => window.generateProductCardHTML(rp)).join('');
+                    container.innerHTML += `
+                        <div class="slider-section" style="margin-top: 15px; border: none; box-shadow: none; padding: 0;">
+                            <div class="slider-header"><h2 style="font-size:0.9rem;"><i class="fa-solid fa-fire" style="color:var(--accent);"></i> منتجات مشابهة</h2></div>
+                            <div class="slider-container" style="padding-bottom: 10px;">${relatedHtml}</div>
+                        </div>
+                    `;
+                }
             }
             if(pushToHistory) window.navigate('details', true, `/p/${p.shortCode}`);
             else window.navigateUI('details');
@@ -1431,12 +1542,32 @@
             if(displayEl) displayEl.innerText = `${total} ج.م`;
         }
 
+        window.flyToCartAnimation = function(imgSrc) {
+            const cartIcon = document.querySelector('.fa-cart-shopping');
+            if (!cartIcon) return;
+            const img = document.createElement('img');
+            img.src = window.optimizeImage(imgSrc, 100);
+            img.className = 'flying-img';
+            img.style.width = '60px'; img.style.height = '60px';
+            img.style.left = (window.innerWidth / 2 - 30) + 'px';
+            img.style.top = (window.innerHeight / 2 - 30) + 'px';
+            document.body.appendChild(img);
+            const cartPos = cartIcon.getBoundingClientRect();
+            setTimeout(() => {
+                img.style.left = cartPos.left + 'px';
+                img.style.top = cartPos.top + 'px';
+                img.style.width = '15px'; img.style.height = '15px';
+                img.style.opacity = '0'; img.style.transform = 'scale(0.1)';
+            }, 50);
+            setTimeout(() => { img.remove(); }, 800);
+        }
+
         window.addFromFormToCart = function(id, adminPhone) {
             const p = window.products.find(x => String(x.id) === String(id));
             let size = document.getElementById('order-size') ? document.getElementById('order-size').value : '';
             let color = document.getElementById('order-color') ? document.getElementById('order-color').value : '';
             let qtyInput = document.getElementById('order-qty');
-            
+
             let qty = parseInt(qtyInput ? qtyInput.value : 1);
             if (isNaN(qty) || qty < 1) qty = 1;
 
@@ -1451,6 +1582,7 @@
             window.cart.push({ ...p, selSize: size, selColor: color, selQty: qty, selImg: selectedImg, marketerPhone: adminPhone });
             try { localStorage.setItem('am_cart', JSON.stringify(window.cart)); } catch(e){}
             window.updateCartBadge(); 
+            window.flyToCartAnimation(selectedImg);
             window.showToast("تمت الإضافة للسلة بنجاح", "#2ecc71"); 
         }
 
@@ -1459,7 +1591,7 @@
             let size = document.getElementById('order-size') ? document.getElementById('order-size').value : '';
             let color = document.getElementById('order-color') ? document.getElementById('order-color').value : '';
             let qtyInput = document.getElementById('order-qty');
-            
+
             let qty = parseInt(qtyInput ? qtyInput.value : 1);
             if (isNaN(qty) || qty < 1) qty = 1;
 
@@ -1700,7 +1832,7 @@
             });
 
             const statsRef = doc(db, "gam3a_settings", "visitor_stats");
-            
+
             onSnapshot(statsRef, (docSnap) => {
                 if (docSnap.exists()) {
                     document.getElementById('total-visits-count').innerText = docSnap.data().totalVisits;
@@ -1713,7 +1845,7 @@
 
             if (!localStorage.getItem('gam3a_visited')) {
                 localStorage.setItem('gam3a_visited', 'true');
-                
+
                 getDoc(statsRef).then(snap => {
                     if (!snap.exists()) {
                         setDoc(statsRef, { totalVisits: 1 });
@@ -1726,7 +1858,7 @@
 
         const messaging = getMessaging(app);
 
-        window.savedNotifications = JSON.parse(localStorage.getItem('gam3a_notifications')) ||[];
+        window.savedNotifications = JSON.parse(localStorage.getItem('gam3a_notifications')) || [];
 
         window.updateNotificationBadge = function() {
             const badge = document.getElementById('notification-badge'); 
@@ -1760,7 +1892,7 @@
             if(e) e.stopPropagation(); 
 
             const box = document.getElementById('notification-dropdown'); 
-            
+
             if (!box.classList.contains('show')) {
                 box.classList.add('show'); 
 
