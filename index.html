@@ -61,7 +61,7 @@
             --card-border: #dce5df; 
             --input-border: #b5c4bc; 
             --border-width: 1px; 
-            --line-accent: rgba(9, 66, 41, 0.12); 
+            --line-accent: rgba(46, 204, 113, 0.35); /* أخضر فاتح شفاف للفواصل */
             --price-color: #059669; 
             
             --text-light: #ffffff; 
@@ -221,7 +221,8 @@
         }
         .inner-product-card:active { transform: scale(0.98); }
         .inner-product-card .img-container { position: relative; width: 100%; aspect-ratio: 1 / 1; background: var(--bg-surface); }
-        .inner-product-card img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; border-bottom: var(--border-width) solid var(--card-border); transition: opacity 0.15s;} 
+        /* تم تغيير الإطار السفلي للصورة ليكون أخضر فاتح شفاف وسميك قليلاً لإبرازه */
+        .inner-product-card img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; border-bottom: 1.5px solid var(--line-accent); transition: opacity 0.15s;}
 
 
         .card-info { padding: 10px; text-align: right; }
