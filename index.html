@@ -45,44 +45,48 @@
 
 
     <style>
-       /* الوضع الفاتح (النهاري) - التصميم الفاخر المتناغم مع الليل */
+       /* الوضع الفاتح (النهاري) - التصميم الفاخر بلون التوفي والكراميل 🍮 */
         :root { 
-            /* لون خلفية مريح جداً بلمسة خضراء فاتحة (Mint) بدلاً من الرمادي الباهت */
-            --bg-main: #f2f7f4; 
+            /* خلفية "كريمي/فانيليا" دافئة ومريحة جداً للعين بدلاً من الأبيض الصارخ */
+            --bg-main: #fcf9f5; 
             --bg-surface: #ffffff; 
-            --bg-dark-blue: #094229; 
+            --bg-dark-blue: #4a2c11; /* بني شوكولاتة عميق بديل للأخضر الكاتم */
             
-            /* هيدر غني وعميق يعكس الفخامة ويبرز اللوجو */
-            --header-bg: radial-gradient(circle at 10% 20%, #105938 0%, #06301e 100%);
+            /* هيدر غني وعميق يعكس فخامة الكراميل والقهوة */
+            --header-bg: radial-gradient(circle at 10% 20%, #8c5322 0%, #4a2c11 100%);
             
-            --text-primary: #094229; 
+            --text-primary: #4a2c11; 
             
-            /* إطارات متناغمة مع لون المتجر وليس رمادياً */
-            --card-border: #dce5df; 
-            --input-border: #b5c4bc; 
+            /* إطارات متناغمة مع لون الكراميل الفاتح */
+            --card-border: #eee6de; 
+            --input-border: #d2c5b8; 
             --border-width: 1px; 
-            --line-accent: rgba(46, 204, 113, 0.35); /* أخضر فاتح شفاف للفواصل */
-            --price-color: #059669;
---card-icon-color: var(--accent);
+            
+            /* فواصل وخطوط بلون توفي شفاف يفتح النفس */
+            --line-accent: rgba(196, 131, 68, 0.35); 
+            
+            /* لون السعر والأيقونات "توفي غني / نحاسي" فخم جداً */
+            --price-color: #b87333; 
+            --card-icon-color: #b87333; 
             
             --text-light: #ffffff; 
-            /* نصوص بلون زيتي داكن جداً بدلاً من الأسود لراحة العين */
-            --text-dark: #1b2e24; 
-            --text-muted: #6b7a71; 
-            --border-light: #e6eee9; 
-            --accent: #10b981; 
-            --silver: #a3b3aa; 
+            /* نصوص بني داكن جداً (إسبريسو) لراحة عين فائقة بدلاً من الأسود */
+            --text-dark: #3e2723; 
+            --text-muted: #8d6e63; 
+            --border-light: #f5efe9; 
+            --accent: #c48344; /* لون التوفي الأساسي للتفاصيل */
+            --silver: #bcaaa0; 
             --radius: 20px; 
             
-            /* السر هنا: ظلال ملونة بلمسة خضراء زاهية بدلاً من الظل الأسود الكئيب */
-            --shadow: 0 10px 25px rgba(9, 66, 41, 0.08); 
+            /* ظلال ملونة بلمسة كراميل دافئة تجعل الكروت تطفو بنعومة */
+            --shadow: 0 10px 25px rgba(140, 83, 34, 0.08); 
             --glass-bg: rgba(255, 255, 255, 0.9);
-            --glass-icon: #094229;
+            --glass-icon: #4a2c11;
             
-            /* الباترن السحري: إضاءة خلفية ناعمة جداً تنقل فخامة الوضع الليلي للنهار */
-            --bg-pattern: radial-gradient(circle at 85% 15%, rgba(9, 66, 41, 0.06) 0%, transparent 55%), 
-                          radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.05) 0%, transparent 60%),
-                          radial-gradient(circle at 50% 50%, rgba(5, 150, 105, 0.02) 0%, transparent 65%); 
+            /* الباترن السحري: إضاءة خلفية ناعمة جداً تنشر دفء الكراميل في أركان الشاشة */
+            --bg-pattern: radial-gradient(circle at 85% 15%, rgba(196, 131, 68, 0.08) 0%, transparent 55%), 
+                          radial-gradient(circle at 15% 85%, rgba(140, 83, 34, 0.06) 0%, transparent 60%),
+                          radial-gradient(circle at 50% 50%, rgba(184, 115, 51, 0.03) 0%, transparent 65%); 
         }
         
         /* الوضع الليلي الفخم (باللمعة الزيتية الأصلية الساحرة) */
@@ -98,7 +102,7 @@
             --border-width: 0.43px; 
             
             /* التعديلات الخاصة بلون السعر والأيقونات والفواصل */
-            --line-accent: rgba(46, 204, 113, 0.50); 
+            --line-accent: rgba(46, 204, 113, 0.45); 
             --price-color: #2ecc71; 
             --card-icon-color: #2ecc71; 
             
@@ -464,21 +468,21 @@
 
         <div class="categories-grid">
             <div class="category-card" onclick="openCategory('ملابس رجالي')">
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1782229535/n6gpcskzz8azhbn0dlo8.jpg" alt="قسم ملابس رجالي - Gam3a Store" loading="lazy">
+                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777897969/qi3lscagmdzbrkvup5vf.png" alt="قسم ملابس رجالي - Gam3a Store" loading="lazy">
                 <h3 style="background: var(--header-bg); color: #fff;">ملابس رجالي</h3>
             </div>
             <div class="category-card" onclick="openCategory('ملابس حريمي')">
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1782229546/ebsfdmf2yworawpwizeq.jpg" alt="قسم ملابس حريمي - Gam3a Store" loading="lazy">
+                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777897952/f0zjvcf4shbdm6vpsu9v.png" alt="قسم ملابس حريمي - Gam3a Store" loading="lazy">
                 <h3 style="background: var(--header-bg); color: #fff;">ملابس حريمي</h3>
             </div>
             <div class="category-card" onclick="openCategory('أحذية')">
                 <div class="gender-ribbon"><span>رجالي</span><span>حريمي</span></div>
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1782229609/uqf1cv1cfqsokbpmw85i.jpg" alt="قسم الأحذية والكوتشيات - Gam3a Store" loading="lazy">
+                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778299211/rnrno7nblv0kibpvjzsd.png" alt="قسم الأحذية والكوتشيات - Gam3a Store" loading="lazy">
                 <h3 style="background: var(--header-bg); color: #fff;">أحذية</h3>
             </div>
             <div class="category-card" onclick="openCategory('برفانات')">
                 <div class="gender-ribbon"><span>رجالي</span><span>حريمي</span></div>
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1782229479/bmvchsi9t7pskex1onkb.jpg" alt="قسم البرفانات والعطور - Gam3a Store" loading="lazy">
+                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777898091/o7n4f5rmofg75heasp2n.png" alt="قسم البرفانات والعطور - Gam3a Store" loading="lazy">
                 <h3 style="background: var(--header-bg); color: #fff;">برفانات</h3>
             </div>
             <div class="category-card" onclick="openCategory('اكسسورات رجالي')">
