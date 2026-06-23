@@ -1,5 +1,6 @@
+
 <!DOCTYPE html>
-<!-- التحديث الجديد 9.0 - حل اللاج، السحاب النهاري، الإطارات الديناميكية، وإصلاح الواتساب -->
+<!-- التحديث الجديد 10.0 - الأسعار اللامعة، الخطوط الزيتونية، وسرعة زر الرجوع الصاروخية -->
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -41,12 +42,13 @@
             --bg-main: #f4f6f9; 
             --bg-surface: #ffffff; 
             --bg-dark-blue: #094229; 
-            /* تأثير السحاب الزيتوني للهيدر والفوتر في الوضع النهاري */
             --header-bg: radial-gradient(circle at 20% 0%, #135c3a 0%, #094229 60%), radial-gradient(circle at 80% 100%, #135c3a 0%, #094229 60%);
             --text-primary: #094229; 
-            --card-border: #dfe6e9; /* إطار فضي فاتح للبطاقات */
-            --input-border: #9ca3af; /* إطار فضي غامق لحقول الإدخال */
-            --border-width: 0.5px; /* سُمك الإطار النهاري */
+            --card-border: #dfe6e9; 
+            --input-border: #9ca3af; 
+            --border-width: 0.8px; /* تم إعادة الإطار ليكون بارزاً في النهار */
+            --line-accent: #3b7a57; /* الخط الزيتوني الأنيق الفاصل */
+            --price-color: #059669; /* أخضر غامق لامع للأسعار */
             --text-light: #f8f9fa; 
             --text-dark: #2d3436; 
             --text-muted: #636e72; 
@@ -57,7 +59,7 @@
             --shadow: 0 8px 20px rgba(0,0,0,0.06); 
             --glass-bg: rgba(255, 255, 255, 0.85);
             --glass-icon: #636e72;
-            --bg-pattern: none; /* بدون ضباب في الخلفية للموقع في النهار */
+            --bg-pattern: none; 
         }
         
         /* الوضع الليلي الفخم */
@@ -67,9 +69,11 @@
             --bg-dark-blue: #094229; 
             --header-bg: radial-gradient(circle at 20% 0%, #135c3a 0%, #094229 60%), radial-gradient(circle at 80% 100%, #135c3a 0%, #094229 60%);
             --text-primary: #ffffff; 
-            --card-border: #d1ecd9; /* أبيض مخضر فاتح للإطارات */
+            --card-border: #d1ecd9; 
             --input-border: #4b5563;
-            --border-width: 0.43px; /* سُمك الإطار الليلي المصغر */
+            --border-width: 0.43px; /* إطار نحيف في الليل */
+            --line-accent: #4ade80; /* خط زيتي فاتح لامع في الليل */
+            --price-color: #2ecc71; /* أخضر فاقع لامع للأسعار في الليل */
             --text-light: #ffffff; 
             --text-dark: #ffffff; 
             --text-muted: #d1d5db; 
@@ -79,7 +83,6 @@
             --shadow: 0 8px 20px rgba(0,0,0,0.4); 
             --glass-bg: rgba(24, 36, 28, 0.85);
             --glass-icon: #cbd5e1;
-            /* زيادة البقع الزيتية اللامعة في خلفية الموقع */
             --bg-pattern: radial-gradient(circle at 85% 15%, rgba(25, 115, 65, 0.35) 0%, transparent 55%), 
                           radial-gradient(circle at 15% 85%, rgba(20, 90, 50, 0.3) 0%, transparent 60%),
                           radial-gradient(circle at 50% 50%, rgba(15, 80, 45, 0.2) 0%, transparent 65%); 
@@ -87,13 +90,11 @@
 
         .theme-toggle { cursor: pointer; font-size: 1.2rem; color: var(--text-light); transition: 0.15s; margin-left: 5px; display: flex; align-items: center;}
 
-        /* إلغاء المربع الأزرق المزعج عند اللمس في الهواتف */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         
         html { font-size: 16px; }
         @media (max-width: 400px) { html { font-size: 14px; } }
 
-        /* حل مشكلة التقطيع (اللاج) وشريط المتصفح عبر 100dvh وعزل الخلفية */
         body { 
             background-color: var(--bg-main); 
             color: var(--text-dark); 
@@ -102,10 +103,10 @@
             flex-direction: column; 
             align-items: center; 
             -webkit-font-smoothing: antialiased; 
+            transition: background-color 0.15s, color 0.15s, border-color 0.15s; 
             position: relative;
         }
 
-        /* عزل تأثير الضباب في طبقة خلفية مخصصة لمعالجة اللاج (Hardware Accelerated) */
         body::before {
             content: '';
             position: fixed;
@@ -137,8 +138,11 @@
         .cover-video-section video { width: 100%; height: auto; max-height: 350px; object-fit: cover; pointer-events: none; display: block; }
 
         .top-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
-        .back-arrow { display: inline-flex; align-items: center; gap: 8px; color: var(--text-primary); font-weight: bold; cursor: pointer; padding: 8px 15px; background: var(--bg-surface); border-radius: 25px; box-shadow: var(--shadow); font-size: 0.85rem; transition: 0.15s; border: var(--border-width) solid var(--card-border);}
-        .back-arrow:active { transform: scale(0.95); }
+        
+        /* تسريع استجابة زر الرجوع */
+        .back-arrow { display: inline-flex; align-items: center; gap: 8px; color: var(--text-primary); font-weight: bold; cursor: pointer; padding: 8px 15px; background: var(--bg-surface); border-radius: 25px; box-shadow: var(--shadow); font-size: 0.85rem; border: var(--border-width) solid var(--card-border); touch-action: manipulation;}
+        .back-arrow:active { background: var(--border-light); }
+        
         .top-title-text { font-size: 0.85rem; font-weight: bold; color: var(--text-muted); background: var(--bg-surface); padding: 8px 15px; border-radius: 25px; box-shadow: var(--shadow); border: var(--border-width) solid var(--card-border);}
 
         .share-btn-top { background: var(--bg-surface); color: var(--text-primary); width: 34px; height: 34px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: var(--shadow); cursor: pointer; border: var(--border-width) solid var(--card-border); font-size: 0.9rem; transition: 0.15s; }
@@ -184,17 +188,20 @@
         .card-info { padding: 10px; text-align: right; }
         .title-price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; gap: 8px; }
         .title-price-row h3 { font-size: 0.8rem; color: var(--text-dark); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; text-align: start; font-weight: bold; }
-        .product-price-badge { font-size: 0.85rem; font-weight: bold; color: var(--accent); margin: 0; white-space: nowrap; }
+        
+        /* تعديل لون السعر ليصبح الأخضر الغامق اللامع */
+        .product-price-badge { font-size: 0.85rem; font-weight: bold; color: var(--price-color); margin: 0; white-space: nowrap; }
 
         .card-type-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .card-type-text { font-size: 0.7rem; color: var(--text-muted); font-weight: bold; }
-        .card-gender-badge { background: var(--bg-main); color: var(--text-dark); padding: 2px 8px; border-radius: 10px; font-size: 0.65rem; font-weight: bold; border: var(--border-width) solid var(--card-border); }
+        .card-gender-badge { background: var(--bg-main); color: var(--text-dark); padding: 2px 8px; border-radius: 10px; font-size: 0.65rem; font-weight: bold; border: var(--border-width) solid var(--border-light); }
 
         .card-color-circles { display: flex; align-items: center; gap: 3px; margin-bottom: 8px; flex-wrap: nowrap; overflow: hidden; width: 100%; }
         .color-label { font-size: 0.65rem; color: var(--text-muted); margin-left: 4px; font-weight: bold; flex-shrink: 0; }
         .card-color-circle { width: 10px; height: 10px; border-radius: 50%; border: var(--border-width) solid var(--card-border); box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-shrink: 0; }
 
-        .card-desc-snippet { font-size: 0.8rem; color: var(--text-muted); margin: 0; text-align: start; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; border-top: var(--border-width) dashed var(--card-border); padding-top: 8px; }
+        /* تغيير الخط المنقط ليكون بنفس اللون الزيتوني الفاتح/الغامق */
+        .card-desc-snippet { font-size: 0.8rem; color: var(--text-muted); margin: 0; text-align: start; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; border-top: 1.5px dashed var(--line-accent); padding-top: 8px; }
 
         .badge-discount { position: absolute; top: 6px; left: 6px; background-color: #e74c3c; color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.6rem; font-weight: bold; z-index: 5;}
 
@@ -202,7 +209,9 @@
         .img-outofstock { opacity: 0.85; }
 
         .slider-section { background-color: var(--bg-surface); padding: 10px 15px 10px 15px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 25px; border: var(--border-width) solid var(--card-border);}
-        .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: var(--border-width) solid var(--card-border); padding-bottom: 6px;}
+        
+        /* تغيير الخط أسفل أحدث الإضافات ليكون زيتوني */
+        .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1.5px solid var(--line-accent); padding-bottom: 6px;}
         .slider-header h2 { font-size: 0.9rem; color: var(--text-primary); margin: 0; }
         .slider-nav { display: flex; gap: 8px; }
         .slider-arrow { width: 24px; height: 24px; border-radius: 50%; background: var(--bg-main); color: var(--text-primary); display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 0.7rem; border: var(--border-width) solid var(--card-border); transition: 0.15s;}
@@ -343,7 +352,6 @@
                         <div class="slider-arrow" onclick="scrollSlider('right')"><i class="fa-solid fa-chevron-right"></i></div>
                         <div class="slider-arrow" onclick="scrollSlider('left')"><i class="fa-solid fa-chevron-left"></i></div>
                     </div>
-                    <!-- زر المفضلة المحسن والمصغر -->
                     <button class="wishlist-page-btn" onclick="openWishlistPage()" style="background: var(--header-bg); color: #fff; border: var(--border-width) solid rgba(255,255,255,0.15); padding: 4px 12px; border-radius: 25px; font-size: 0.75rem; font-weight: bold; cursor: pointer; box-shadow: var(--shadow); transition: 0.15s;">
                         المفضلة
                     </button>
@@ -352,7 +360,6 @@
             <div class="slider-container" id="latest-products-slider"></div>
         </div>
 
-        <!-- الأقسام المتاحة -->
         <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 15px;">
             <div class="section-title-ribbon" style="display: inline-flex; align-items: center; gap: 6px; font-weight: bold; color: #fff; background: var(--header-bg); padding: 5px 18px; border-radius: 50px; font-size: 0.85rem; box-shadow: var(--shadow); border: var(--border-width) solid rgba(255,255,255,0.1);">
                 <i class="fa-solid fa-layer-group" style="color: #fff;"></i> الأقسام المتاحة
@@ -850,10 +857,11 @@
                 }
             }
 
+            // حل مشكلة تأخر زر الرجوع بالقفز الفوري
             if (isBack && window.scrollPositions[pageId] !== undefined) {
-                setTimeout(() => {
+                window.requestAnimationFrame(() => {
                     window.scrollTo({ top: window.scrollPositions[pageId], behavior: 'instant' });
-                }, 10);
+                });
             } else {
                 window.scrollTo({ top: 0, behavior: 'instant' });
             }
@@ -1343,7 +1351,7 @@
                         <strong style="font-size:1.1rem; color:var(--text-primary);">${admin.name}</strong>
                         <span style="font-size:0.8rem; color:var(--text-muted);">انضم: ${joinDate}</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-top: var(--border-width) dashed var(--border-light); padding-top: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-top: var(--border-width) dashed var(--line-accent); padding-top: 8px;">
                         <span style="font-size:0.85rem; color:var(--text-dark);"><i class="fa-solid fa-location-dot" style="color:var(--accent);"></i> ${admin.address}</span>
                         <span style="font-size:0.85rem; color:var(--text-dark); font-weight:bold;" dir="ltr"><i class="fa-solid fa-phone" style="color:var(--accent);"></i> ${admin.phone}</span>
                     </div>
@@ -1492,7 +1500,7 @@
             if (!isSoldOut) {
                 orderSectionHTML = `
                 <div class="options-section" style="padding: 12px; border: var(--border-width) solid var(--border-light); overflow: visible;">
-                    <div style="font-weight:bold; font-size:0.9rem; color:var(--text-primary); margin-bottom: 10px; border-bottom: var(--border-width) solid var(--border-light); padding-bottom: 5px;">تجهيز الطلب:</div>
+                    <div style="font-weight:bold; font-size:0.9rem; color:var(--text-primary); margin-bottom: 10px; border-bottom: var(--border-width) solid var(--line-accent); padding-bottom: 5px;">تجهيز الطلب:</div>
                     
                     <div style="display: flex; gap: 8px; margin-bottom: 10px;">
                         <div style="flex: 1;">
@@ -1532,7 +1540,7 @@
                         </div>
                         <div style="flex: 2; text-align: center; background: var(--bg-main); padding: 6px; border-radius: 8px; border: var(--border-width) solid var(--border-light);">
                             <span style="font-size:0.75rem; color:var(--text-muted); font-weight:bold;">الإجمالي:</span>
-                            <span id="order-total-display" style="font-size:0.95rem; font-weight:bold; color:var(--text-primary); margin-right: 5px;">${p.price} ج.م</span>
+                            <span id="order-total-display" style="font-size:0.95rem; font-weight:bold; color:var(--price-color); margin-right: 5px;">${p.price} ج.م</span>
                         </div>
                     </div>
                     
@@ -1593,7 +1601,7 @@
                     <div class="info-bar" style="align-items: flex-start;">
                         <div>
                             <strong style="font-size:0.95rem; display:block; margin-bottom:5px;" dir="auto">${p.name}</strong> 
-                            <span style="color:var(--accent); font-weight:bold; font-size:1.1rem;">${p.price} ج.م</span>
+                            <span style="color:var(--price-color); font-weight:bold; font-size:1.1rem;">${p.price} ج.م</span>
                         </div>
                         <div style="text-align: left; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
                             <span style="font-size: 0.55rem; color: var(--silver); direction: ltr;">${pubDate}</span>
@@ -1647,7 +1655,7 @@
             if(displayEl) displayEl.innerText = `${total} ج.م`;
         }
 
-        /* تقليل الزوم في تأثير السلة لمنع اللاج */
+        /* زوم خفيف بدون لاج مع تسريع الحركة (will-change) */
         window.flyToCartAnimation = function(imgSrc) {
             const cartIcon = document.querySelector('.fa-cart-shopping');
             if (!cartIcon) return;
@@ -1658,8 +1666,8 @@
             img.style.height = '80px';
             img.style.left = (window.innerWidth / 2 - 40) + 'px';
             img.style.top = (window.innerHeight / 2 - 40) + 'px';
-            img.style.transform = 'scale(0.8)'; /* زوم خفيف ومريح */
-            img.style.willChange = 'top, left, transform, opacity'; /* تسريع الحركة عبر كارت الشاشة */
+            img.style.transform = 'scale(0.8)';
+            img.style.willChange = 'top, left, transform, opacity'; 
             document.body.appendChild(img);
             
             const cartPos = cartIcon.getBoundingClientRect();
@@ -1700,7 +1708,7 @@
             window.showToast("تمت الإضافة للسلة بنجاح", "#2ecc71"); 
         }
 
-        /* إصلاح تكرار الرابط في الواتساب عبر window.location.origin */
+        /* إصلاح رابط الواتساب لتجنب مشكلة /p/123/p/123 */
         window.confirmDirectOrder = function(id, adminPhone) {
             const p = window.products.find(x => String(x.id) === String(id));
             let size = document.getElementById('order-size') ? document.getElementById('order-size').value : '';
@@ -1720,7 +1728,7 @@
 
             if (qty > p.qty) { alert("الكمية المطلوبة أكبر من المتاح في المخزن!"); return; }
 
-            const cleanBaseUrl = window.location.origin;
+            const cleanBaseUrl = window.location.origin; /* الاعتماد على الرابط الأساسي فقط */
             const productUrl = `${cleanBaseUrl}/p/${p.shortCode}`;
             const totalPrice = p.price * qty;
 
@@ -1734,7 +1742,7 @@
             const p = window.products.find(x => String(x.id) === String(id));
             if (!p) return;
 
-            const cleanBaseUrl = window.location.origin;
+            const cleanBaseUrl = window.location.origin; /* الاعتماد على الرابط الأساسي فقط */
             const productUrl = `${cleanBaseUrl}/p/${p.shortCode}`;
 
             let targetPhone = adminPhone || window.SELLER_PHONE;
@@ -1773,7 +1781,7 @@
                     <div style="flex:1; margin: 0 12px;">
                         <strong style="font-size:0.9rem;" dir="auto">${item.name}</strong><br>
                         <small style="color:var(--text-muted); font-size:0.75rem;">${item.selColor ? `لون: ${item.selColor} | ` : ''}${item.selSize ? `مقاس: ${item.selSize} | ` : ''}<strong style="color:var(--text-primary)">العدد: ${item.selQty}</strong></small><br>
-                        <span style="color:var(--accent); font-weight:bold; font-size:0.85rem;">${itemTotal} ج.م</span>
+                        <span style="color:var(--price-color); font-weight:bold; font-size:0.85rem;">${itemTotal} ج.م</span>
                     </div>
                     <i class="fa-solid fa-trash" style="color:#e74c3c; cursor:pointer; font-size:1.1rem; padding:8px;" onclick="removeFromCart(${i})"></i>
                 </div>`;
