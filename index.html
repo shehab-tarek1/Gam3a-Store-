@@ -196,25 +196,65 @@
         .share-btn-top.active-heart { color: #e74c3c; border-color: #e74c3c; background: #fff0f0;}
 
 
-        .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px; }
+        /* 🚀 شبكة الأقسام المستطيلة الطولية الفخمة */
+        .categories-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 15px; }
+        @media (min-width: 600px) {
+            .categories-grid { grid-template-columns: repeat(2, 1fr); }
+            .category-card[style*="grid-column: span 2;"] { grid-column: span 2 !important; }
+        }
 
-
+        /* كارت القسم المستطيل الفاخر الجديد */
         .category-card { 
             position: relative; 
             background-color: var(--bg-surface); 
             border-radius: var(--radius); 
             overflow: hidden; 
-            text-align: center; 
             box-shadow: var(--shadow); 
             cursor: pointer; 
             border: var(--border-width) solid var(--card-border); 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 90px; /* ارتفاع الكارت المستطيل متناسق جداً ومريح */
             transform: translateZ(0);
             transition: transform 0.15s;
         }
         .category-card:active { transform: scale(0.98); }
-        .category-card img { width: 100%; aspect-ratio: 4/3; height: auto; object-fit: cover; object-position: center; display: block;}
-        .category-card h3 { background: var(--header-bg); color: var(--text-light); padding: 6px; font-size: 0.8rem; margin: 0;} 
 
+        /* الجزء الداخلي الذي يحتوي على الاسم يميناً والصورة يساراً */
+        .category-card-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 15px;
+            flex: 1;
+        }
+        /* عنوان القسم في أقصى اليمين */
+        .category-card-body h3 {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin: 0;
+            text-align: right;
+            background: transparent !important; /* إلغاء لون الخلفية القديم للعنوان */
+        }
+        /* الصورة الأنيقة في أقصى اليسار */
+        .category-card-body img {
+            width: 62px;
+            height: 62px;
+            border-radius: 12px;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            border: var(--border-width) solid var(--card-border);
+        }
+
+        /* 🍮 شريط التوفي/الكراميل السفلي الممتد */
+        .category-card-bar {
+            height: 6px;
+            background: var(--header-bg);
+            width: 100%;
+        }
 
         .gender-ribbon { position: absolute; top: 10px; right: 10px; background: rgba(255, 255, 255, 0.95); border-radius: 8px; padding: 4px 8px; font-size: 0.55rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 5; border: var(--border-width) solid var(--card-border); color: #2d3436; line-height: 1.2; }
 
@@ -466,68 +506,159 @@
         </div>
 
 
-        <div class="categories-grid">
+       <div class="categories-grid">
+            <!-- 1. ملابس رجالي -->
             <div class="category-card" onclick="openCategory('ملابس رجالي')">
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777897969/qi3lscagmdzbrkvup5vf.png" alt="قسم ملابس رجالي - Gam3a Store" loading="lazy">
-                <h3 style="background: var(--header-bg); color: #fff;">ملابس رجالي</h3>
+                <div class="category-card-body">
+                    <h3>ملابس رجالي</h3>
+                    <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777897969/qi3lscagmdzbrkvup5vf.png" alt="قسم ملابس رجالي" loading="lazy">
+                </div>
+                <div class="category-card-bar"></div>
             </div>
+
+            <!-- 2. ملابس حريمي -->
             <div class="category-card" onclick="openCategory('ملابس حريمي')">
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777897952/f0zjvcf4shbdm6vpsu9v.png" alt="قسم ملابس حريمي - Gam3a Store" loading="lazy">
-                <h3 style="background: var(--header-bg); color: #fff;">ملابس حريمي</h3>
+                <div class="category-card-body">
+                    <h3>ملابس حريمي</h3>
+                    <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777897952/f0zjvcf4shbdm6vpsu9v.png" alt="قسم ملابس حريمي" loading="lazy">
+                </div>
+                <div class="category-card-bar"></div>
             </div>
+
+            <!-- 3. أحذية -->
             <div class="category-card" onclick="openCategory('أحذية')">
-                <div class="gender-ribbon"><span>رجالي</span><span>حريمي</span></div>
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778299211/rnrno7nblv0kibpvjzsd.png" alt="قسم الأحذية والكوتشيات - Gam3a Store" loading="lazy">
-                <h3 style="background: var(--header-bg); color: #fff;">أحذية</h3>
+                <div class="category-card-body">
+                    <h3>أحذية</h3>
+                    <div style="position: relative; width: 62px; height: 62px;">
+                        <div class="gender-ribbon" style="top: 2px; right: 2px; font-size: 0.45rem; padding: 2px 4px; border-radius: 4px; gap: 1px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);"><span>رجالي</span><span>حريمي</span></div>
+                        <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778299211/rnrno7nblv0kibpvjzsd.png" alt="قسم الأحذية والكوتشيات" style="width: 100%; height: 100%;" loading="lazy">
+                    </div>
+                </div>
+                <div class="category-card-bar"></div>
             </div>
+
+            <!-- 4. برفانات -->
             <div class="category-card" onclick="openCategory('برفانات')">
-                <div class="gender-ribbon"><span>رجالي</span><span>حريمي</span></div>
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777898091/o7n4f5rmofg75heasp2n.png" alt="قسم البرفانات والعطور - Gam3a Store" loading="lazy">
-                <h3 style="background: var(--header-bg); color: #fff;">برفانات</h3>
+                <div class="category-card-body">
+                    <h3>برفانات</h3>
+                    <div style="position: relative; width: 62px; height: 62px;">
+                        <div class="gender-ribbon" style="top: 2px; right: 2px; font-size: 0.45rem; padding: 2px 4px; border-radius: 4px; gap: 1px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);"><span>رجالي</span><span>حريمي</span></div>
+                        <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777898091/o7n4f5rmofg75heasp2n.png" alt="قسم البرفانات والعطور" style="width: 100%; height: 100%;" loading="lazy">
+                    </div>
+                </div>
+                <div class="category-card-bar"></div>
             </div>
+
+            <!-- 5. اكسسورات رجالي -->
             <div class="category-card" onclick="openCategory('اكسسورات رجالي')">
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777899460/w2jl5kfkm6laxg8azxj2.png" alt="قسم إكسسوارات رجالي - Gam3a Store" loading="lazy">
-                <h3 style="background: var(--header-bg); color: #fff;">اكسسورات رجالي</h3>
+                <div class="category-card-body">
+                    <h3>إكسسوارات رجالي</h3>
+                    <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777899460/w2jl5kfkm6laxg8azxj2.png" alt="قسم إكسسوارات رجالي" loading="lazy">
+                </div>
+                <div class="category-card-bar"></div>
             </div>
+
+            <!-- 6. اكسسورات حريمي -->
             <div class="category-card" onclick="openCategory('اكسسورات حريمي')">
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778298464/hao9excix6gpoywm3yeb.png" alt="قسم إكسسوارات حريمي - Gam3a Store" loading="lazy">
-                <h3 style="background: var(--header-bg); color: #fff;">اكسسورات حريمي</h3>
+                <div class="category-card-body">
+                    <h3>إكسسوارات حريمي</h3>
+                    <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778298464/hao9excix6gpoywm3yeb.png" alt="قسم إكسسوارات حريمي" loading="lazy">
+                </div>
+                <div class="category-card-bar"></div>
             </div>
+
+            <!-- 7. عناية شخصية للرجال -->
             <div class="category-card" onclick="openCategory('العناية الشخصية للرجال')">
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778298454/hocvf18thnbbbnyse9mq.png" alt="قسم العناية الشخصية للرجال - Gam3a Store" loading="lazy">
-                <h3 style="background: var(--header-bg); color: #fff;">عناية شخصية للرجال</h3>
+                <div class="category-card-body">
+                    <h3>عناية شخصية للرجال</h3>
+                    <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778298454/hocvf18thnbbbnyse9mq.png" alt="قسم العناية الشخصية للرجال" loading="lazy">
+                </div>
+                <div class="category-card-bar"></div>
             </div>
+
+            <!-- 8. عناية شخصية للبنات -->
             <div class="category-card" onclick="openCategory('العناية الشخصية للحريم')">
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778298442/cf1knz6ug3g8mib8ai7n.png" alt="قسم العناية الشخصية للبنات - Gam3a Store" loading="lazy">
-                <h3 style="background: var(--header-bg); color: #fff;">عناية شخصية للبنات</h3>
+                <div class="category-card-body">
+                    <h3>عناية شخصية للبنات</h3>
+                    <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778298442/cf1knz6ug3g8mib8ai7n.png" alt="قسم العناية الشخصية للبنات" loading="lazy">
+                </div>
+                <div class="category-card-bar"></div>
             </div>
+
+            <!-- 9. مستحضرات التجميل -->
             <div class="category-card" onclick="openCategory('مستحضرات التجميل')">
-                <img src="https://images.pexels.com/photos/2533266/pexels-photo-2533266.jpeg?auto=compress&cs=tinysrgb&w=400" alt="قسم مستحضرات التجميل والمكياج - Gam3a Store" loading="lazy">
-                <h3 style="background: var(--header-bg); color: #fff;">مستحضرات التجميل</h3>
+                <div class="category-card-body">
+                    <h3>مستحضرات التجميل</h3>
+                    <img src="https://images.pexels.com/photos/2533266/pexels-photo-2533266.jpeg?auto=compress&cs=tinysrgb&w=400" alt="قسم مستحضرات التجميل والمكياج" loading="lazy">
+                </div>
+                <div class="category-card-bar"></div>
             </div>
+
+            <!-- 10. أدوات دراسية -->
             <div class="category-card" onclick="openCategory('ادوات دراسية')">
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778299201/w0q9f0y45z3hspjmo9wa.png" alt="قسم الأدوات الدراسية والمكتبية - Gam3a Store" loading="lazy">
-                <h3 style="background: var(--header-bg); color: #fff;">أدوات دراسية</h3>
+                <div class="category-card-body">
+                    <h3>أدوات دراسية</h3>
+                    <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778299201/w0q9f0y45z3hspjmo9wa.png" alt="قسم الأدوات الدراسية والمكتبية" loading="lazy">
+                </div>
+                <div class="category-card-bar"></div>
             </div>
+
+            <!-- 11. بيتي بايتس -->
             <div class="category-card" onclick="openCategory('مواد غذائية')">
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778433670/izsazg1pr1895mpfy2il.png" alt="قسم مواد غذائية - Gam3a Store" loading="lazy">
-                <h3 style="background: var(--header-bg); color: #fff;">بيتي بايتس</h3>
+                <div class="category-card-body">
+                    <h3>بيتي بايتس</h3>
+                    <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778433670/izsazg1pr1895mpfy2il.png" alt="قسم مواد غذائية" loading="lazy">
+                </div>
+                <div class="category-card-bar"></div>
             </div>
+
+            <!-- 12. هدايا -->
             <div class="category-card" onclick="openCategory('هدايا')">
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778297750/zlkeup1gwhe4obz9k1ph.png" alt="قسم هدايا - Gam3a Store" loading="lazy">
-                <h3 style="background: var(--header-bg); color: #fff;">هدايا</h3>
+                <div class="category-card-body">
+                    <h3>هدايا</h3>
+                    <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778297750/zlkeup1gwhe4obz9k1ph.png" alt="قسم هدايا" loading="lazy">
+                </div>
+                <div class="category-card-bar"></div>
             </div>
+
+            <!-- 13. أدوات منزلية -->
             <div class="category-card" onclick="openCategory('ادوات منزلية')">
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778298017/rrrozqeadq8fc3xpvsrr.png" alt="قسم الأدوات المنزلية - Gam3a Store" loading="lazy">
-                <h3 style="background: var(--header-bg); color: #fff;">أدوات منزلية</h3>
+                <div class="category-card-body">
+                    <h3>أدوات منزلية</h3>
+                    <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778298017/rrrozqeadq8fc3xpvsrr.png" alt="قسم الأدوات المنزلية" loading="lazy">
+                </div>
+                <div class="category-card-bar"></div>
             </div>
+
+            <!-- 14. سكن الطلاب -->
             <div class="category-card" onclick="openCategory('سكن الطلاب')">
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778298131/dtih2zi7xw5x7jxmjdkz.png" alt="قسم سكن الطلاب والمغتربين - Gam3a Store" loading="lazy">
-                <h3 style="background: var(--header-bg); color: #fff;">سكن الطلاب</h3>
+                <div class="category-card-body">
+                    <h3>سكن الطلاب</h3>
+                    <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1778298131/dtih2zi7xw5x7jxmjdkz.png" alt="قسم سكن الطلاب والمغتربين" loading="lazy">
+                </div>
+                <div class="category-card-bar"></div>
             </div>
-            <div class="category-card" style="grid-column: span 2;" onclick="openCategory('عروض')">
-                <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_700,q_auto,f_auto/v1777901914/v1dl24ujnayzxsxcljov.png" alt="عروض وخصومات حصرية - Gam3a Store" style="height: 120px; object-position: center;" loading="lazy">
-                <h3 style="background: var(--header-bg); color: #fff;">عروض خاصة</h3>
+
+            <!-- 15. عروض خاصة (البانر العريض الفخم بالوسام الذهبي والقلب) -->
+            <div class="category-card" style="grid-column: span 2; border: none; background: transparent; box-shadow: none; height: auto !important;" onclick="openCategory('عروض')">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 130" width="100%" height="130px" style="background: var(--header-bg); display: block; border-radius: var(--radius); box-shadow: var(--shadow); border: var(--border-width) solid var(--card-border);">
+                    <g id="appreciation-ribbon">
+                        <path d="M 145,35 Q 150,35 150,30 Q 150,35 155,35 Q 150,35 150,40 Q 150,35 145,35 Z" fill="#dfb15b" />
+                        <path d="M 65,85 Q 70,85 70,80 Q 70,85 75,85 Q 70,85 70,90 Q 70,85 65,85 Z" fill="#dfb15b" />
+                        <polygon points="72,28 74,32 79,33 75,37 76,42 72,39 68,42 69,37 65,33 70,32" fill="#dfb15b" />
+                        <path d="M 102,65 L 85,112 L 96,106 L 105,112 Z" fill="#e74c3c" />
+                        <path d="M 118,65 L 135,112 L 124,106 L 115,112 Z" fill="#c0392b" />
+                        <circle cx="110" cy="65" r="28" fill="#dfb15b" />
+                        <circle cx="110" cy="65" r="22" fill="#e74c3c" />
+                        <circle cx="110" cy="65" r="18" stroke="#dfb15b" stroke-width="1.2" fill="none" />
+                        <polygon points="110,54 113,61 121,62 115,67 117,74 110,70 103,74 105,67 99,62 107,61" fill="#dfb15b" />
+                    </g>
+                    <g id="offers-heart" transform="translate(10, 0)">
+                        <path d="M 270,105 C 250,85 225,68 225,48 C 225,35 235,27 247,27 C 257,27 265,33 270,40 C 275,33 283,27 293,27 C 305,27 315,35 315,48 C 315,68 290,85 270,105 Z" fill="#ff4d6d" />
+                        <text x="270" y="55" font-family="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">عروض لك ♥</text>
+                        <text x="270" y="73" font-family="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" font-size="9" font-weight="bold" fill="#ffffff" opacity="0.9" text-anchor="middle">تسوق الآن</text>
+                    </g>
+                </svg>
             </div>
         </div>
     </main>
