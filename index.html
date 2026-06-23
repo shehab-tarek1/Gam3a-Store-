@@ -1213,15 +1213,32 @@
         }
 
 
+        // 🚀 دالة ذكية لتحديد أيقونة القسم برمز صغير جداً فخم ومناسب تلقائياً
+        window.getCategoryIcon = function(category) {
+            if (!category) return 'fa-tag';
+            const cat = category.trim();
+            if (cat.includes('أحذية') || cat.includes('جزم') || cat.includes('كوتش') || cat.includes('شوز')) return 'fa-shoe-prints';
+            if (cat.includes('برفان') || cat.includes('عطور') || cat.includes('عطر')) return 'fa-spray-can';
+            if (cat.includes('اكسسور') || cat.includes('إكسسوار') || cat.includes('ساعة') || cat.includes('نظارة')) return 'fa-gem';
+            if (cat.includes('ملابس') || cat.includes('تيشيرت') || cat.includes('بنطلون') || cat.includes('قميص') || cat.includes('جاكيت') || cat.includes('بلوفر') || cat.includes('هودي')) return 'fa-shirt';
+            if (cat.includes('عناية') || cat.includes('شخصية') || cat.includes('شاور') || cat.includes('صابون')) return 'fa-soap';
+            if (cat.includes('تجميل') || cat.includes('مكياج') || cat.includes('ميك اب') || cat.includes('روج')) return 'fa-wand-magic-sparkles';
+            if (cat.includes('دراسة') || cat.includes('ادوات دراسية') || cat.includes('مكتب') || cat.includes('قلم') || cat.includes('كشكول')) return 'fa-pencil';
+            if (cat.includes('غذاء') || cat.includes('بيتي بايتس') || cat.includes('أكل') || cat.includes('طعام')) return 'fa-cookie-bite';
+            if (cat.includes('هدايا') || cat.includes('هدية')) return 'fa-gift';
+            if (cat.includes('منزل') || cat.includes('بيت') || cat.includes('مطبخ')) return 'fa-couch';
+            if (cat.includes('سكن') || cat.includes('مغترب')) return 'fa-bed';
+            if (cat.includes('عروض') || cat.includes('عرض') || cat.includes('خصم')) return 'fa-percent';
+            return 'fa-tag'; 
+        }
+
         window.generateProductCardHTML = function(p) {
             let displayImg = window.optimizeImage(p.images ? p.images[0] : p.img, 600);
-
 
             let isSoldOut = (p.hidden === true || p.qty <= 0);
             let discountBadge = (p.isOffer && p.discount && !isSoldOut) ? `<div class="badge-discount">خصم ${p.discount}</div>` : '';
             let outOfStockBadge = isSoldOut ? `<div class="badge-outofstock">نفذت الكمية</div>` : '';
             let imgClass = isSoldOut ? 'img-outofstock' : '';
-
 
             let colorCirclesHTML = '';
             if (p.colors && p.colors.length > 0) {
@@ -1230,10 +1247,12 @@
                 colorCirclesHTML = `<div class="card-color-circles"><span class="color-label">الألوان:</span>${circles}</div>`;
             }
 
-
             let genderBadge = p.targetGender ? `<span class="card-gender-badge">${p.targetGender}</span>` : '';
-            let typeText = `<span class="card-type-text">النوع: ${p.subType ? p.subType : p.category}</span>`;
-
+            
+            // 🛠️ جلب اسم النوع وتحديد الأيقونة المناسبة له تلقائياً وعرضها بحجم صغير جداً وأنيق
+            let typeName = p.subType ? p.subType : p.category;
+            let categoryIcon = window.getCategoryIcon(typeName);
+            let typeText = `<span class="card-type-text">النوع: <i class="fa-solid ${categoryIcon}" style="font-size: 0.65rem; margin-left: 3px; color: var(--accent); vertical-align: middle;"></i> ${typeName}</span>`;
 
             return `
                 <a href="/p/${p.shortCode}" class="inner-product-card" onclick="event.preventDefault(); openProduct('${p.id}')" style="text-decoration: none; color: inherit; display: block;">
