@@ -262,17 +262,20 @@
         .category-card:active { transform: scale(0.98); box-shadow: 0 5px 15px rgba(140, 83, 34, 0.05); }
         
         .category-card img { 
-            width: 35%; 
-            height: 100%; 
+            width: 75px; /* عرض ثابت للصورة */
+            height: 74px; /* طول يجعلها تترك مسافة من الأعلى والأسفل */
             object-fit: cover; 
             object-position: center; 
             display: block;
             order: 2; 
-            border-radius: 15px 0 0 15px; 
+            border-radius: 12px; /* حواف دائرية للصورة من كل الاتجاهات */
+            margin-left: 8px; /* إبعاد الصورة عن الحافة اليسرى للبطاقة */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* ظل خفيف للصورة لتبرز */
+            background-color: var(--bg-main); /* لون خلفية للصورة */
         }
         
         .category-card h3 { 
-            width: 65%;
+            width: calc(100% - 95px); /* يأخذ باقي المساحة بدقة */
             background: transparent; 
             color: var(--text-primary); 
             padding: 0 15px; 
@@ -281,12 +284,12 @@
             margin: 0;
             order: 1; 
             text-align: right;
-        } 
+        }
 
 
 
 
-        .gender-ribbon { position: absolute; top: 8px; left: 8px; right: auto; background: rgba(255, 255, 255, 0.95); border-radius: 8px; padding: 4px 8px; font-size: 0.55rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 5; border: var(--border-width) solid var(--card-border); color: #2d3436; line-height: 1.2; }
+        .gender-ribbon { position: absolute; top: 12px; left: 45px; right: auto; background: rgba(255, 255, 255, 0.95); border-radius: 8px; padding: 4px 8px; font-size: 0.55rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 5; border: var(--border-width) solid var(--card-border); color: #2d3436; line-height: 1.2; }
 
 
 
