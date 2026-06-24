@@ -54,6 +54,7 @@
             --text-muted: #8d6e63; 
             --border-light: #f5efe9; 
             --accent: #c48344; 
+            --category-ribbon: #c48344; /* لون الشريط في النهاري */ 
             --silver: #bcaaa0; 
             --radius: 20px; 
             --shadow: 0 10px 25px rgba(140, 83, 34, 0.08); 
@@ -62,10 +63,7 @@
             --bg-pattern: radial-gradient(circle at 85% 15%, rgba(196, 131, 68, 0.08) 0%, transparent 55%), 
                           radial-gradient(circle at 15% 85%, rgba(140, 83, 34, 0.06) 0%, transparent 60%),
                           radial-gradient(circle at 50% 50%, rgba(184, 115, 51, 0.03) 0%, transparent 65%); 
-            
-            /* لون زر العروض النهاري (توفي فاتح) */
-            --offers-bg: linear-gradient(45deg, #d2a679, #b87333);
-        }
+                       
         
         /* الوضع الليلي الفخم (باللمعة الزيتية الأصلية الساحرة) */
         :root.dark-theme { 
@@ -87,8 +85,9 @@
             --border-light: #2c4234; 
             --silver: #9ca3af; 
             
-            /* تم استبدال الأزرق بزيتوني لامع فاتح */
-            --accent: #9acd32; 
+            /* تم استبدال الأزرق بزيتوني لامع فاتح */--accent: #9acd32; 
+            /* شريط مدرج بنفس لون الهيدر مع بقع زيتوني فاتح */
+            --category-ribbon: linear-gradient(90deg, #094229 0%, #9acd32 25%, #135c3a 50%, #9acd32 75%, #094229 100%);
             
             --shadow: 0 8px 20px rgba(0,0,0,0.4); 
             --glass-bg: rgba(24, 36, 28, 0.85);
@@ -96,11 +95,7 @@
             --bg-pattern: radial-gradient(circle at 85% 15%, rgba(25, 115, 65, 0.35) 0%, transparent 55%), 
                           radial-gradient(circle at 15% 85%, rgba(20, 90, 50, 0.3) 0%, transparent 60%),
                           radial-gradient(circle at 50% 50%, rgba(15, 80, 45, 0.2) 0%, transparent 65%); 
-            
-            /* لون زر العروض الليلي (زيتوني لامع فاتح متدرج لغامق) */
-            --offers-bg: linear-gradient(45deg, #9acd32, #556b2f);
-        }
-
+                     
         .theme-toggle { cursor: pointer; font-size: 1.2rem; color: var(--text-light); margin-left: 5px; display: flex; align-items: center;}
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -174,13 +169,23 @@
             box-shadow: var(--shadow); 
             cursor: pointer; 
             border: var(--border-width) solid var(--card-border); 
-            border-bottom: 3.5px solid var(--accent); 
             transform: translateZ(0);
             transition: transform 0.15s, box-shadow 0.15s;
             display: flex;
             align-items: center;
             justify-content: space-between;
             height: 90px;
+        }
+        /* الشريط السفلي الممتد (تم تحويله لعنصر وهمي ليدعم التدرج اللوني والبقع) */
+        .category-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3.5px;
+            background: var(--category-ribbon);
+            z-index: 10;
         }
         .category-card:active { transform: scale(0.98); box-shadow: 0 5px 15px rgba(140, 83, 34, 0.05); }
         
