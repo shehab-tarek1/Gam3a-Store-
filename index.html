@@ -262,16 +262,18 @@
         .category-card:active { transform: scale(0.98); box-shadow: 0 5px 15px rgba(140, 83, 34, 0.05); }
         
         .category-card img { 
-            width: 75px; /* عرض ثابت للصورة */
-            height: 74px; /* طول يجعلها تترك مسافة من الأعلى والأسفل */
+            width: 75px; 
+            height: 74px; 
             object-fit: cover; 
             object-position: center; 
             display: block;
             order: 2; 
-            border-radius: 12px; /* حواف دائرية للصورة من كل الاتجاهات */
-            margin-left: 8px; /* إبعاد الصورة عن الحافة اليسرى للبطاقة */
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* ظل خفيف للصورة لتبرز */
-            background-color: var(--bg-main); /* لون خلفية للصورة */
+            border-radius: 12px; 
+            margin-left: 8px; 
+            /* التعديلات الجديدة للبروز 🚀 */
+            border: var(--border-width) solid var(--card-border); /* إطار نحيف يتغير مع الوضع */
+            background-color: var(--border-light); /* خلفية أغمق درجة لتحديد الصورة */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12); /* ظل ناعم يرفع الصورة عن الكارت */
         }
         
         .category-card h3 { 
