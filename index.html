@@ -497,7 +497,8 @@
 
         .slider-container { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 5px; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
         .slider-container::-webkit-scrollbar { display: none; } 
-        .slider-container .inner-product-card { width: calc(50% - 6px); scroll-snap-align: start; }
+        /* إضافة scroll-snap-stop: normal لتستجيب لقوة سحبة الإصبع */
+        .slider-container .inner-product-card { width: calc(50% - 6px); scroll-snap-align: start; scroll-snap-stop: normal; } 
 
 
 
@@ -540,9 +541,11 @@
 
 
         .details-image-wrapper { width: 100%; max-width: 300px; margin: 0 auto 10px auto; overflow: hidden; position: relative;}
-        .details-slider { display: flex; overflow-x: auto; scrollbar-width: none; border-radius: var(--radius); box-shadow: var(--shadow); border: var(--border-width) solid var(--card-border); -webkit-overflow-scrolling: touch; position: relative; }
+        /* تفعيل المسار المغناطيسي للسلايدر */
+        .details-slider { display: flex; overflow-x: auto; scrollbar-width: none; border-radius: var(--radius); box-shadow: var(--shadow); border: var(--border-width) solid var(--card-border); -webkit-overflow-scrolling: touch; position: relative; scroll-snap-type: x mandatory; }
         .details-slider::-webkit-scrollbar { display: none; }
-        .details-slider img { flex: 0 0 100%; width: 100%; aspect-ratio: 1 / 1; height: auto; object-fit: cover; object-position: center; background: var(--bg-surface); }
+        /* ضبط الصورة لتقف في المنتصف بالضبط وتستجيب للسرعة */
+        .details-slider img { flex: 0 0 100%; width: 100%; aspect-ratio: 1 / 1; height: auto; object-fit: cover; object-position: center; background: var(--bg-surface); scroll-snap-align: center; scroll-snap-stop: normal; }
 
 
 
@@ -2299,7 +2302,15 @@
             }
             document.getElementById('category-products').innerHTML = '';
             window.catIndex = 0;
+            window.CAT_BATCH_SIZE = 8; // إعادة الضبط للحجم الطبيعي
             window.loadMoreCategoryProducts();
+            
+            // 🚀 إعادة تشغيل الرادار لضمان استمرار التحميل عند النزول بعد الفلترة
+            const loader = document.getElementById('category-loader');
+            if(loader) {
+                window.catObserver.disconnect();
+                window.catObserver.observe(loader);
+            }
         }
 
 
@@ -4437,6 +4448,9 @@ window.CAT_BATCH_SIZE = 8; // إعادة ضبط التحميل الكسول لـ
 
 
 
+
+
+
         onMessage(messaging, (payload) => {
             const title = payload.notification.title || "إشعار جديد";
             const body = payload.notification.body || "";
@@ -4456,12 +4470,29 @@ window.CAT_BATCH_SIZE = 8; // إعادة ضبط التحميل الكسول لـ
             });
 
 
+
+
+
+
+
+
             if(window.savedNotifications.length > 50) {
                 window.savedNotifications.shift();
             }
 
 
+
+
+
+
+
+
             localStorage.setItem('gam3a_notifications', JSON.stringify(window.savedNotifications));
+
+
+
+
+
 
 
 
@@ -4471,10 +4502,30 @@ window.CAT_BATCH_SIZE = 8; // إعادة ضبط التحميل الكسول لـ
         });
 
 
+
+
+
+
+
+
         window.updateNotificationBadge();
         window.renderNotifications();
 
+
+
+
+
+
+
+
         initVisitorStats(); 
+
+
+
+
+
+
+
 
     </script>
 </body>
