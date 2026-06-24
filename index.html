@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- التحديث النهائي 11.0 - أداء صاروخي، إطارات 1px، تأثير السلة المحسن + تصميم الأقسام الأفقي -->
+<!-- التحديث النهائي 11.0 - أداء صاروخي، إطارات 1px، تأثير السلة المحسن، تصميم الأقسام الأفقي، ونقاط السلايدر -->
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -38,46 +38,33 @@
     <style>
        /* الوضع الفاتح (النهاري) - التصميم الفاخر بلون التوفي والكراميل 🍮 */
         :root { 
-            /* خلفية "كريمي/فانيليا" دافئة ومريحة جداً للعين بدلاً من الأبيض الصارخ */
             --bg-main: #fcf9f5; 
             --bg-surface: #ffffff; 
-            --bg-dark-blue: #4a2c11; /* بني شوكولاتة عميق بديل للأخضر الكاتم */
-            
-            /* هيدر غني وعميق يعكس فخامة الكراميل والقهوة */
+            --bg-dark-blue: #4a2c11; 
             --header-bg: radial-gradient(circle at 10% 20%, #8c5322 0%, #4a2c11 100%);
-            
             --text-primary: #4a2c11; 
-            
-            /* إطارات متناغمة مع لون الكراميل الفاتح */
             --card-border: #eee6de; 
             --input-border: #d2c5b8; 
             --border-width: 1px; 
-            
-            /* فواصل وخطوط بلون توفي شفاف يفتح النفس */
             --line-accent: rgba(196, 131, 68, 0.35); 
-            
-            /* لون السعر والأيقونات "توفي غني / نحاسي" فخم جداً */
             --price-color: #b87333; 
             --card-icon-color: #b87333; 
-            
             --text-light: #ffffff; 
-            /* نصوص بني داكن جداً (إسبريسو) لراحة عين فائقة بدلاً من الأسود */
             --text-dark: #3e2723; 
             --text-muted: #8d6e63; 
             --border-light: #f5efe9; 
-            --accent: #c48344; /* لون التوفي الأساسي للتفاصيل */
+            --accent: #c48344; 
             --silver: #bcaaa0; 
             --radius: 20px; 
-            
-            /* ظلال ملونة بلمسة كراميل دافئة تجعل الكروت تطفو بنعومة */
             --shadow: 0 10px 25px rgba(140, 83, 34, 0.08); 
             --glass-bg: rgba(255, 255, 255, 0.9);
             --glass-icon: #4a2c11;
-            
-            /* الباترن السحري: إضاءة خلفية ناعمة جداً تنشر دفء الكراميل في أركان الشاشة */
             --bg-pattern: radial-gradient(circle at 85% 15%, rgba(196, 131, 68, 0.08) 0%, transparent 55%), 
                           radial-gradient(circle at 15% 85%, rgba(140, 83, 34, 0.06) 0%, transparent 60%),
                           radial-gradient(circle at 50% 50%, rgba(184, 115, 51, 0.03) 0%, transparent 65%); 
+            
+            /* لون زر العروض النهاري (توفي فاتح) */
+            --offers-bg: linear-gradient(45deg, #d2a679, #b87333);
         }
         
         /* الوضع الليلي الفخم (باللمعة الزيتية الأصلية الساحرة) */
@@ -91,37 +78,36 @@
             --card-border: #d1ecd9; 
             --input-border: #4b5563;
             --border-width: 0.43px; 
-            
-            /* التعديلات الخاصة بلون السعر والأيقونات والفواصل */
             --line-accent: rgba(46, 204, 113, 0.45); 
             --price-color: #2ecc71; 
             --card-icon-color: #2ecc71; 
-            
             --text-light: #ffffff; 
             --text-dark: #ffffff; 
             --text-muted: #d1d5db; 
             --border-light: #2c4234; 
             --silver: #9ca3af; 
-            --accent: #60a5fa; 
+            
+            /* تم استبدال الأزرق بزيتوني لامع فاتح */
+            --accent: #9acd32; 
+            
             --shadow: 0 8px 20px rgba(0,0,0,0.4); 
             --glass-bg: rgba(24, 36, 28, 0.85);
             --glass-icon: #cbd5e1;
-            
-            /* 👑 إرجاع اللمعة الزيتية الغامقة الأصلية (إضاءة الخلفية الفخمة) */
             --bg-pattern: radial-gradient(circle at 85% 15%, rgba(25, 115, 65, 0.35) 0%, transparent 55%), 
                           radial-gradient(circle at 15% 85%, rgba(20, 90, 50, 0.3) 0%, transparent 60%),
                           radial-gradient(circle at 50% 50%, rgba(15, 80, 45, 0.2) 0%, transparent 65%); 
+            
+            /* لون زر العروض الليلي (زيتوني لامع فاتح متدرج لغامق) */
+            --offers-bg: linear-gradient(45deg, #9acd32, #556b2f);
         }
 
         .theme-toggle { cursor: pointer; font-size: 1.2rem; color: var(--text-light); margin-left: 5px; display: flex; align-items: center;}
 
-        /* إلغاء المربع الأزرق المزعج عند اللمس في الهواتف */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         
         html { font-size: 16px; }
         @media (max-width: 400px) { html { font-size: 14px; } }
 
-        /* حل مشكلة التقطيع (اللاج): تم إزالة transition من body ليصبح التمرير والتبديل صاروخياً */
         body { 
             background-color: var(--bg-main); 
             color: var(--text-dark); 
@@ -133,7 +119,6 @@
             position: relative;
         }
 
-        /* عزل تأثير الضباب في طبقة خلفية مخصصة لمعالجة اللاج (Hardware Accelerated) */
         body::before {
             content: '';
             position: fixed;
@@ -175,8 +160,11 @@
         .share-btn-top:active { transform: scale(0.9); }
         .share-btn-top.active-heart { color: #e74c3c; border-color: #e74c3c; background: #fff0f0;}
 
-        /* جعل الشبكة عمود واحد في الهواتف لتبدو كقائمة احترافية */
-        .categories-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 15px; }
+        /* --- الشبكة الخاصة بالمنتجات (تم إرجاعها للأصلي) --- */
+        .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px; }
+        
+        /* --- التصميم الجديد لقائمة الأقسام فقط --- */
+        .category-list-layout { display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; }
 
         .category-card { 
             position: relative; 
@@ -186,11 +174,9 @@
             box-shadow: var(--shadow); 
             cursor: pointer; 
             border: var(--border-width) solid var(--card-border); 
-            /* الشريط التوفي ممتد في الحافة السفلية */
             border-bottom: 3.5px solid var(--accent); 
             transform: translateZ(0);
             transition: transform 0.15s, box-shadow 0.15s;
-            /* تنسيق الاستطالة (Flexbox) */
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -198,18 +184,16 @@
         }
         .category-card:active { transform: scale(0.98); box-shadow: 0 5px 15px rgba(140, 83, 34, 0.05); }
         
-        /* الصورة أقصى اليسار */
         .category-card img { 
-            width: 35%; /* عرض الصورة */
+            width: 35%; 
             height: 100%; 
             object-fit: cover; 
             object-position: center; 
             display: block;
-            order: 2; /* في اللغة العربية (RTL) هذا يجعلها أقصى اليسار */
-            border-radius: 15px 0 0 15px; /* تدوير حواف الصورة من اليسار فقط */
+            order: 2; 
+            border-radius: 15px 0 0 15px; 
         }
         
-        /* العنوان أقصى اليمين */
         .category-card h3 { 
             width: 65%;
             background: transparent; 
@@ -218,11 +202,10 @@
             font-size: 1.05rem; 
             font-weight: bold;
             margin: 0;
-            order: 1; /* في اللغة العربية (RTL) هذا يجعله أقصى اليمين */
+            order: 1; 
             text-align: right;
         } 
 
-        /* نقلنا شريط الجنس (رجالي/حريمي) لليسار ليكون فوق الصورة ولا يغطي النص */
         .gender-ribbon { position: absolute; top: 8px; left: 8px; right: auto; background: rgba(255, 255, 255, 0.95); border-radius: 8px; padding: 4px 8px; font-size: 0.55rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 5; border: var(--border-width) solid var(--card-border); color: #2d3436; line-height: 1.2; }
 
         .inner-product-card { 
@@ -239,7 +222,6 @@
         }
         .inner-product-card:active { transform: scale(0.98); }
         .inner-product-card .img-container { position: relative; width: 100%; aspect-ratio: 1 / 1; background: var(--bg-surface); }
-        /* تم تغيير الإطار السفلي للصورة ليكون أخضر فاتح شفاف وسميك قليلاً لإبرازه */
         .inner-product-card img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; border-bottom: 1.5px solid var(--line-accent); transition: opacity 0.15s;}
 
         .card-info { padding: 10px; text-align: right; }
@@ -256,7 +238,6 @@
         .color-label { font-size: 0.65rem; color: var(--text-muted); margin-left: 4px; font-weight: bold; flex-shrink: 0; }
         .card-color-circle { width: 10px; height: 10px; border-radius: 50%; border: var(--border-width) solid var(--card-border); box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-shrink: 0; }
 
-        /* الشفافية للخط المنقط في النهاري والداكن */
         .card-desc-snippet { font-size: 0.8rem; color: var(--text-muted); margin: 0; text-align: start; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; border-top: 1.5px dashed var(--line-accent); padding-top: 8px; }
 
         .badge-discount { position: absolute; top: 6px; left: 6px; background-color: #e74c3c; color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.6rem; font-weight: bold; z-index: 5;}
@@ -266,16 +247,33 @@
 
         .slider-section { background-color: var(--bg-surface); padding: 10px 15px 10px 15px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 25px; border: var(--border-width) solid var(--card-border);}
         
-        /* الشفافية للخط تحت أحدث الإضافات */
         .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1.5px solid var(--line-accent); padding-bottom: 6px;}
         .slider-header h2 { font-size: 0.9rem; color: var(--text-primary); margin: 0; }
         .slider-nav { display: flex; gap: 8px; }
         .slider-arrow { width: 24px; height: 24px; border-radius: 50%; background: var(--bg-main); color: var(--text-primary); display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 0.7rem; border: var(--border-width) solid var(--card-border); transition: transform 0.15s;}
         .slider-arrow:active { transform: scale(0.9); }
         
-        .slider-container { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 5px; -webkit-overflow-scrolling: touch; }
+        /* تصميم نقاط السلايدر الجديدة */
+        .home-slider-dots { display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; }
+        .home-slider-dots .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--silver); transition: 0.3s; }
+        .home-slider-dots .dot.active { background: var(--accent); transform: scale(1.3); }
+
+        .slider-container { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 5px; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
         .slider-container::-webkit-scrollbar { display: none; } 
-        .slider-container .inner-product-card { width: calc(50% - 6px); }
+        .slider-container .inner-product-card { width: calc(50% - 6px); scroll-snap-align: start; }
+
+        /* تصميم زر العروض الجديد بالأسفل */
+        .offers-btn-container { display: flex; justify-content: center; width: 100%; margin-top: 5px; margin-bottom: 25px; }
+        .offers-btn {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            color: #fff; background: var(--offers-bg); padding: 12px 20px;
+            border-radius: 50px; box-shadow: var(--shadow); border: 2px solid rgba(255,255,255,0.15);
+            cursor: pointer; width: 95%; max-width: 500px; transition: transform 0.15s;
+        }
+        .offers-btn:active { transform: scale(0.95); }
+        .offers-text-wrapper { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.2; }
+        .offers-title { font-size: 1.15rem; font-weight: bold; }
+        .offers-subtitle { font-size: 0.75rem; opacity: 0.9; font-weight: normal; margin-top: 2px; }
 
         footer { background: var(--header-bg); color: var(--text-light); border-radius: 25px; padding: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.15); margin: 10px auto 25px auto; width: calc(100% - 30px); max-width: 760px; border: var(--border-width) solid var(--card-border); transform: translateZ(0);}
         footer .footer-logo { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--text-light); margin-bottom: 10px; }
@@ -312,7 +310,6 @@
         .btn-cart { background: var(--bg-surface); color: var(--text-dark); border: var(--border-width) solid var(--card-border); }
         .btn-whatsapp { background: #25D366; color: #fff;}
 
-        /* تطبيق إطار حقول الإدخال */
         .form-control { width: 100%; padding: 10px; border-radius: 10px; border: var(--border-width) solid var(--input-border); font-size: 0.95rem; background: var(--bg-main); color: var(--text-dark); outline: none;}
         .form-control:focus { border-color: var(--accent); }
 
@@ -331,31 +328,29 @@
         .online-dot::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 50%; background: #2ecc71; animation: pulse-green 1.5s infinite; }
 
         @media (min-width: 600px) {
-            .categories-grid { grid-template-columns: repeat(2, 1fr); }
+            .categories-grid { grid-template-columns: repeat(3, 1fr); }
+            .category-list-layout { display: grid; grid-template-columns: repeat(2, 1fr); }
             .slider-container .inner-product-card { width: calc(33.333% - 8px); }
         }
 
         .skeleton { background: linear-gradient(90deg, var(--bg-main) 25%, var(--border-light) 50%, var(--bg-main) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: var(--radius); height: 250px; width: 100%; border: var(--border-width) solid var(--card-border); }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
         
-        /* تسريع الأنيميشن الخاصة بالسلة */
         .flying-img { position: fixed; z-index: 999999; border-radius: 50%; object-fit: cover; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0.9; box-shadow: var(--shadow); pointer-events: none; }
         
         .wishlist-icon { position: absolute; top: 8px; right: 8px; background: var(--glass-bg); color: var(--glass-icon); width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.15); z-index: 10; font-size: 0.85rem; cursor: pointer; transition: transform 0.15s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border: var(--border-width) solid rgba(255,255,255,0.1);}
         .wishlist-icon.active { color: #e74c3c; animation: pop 0.2s; }
         @keyframes pop { 50% { transform: scale(1.3); } }
 
-        /* 🚀 فصلنا البطاقات لأن ارتفاعها اختلف لمنع قفز الشاشة */
         .inner-product-card {
             content-visibility: auto;
             contain-intrinsic-size: 250px; 
         }
         .category-card {
             content-visibility: auto;
-            contain-intrinsic-size: 90px; /* الارتفاع الجديد لبطاقة القسم الأفقية */
+            contain-intrinsic-size: 90px; 
         }
         
-        /* 🚀 View Transitions API لعمل انتقال سلس بين الصفحات يشبه التطبيقات */
         ::view-transition-old(root),
         ::view-transition-new(root) {
             animation-duration: 0.3s;
@@ -435,14 +430,12 @@
                     </button>
                 </div>
             </div>
-            <div class="slider-container" id="latest-products-slider"></div>
-        </div>
-
-        <!-- زر العروض الخاصة الجديد (مستطيل بحواف دائرية) -->
-        <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 20px;">
-            <div onclick="openCategory('عروض')" style="display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; color: #fff; background: linear-gradient(45deg, #e74c3c, #c0392b); padding: 12px 20px; border-radius: 50px; font-size: 1.1rem; box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3); border: 2px solid rgba(255,255,255,0.2); cursor: pointer; width: 95%; max-width: 500px; transition: transform 0.15s;">
-                <i class="fa-solid fa-fire" style="color: #fff; font-size: 1.3rem;"></i> عروض خاصة وخصومات حصرية
-            </div>
+            
+            <!-- نقاط السلايدر الجديدة -->
+            <div id="home-slider-dots" class="home-slider-dots"></div>
+            
+            <!-- تمت إضافة onscroll لتحديث النقاط -->
+            <div class="slider-container" id="latest-products-slider" onscroll="updateHomeSliderDots()"></div>
         </div>
 
         <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 15px;">
@@ -451,7 +444,8 @@
             </div>
         </div>
 
-        <div class="categories-grid">
+        <!-- استخدام الكلاس الجديد للأقسام المستطيلة -->
+        <div class="category-list-layout">
             <div class="category-card" onclick="openCategory('ملابس رجالي')">
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777897969/qi3lscagmdzbrkvup5vf.png" alt="قسم ملابس رجالي - Gam3a Store" loading="lazy">
                 <h3>ملابس رجالي</h3>
@@ -511,6 +505,18 @@
                 <h3>سكن الطلاب</h3>
             </div>
         </div>
+
+        <!-- زر العروض والخصومات بالأسفل -->
+        <div class="offers-btn-container">
+            <div onclick="openCategory('عروض')" class="offers-btn">
+                <i class="fa-solid fa-fire" style="font-size: 1.5rem;"></i>
+                <div class="offers-text-wrapper">
+                    <span class="offers-title">عروض وخصومات</span>
+                    <span class="offers-subtitle">انقر هنا للمزيد <i class="fa-solid fa-hand-pointer" style="font-size: 0.65rem; margin-right: 3px;"></i></span>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <!-- صفحة القسم -->
@@ -532,6 +538,7 @@
             </div>
         </div>
 
+        <!-- هنا تم إرجاع كلاس categories-grid ليحافظ على حجم المنتجات المربع -->
         <div class="categories-grid" id="category-products"></div>
         
         <div id="category-loader" style="display:none; width: 100%; padding: 15px 0;">
@@ -695,7 +702,6 @@
             const root = document.documentElement;
             const icon = document.getElementById('theme-icon');
             
-            // إزالة التحولات الثقيلة لمنع اللاج عند التبديل
             document.body.style.transition = 'none';
             
             root.classList.toggle('dark-theme');
@@ -915,13 +921,11 @@
 
             const pages = ['home', 'category', 'details', 'cart', 'profile', 'wishlist-page'];
 
-            // تسجيل مكان السكرول قبل التغيير
             let currentVisible = pages.find(p => document.getElementById(p) && !document.getElementById(p).classList.contains('hidden'));
             if (currentVisible) {
                 window.scrollPositions[currentVisible] = window.scrollY || document.documentElement.scrollTop;
             }
 
-            // دالة تغيير الـ DOM التي سيتم تشغيلها بسلاسة
             const updateDOM = () => {
                 pages.forEach(p => {
                     const el = document.getElementById(p);
@@ -934,7 +938,6 @@
                 const bgVideo = document.getElementById('main-bg-video');
                 const bgImg = document.getElementById('fallback-poster-img');
 
-                // 🛠️ إصلاح خطأ الـ Video Promise Rejection
                 if (bgVideo && bgImg) {
                     if (pageId !== 'home') {
                         bgVideo.style.display = 'none'; 
@@ -945,7 +948,7 @@
                         bgVideo.style.display = 'block';
                         let playPromise = bgVideo.play();
                         if (playPromise !== undefined) {
-                            playPromise.catch(e => { /* تجاهل خطأ التشغيل التلقائي */ });
+                            playPromise.catch(e => {});
                         }
                     }
                 }
@@ -975,7 +978,6 @@
                     }
                 }
 
-                // 🛠️ إصلاح السكرول الخاطئ (استخدام requestAnimationFrame لانتظار الـ DOM)
                 window.requestAnimationFrame(() => {
                     if (isBack && window.scrollPositions[pageId] !== undefined) {
                         window.scrollTo({ top: window.scrollPositions[pageId], behavior: 'instant' });
@@ -985,7 +987,6 @@
                 });
             };
 
-            // 🚀 تفعيل View Transitions API إذا كان المتصفح يدعمها
             if (document.startViewTransition) {
                 document.startViewTransition(() => updateDOM());
             } else {
@@ -1140,18 +1141,11 @@
             return orderedColors;
         }
 
-        // 🚀 دالة ذكية لتحديد أيقونة القسم بدقة تامة ومطابقة لكل المسميات
         window.getCategoryIcon = function(category) {
             if (!category) return 'fa-tag';
             const cat = category.trim();
-            
-            // روايات وكتب وقصص
             if (cat.includes('رواية') || cat.includes('روايات') || cat.includes('كتاب') || cat.includes('كتب') || cat.includes('قصص') || cat.includes('دراسات')) return 'fa-book-open';
-            
-            // أدوات المطبخ والأدوات المنزلية
             if (cat.includes('مطبخ') || cat.includes('أدوات منزلية') || cat.includes('منزلية') || cat.includes('حلل') || cat.includes('معالق') || cat.includes('شوك') || cat.includes('أطباق')) return 'fa-utensils';
-            
-            // باقي التصنيفات السابقة بدقة
             if (cat.includes('أحذية') || cat.includes('جزم') || cat.includes('كوتش') || cat.includes('شوز')) return 'fa-shoe-prints';
             if (cat.includes('برفان') || cat.includes('عطور') || cat.includes('عطر')) return 'fa-spray-can';
             if (cat.includes('اكسسور') || cat.includes('إكسسوار') || cat.includes('ساعة') || cat.includes('نظارة')) return 'fa-gem';
@@ -1184,7 +1178,6 @@
 
             let genderBadge = p.targetGender ? `<span class="card-gender-badge">${p.targetGender}</span>` : '';
             
-            // 🛠️ جلب اسم النوع وتحديد الأيقونة المناسبة له مع وضعها قبل كلمة "النوع:" وتلوينها بالذهبي لليلي
             let typeName = p.subType ? p.subType : p.category;
             let categoryIcon = window.getCategoryIcon(typeName);
             let typeText = `<span class="card-type-text"><i class="fa-solid ${categoryIcon}" style="font-size: 0.65rem; margin-left: 4px; color: var(--card-icon-color); vertical-align: middle;"></i>النوع: ${typeName}</span>`;
@@ -1210,7 +1203,7 @@
             `;
         }
 
-       window.lastRenderedCount = -1; // متغير جديد لمنع التكرار
+       window.lastRenderedCount = -1; 
        window.renderHomeSlider = function() {
             const slider = document.getElementById('latest-products-slider');
             if(!slider) return;
@@ -1223,7 +1216,6 @@
                 return;
             }
 
-            // 🛠️ الحماية من الـ Lag: عدم إرهاق المتصفح بإعادة بناء السلايدر إذا لم تتغير المنتجات
             if(window.lastRenderedCount === visibleProducts.length && slider.innerHTML.trim() !== '') {
                 return; 
             }
@@ -1237,7 +1229,48 @@
 
             window.sliderProducts = visibleProducts.slice(0, 10);
             slider.innerHTML = window.sliderProducts.map(p => window.generateProductCardHTML(p)).join('');
+            
+            // تهيئة نقاط السلايدر بعد رسم المنتجات
+            setTimeout(() => { window.initHomeSliderDots(); }, 100);
         } 
+
+        // 🚀 وظائف نقاط السلايدر الجديدة
+        window.initHomeSliderDots = function() {
+            const slider = document.getElementById('latest-products-slider');
+            const dotsContainer = document.getElementById('home-slider-dots');
+            if(!slider || !dotsContainer) return;
+
+            const totalWidth = slider.scrollWidth;
+            const viewWidth = slider.clientWidth;
+            
+            if(totalWidth <= viewWidth) {
+                dotsContainer.innerHTML = '';
+                return;
+            }
+
+            const pages = Math.ceil(totalWidth / viewWidth);
+            let dotsHtml = '';
+            for(let i=0; i<pages; i++) {
+                dotsHtml += `<div class="dot ${i===0 ? 'active' : ''}"></div>`;
+            }
+            dotsContainer.innerHTML = dotsHtml;
+        }
+
+        window.updateHomeSliderDots = function() {
+            const slider = document.getElementById('latest-products-slider');
+            const dotsContainer = document.getElementById('home-slider-dots');
+            if(!slider || !dotsContainer) return;
+
+            const viewWidth = slider.clientWidth;
+            const scrollLeft = Math.abs(slider.scrollLeft); 
+            const activeIndex = Math.round(scrollLeft / viewWidth);
+
+            const dots = dotsContainer.children;
+            for(let i=0; i<dots.length; i++) {
+                if(i === activeIndex) dots[i].classList.add('active');
+                else dots[i].classList.remove('active');
+            }
+        }
 
         window.scrollSlider = function(direction) {
             const slider = document.getElementById('latest-products-slider');
@@ -1811,7 +1844,6 @@
             
             setTimeout(() => { img.style.transform = 'scale(1)'; }, 10);
             
-            /* الانتظار ثانية كاملة كما طلبت، ثم الطيران بسرعة */
             setTimeout(() => {
                 img.style.left = cartPos.left + 'px';
                 img.style.top = cartPos.top + 'px';
@@ -1848,7 +1880,6 @@
             window.showToast("تمت الإضافة للسلة بنجاح", "#2ecc71"); 
         }
 
-        /* إصلاح رابط الواتساب لتجنب مشكلة /p/123/p/123 */
         window.confirmDirectOrder = function(id, adminPhone) {
             const p = window.products.find(x => String(x.id) === String(id));
             let size = document.getElementById('order-size') ? document.getElementById('order-size').value : '';
@@ -2084,7 +2115,6 @@
                 }
             });
 
-            // 🛠️ حماية المتصفح من الـ Lag بسبب التحديثات السريعة لعدد الزوار (Throttling)
             let onlineUpdateTimer = null;
             const onlineUsersRef = ref(rtdb, 'online_users');
             onValue(onlineUsersRef, (snap) => {
@@ -2096,7 +2126,7 @@
                         const el = document.getElementById('online-users-count');
                         if(el) el.innerText = count || 1;
                     });
-                }, 1000); // تحديث الواجهة مرة واحدة فقط كل ثانية كحد أقصى
+                }, 1000); 
             });
 
             const statsRef = doc(db, "gam3a_settings", "visitor_stats");
