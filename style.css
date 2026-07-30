@@ -1,3 +1,4 @@
+.hidden { display: none !important; }
 /* الوضع الفاتح (النهاري) - التصميم الفاخر بلون التوفي والكراميل 🍮 */
 :root { 
     --bg-main: #fcf9f5; 
