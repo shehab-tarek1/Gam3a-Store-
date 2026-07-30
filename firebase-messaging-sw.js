@@ -36,13 +36,17 @@ self.addEventListener('notificationclick', function(event) {
 });
 
 // --- نظام تسريع الموقع المتقدم (Advanced Caching) ---
-const STATIC_CACHE = 'gam3a-static-v3'; // للملفات الأساسية
+const STATIC_CACHE = 'gam3a-static-v4'; // تم تحديث الإصدار لإجبار المتصفح على حفظ التعديلات الجديدة
 const DYNAMIC_IMAGE_CACHE = 'gam3a-images-v1'; // لصور المنتجات
 const MAX_CACHED_IMAGES = 150; // الحد الأقصى للصور في الكاش (لحماية رامات ومساحة الهاتف)
 
 const STATIC_ASSETS =[
     '/',
     '/index.html',
+    '/admin.html',
+    '/style.css',
+    '/script.js',
+    '/tailwind.min.css', // الملف الجديد المخصص للتصميم
     '/privacy.html',
     '/manifest.json',
     '/icon-144x144.png',
