@@ -429,19 +429,39 @@ window.updateCartBadge = function() {
     if(badge) badge.innerText = window.cart.length; 
 }
 
+// دالة مزامنة حالة المفضلة لجميع القلوب في الشاشة فوراً
+window.syncWishlistIcons = function(id) {
+    const strId = String(id);
+    const isFav = window.wishlist.includes(strId);
+    
+    // 1. تحديث كافة قلوب الكروت في الرئيسية والأقسام
+    document.querySelectorAll(`.wishlist-icon`).forEach(icon => {
+        if (icon.getAttribute('onclick') && icon.getAttribute('onclick').includes(`'${strId}'`)) {
+            if (isFav) icon.classList.add('active');
+            else icon.classList.remove('active');
+        }
+    });
+
+    // 2. تحديث قلب صفحة التفاصيل إذا كانت مفتوحة
+    if (window.currentViewedProductId === strId) {
+        const wishBtn = document.getElementById('details-wishlist-btn');
+        if (wishBtn) {
+            if (isFav) wishBtn.classList.add('active-heart');
+            else wishBtn.classList.remove('active-heart');
+        }
+    }
+}
+
 window.toggleWishlist = function(event, id, fromDetails = false) {
     if(event) { event.preventDefault(); event.stopPropagation(); }
-    const icon = event ? event.currentTarget : null;
     const strId = String(id);
     const index = window.wishlist.indexOf(strId);
     
     if (index === -1) {
         window.wishlist.push(strId);
-        if(icon) icon.classList.add(fromDetails ? 'active-heart' : 'active');
         window.showToast("تمت الإضافة للمفضلة", "#e74c3c");
     } else {
         window.wishlist.splice(index, 1);
-        if(icon) icon.classList.remove(fromDetails ? 'active-heart' : 'active');
         window.showToast("تم الحذف من المفضلة", "#636e72");
         
         if (window.historyStack[window.historyStack.length - 1] === 'wishlist-page') {
@@ -450,13 +470,8 @@ window.toggleWishlist = function(event, id, fromDetails = false) {
     }
     localStorage.setItem('am_wishlist', JSON.stringify(window.wishlist));
     
-    if (!fromDetails && window.currentViewedProductId === strId) {
-        const wishBtn = document.getElementById('details-wishlist-btn');
-        if(wishBtn) {
-            if(window.wishlist.includes(strId)) wishBtn.classList.add('active-heart');
-            else wishBtn.classList.remove('active-heart');
-        }
-    }
+    // مزامنة حالة القلب في كل أجزاء الموقع فوراً بدون ريفرش
+    window.syncWishlistIcons(strId);
 }
 
 window.openWishlistPage = function() {
