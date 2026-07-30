@@ -618,21 +618,26 @@ window.initHomeSliderDots = function() {
     dotsContainer.innerHTML = dotsHtml;
 }
 
+let sliderDotTicking = false;
 window.updateHomeSliderDots = function() {
-    const slider = document.getElementById('latest-products-slider');
-    const dotsContainer = document.getElementById('home-slider-dots');
-    if(!slider || !dotsContainer || slider.children.length === 0) return;
+    if (!sliderDotTicking) {
+        window.requestAnimationFrame(() => {
+            const slider = document.getElementById('latest-products-slider');
+            const dotsContainer = document.getElementById('home-slider-dots');
+            if (slider && dotsContainer && slider.children.length > 0) {
+                const cardWidth = slider.children[0].offsetWidth + 12;
+                const scrollLeft = Math.abs(slider.scrollLeft);
+                let activeIndex = Math.round(scrollLeft / cardWidth);
+                if (activeIndex >= dotsContainer.children.length) activeIndex = dotsContainer.children.length - 1;
 
-    const cardWidth = slider.children[0].offsetWidth + 12; 
-    const scrollLeft = Math.abs(slider.scrollLeft); 
-    
-    let activeIndex = Math.round(scrollLeft / cardWidth);
-    if(activeIndex >= dotsContainer.children.length) activeIndex = dotsContainer.children.length - 1;
-
-    const dots = dotsContainer.children;
-    for(let i=0; i<dots.length; i++) {
-        if(i === activeIndex) dots[i].classList.add('active');
-        else dots[i].classList.remove('active');
+                const dots = dotsContainer.children;
+                for (let i = 0; i < dots.length; i++) {
+                    dots[i].classList.toggle('active', i === activeIndex);
+                }
+            }
+            sliderDotTicking = false;
+        });
+        sliderDotTicking = true;
     }
 }
 
