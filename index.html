@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- التحديث النهائي 11.0 - أداء صاروخي، شبكة أقسام 2 أعمدة، ضغط مساحات الكروت -->
+<!-- التحديث النهائي 11.2 - فوتر مدمج ومتوسط، سلايدر رشيق، شبكة أقسام خفيفة ومريحة للعين -->
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -96,12 +96,12 @@
         <div class="slider-section">
             <div class="slider-header">
                 <h2 style="color: var(--text-primary);">أحدث الإضافات</h2>
-                <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
                     <div class="slider-nav">
                         <div class="slider-arrow" onclick="scrollSlider('right')"><i class="fa-solid fa-chevron-right"></i></div>
                         <div class="slider-arrow" onclick="scrollSlider('left')"><i class="fa-solid fa-chevron-left"></i></div>
                     </div>
-                    <button class="wishlist-page-btn" onclick="openWishlistPage()" style="background: var(--header-bg); color: #fff; border: var(--border-width) solid rgba(255,255,255,0.15); padding: 4px 12px; border-radius: 25px; font-size: 0.75rem; font-weight: bold; cursor: pointer; box-shadow: var(--shadow); transition: transform 0.15s;">
+                    <button class="wishlist-page-btn" onclick="openWishlistPage()" style="background: var(--header-bg); color: #fff; border: var(--border-width) solid rgba(255,255,255,0.15); padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: bold; cursor: pointer; box-shadow: var(--shadow); transition: transform 0.15s;">
                         المفضلة
                     </button>
                 </div>
@@ -113,8 +113,8 @@
             <div class="slider-container" id="latest-products-slider" onscroll="updateHomeSliderDots()"></div>
         </div>
 
-        <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 12px;">
-            <div class="section-title-ribbon" style="display: inline-flex; align-items: center; gap: 6px; font-weight: bold; color: #fff; background: var(--header-bg); padding: 5px 18px; border-radius: 50px; font-size: 0.85rem; box-shadow: var(--shadow); border: var(--border-width) solid rgba(255,255,255,0.1);">
+        <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 10px;">
+            <div class="section-title-ribbon" style="display: inline-flex; align-items: center; gap: 6px; font-weight: bold; color: #fff; background: var(--header-bg); padding: 4px 16px; border-radius: 50px; font-size: 0.82rem; box-shadow: var(--shadow); border: var(--border-width) solid rgba(255,255,255,0.1);">
                 <i class="fa-solid fa-layer-group" style="color: #fff;"></i> الأقسام المتاحة
             </div>
         </div>
@@ -184,7 +184,7 @@
         <!-- زر العروض والخصومات -->
         <div class="offers-btn-container">
             <div onclick="openCategory('عروض')" class="offers-btn">
-                <i class="fa-solid fa-fire" style="font-size: 1.5rem;"></i>
+                <i class="fa-solid fa-fire" style="font-size: 1.3rem;"></i>
                 <div class="offers-text-wrapper">
                     <span class="offers-title">عروض وخصومات</span>
                     <span class="offers-subtitle">انقر هنا للمزيد</span>
@@ -258,10 +258,10 @@
             <div class="share-btn-top" id="profile-share-btn" onclick=""><i class="fa-solid fa-share-nodes"></i></div>
         </div>
         <div id="profile-content"></div>
-        <h3 class="top-title-text" style="text-align: center; margin: 20px 0; display: block; border-radius: 12px;" id="profile-products-title">منتجات المسوق</h3>
+        <h3 class="top-title-text" style="text-align: center; margin: 15px 0; display: block; border-radius: 12px;" id="profile-products-title">منتجات المسوق</h3>
         <div class="categories-grid" id="profile-products"></div>
-        <div id="profile-loader" style="text-align:center; padding: 20px; display:none;">
-            <div class="spinner" style="margin: 0 auto; width: 30px; height: 30px; border-width: 3px;"></div>
+        <div id="profile-loader" style="text-align:center; padding: 15px; display:none;">
+            <div class="spinner" style="margin: 0 auto; width: 28px; height: 28px; border-width: 3px;"></div>
         </div>
     </main>
 
@@ -273,39 +273,41 @@
                 <span class="top-title-text">السلة</span>
             </div>
         </div>
-        <div class="slider-section" style="margin-top: 10px;">
+        <div class="slider-section" style="margin-top: 8px;">
             <div id="cart-items"></div>
             <div id="cart-total-container"></div>
             <button class="btn btn-whatsapp" id="cart-checkout-btn" onclick="checkoutCart()"><i class="fa-brands fa-whatsapp"></i> إرسال الطلب واتساب</button>
         </div>
     </main>
 
+    <!-- الفوتر المحسن والمتوسط تماماً -->
     <footer id="main-footer" class="hidden">
         <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/w_600,h_600,c_fill,q_auto,f_auto/v1777862797/lbshj6jfcheyuehidf7l.jpg" class="footer-logo" alt="Logo" loading="lazy">
-        <h2 style="color: var(--text-light); font-size:1.1rem;">gam3a store</h2>
-        <div style="margin-top: 5px; color: #cbd5e1; font-size: 0.85rem;">
-            <p><i class="fa-solid fa-location-dot" style="color: var(--accent); margin-left: 5px;"></i> العنوان: الزقازيق</p>
-            <p style="margin-top: 5px;"><i class="fa-solid fa-user-tie" style="color: var(--accent); margin-left: 5px;"></i> المطور: Shehab Tarek</p>
-            <div style="margin-top: 10px; display: flex; justify-content: center; gap: 15px;">
+        <h2>gam3a store</h2>
+        
+        <div class="footer-info-text">
+            <p><i class="fa-solid fa-location-dot" style="color: var(--accent); margin-left: 4px;"></i> العنوان: الزقازيق</p>
+            <p><i class="fa-solid fa-user-tie" style="color: var(--accent); margin-left: 4px;"></i> المطور: Shehab Tarek</p>
+            <div style="margin-top: 4px; display: flex; justify-content: center; gap: 12px;">
                 <a href="privacy.html" target="_blank" style="color: #cbd5e1; text-decoration: none; border-bottom: var(--border-width) solid #cbd5e1;">سياسة الخصوصية</a>
                 <a href="terms.html" target="_blank" style="color: #cbd5e1; text-decoration: none; border-bottom: var(--border-width) solid #cbd5e1;">شروط الاستخدام</a>
             </div>
         </div>
 
-        <div style="display: flex; justify-content: center; gap: 40px; margin-top: 20px; border-top: var(--border-width) dashed rgba(255,255,255,0.2); padding-top: 15px;">
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
-                <i class="fa-solid fa-users" style="font-size: 1.4rem; color: var(--silver);"></i>
-                <span style="font-size: 0.75rem; color: #cbd5e1;">إجمالي الزيارات</span>
-                <strong id="total-visits-count" style="font-size: 1.2rem; color: #fff;">...</strong>
+        <div class="footer-stats-row">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                <i class="fa-solid fa-users" style="font-size: 1.2rem; color: var(--silver);"></i>
+                <span style="font-size: 0.7rem; color: #cbd5e1;">إجمالي الزيارات</span>
+                <strong id="total-visits-count" style="font-size: 1.1rem; color: #fff;">...</strong>
             </div>
 
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
                 <div style="position: relative; display: inline-block;">
-                    <i class="fa-solid fa-user" style="font-size: 1.4rem; color: var(--silver);"></i>
+                    <i class="fa-solid fa-user" style="font-size: 1.2rem; color: var(--silver);"></i>
                     <span class="online-dot"></span>
                 </div>
-                <span style="font-size: 0.75rem; color: #cbd5e1;">المتصلين الآن</span>
-                <strong id="online-users-count" style="font-size: 1.2rem; color: #2ecc71;">...</strong>
+                <span style="font-size: 0.7rem; color: #cbd5e1;">المتصلين الآن</span>
+                <strong id="online-users-count" style="font-size: 1.1rem; color: #2ecc71;">...</strong>
             </div>
         </div>
 
