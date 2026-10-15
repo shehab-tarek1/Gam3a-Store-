@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- التحديث النهائي 11.2 - فوتر مدمج ومتوسط، سلايدر رشيق، شبكة أقسام خفيفة ومريحة للعين -->
+<!-- التحديث النهائي 11.3 - فيديو بانورامي، بطاقات منتجات واضحة ومريحة للعين، نسبة صور مثالية -->
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -86,11 +86,12 @@
 
     <!-- الصفحة الرئيسية -->
     <main id="home" class="hidden">
+        <!-- شريحة الفيديو البانورامية الرشيقة والمريحة للعين -->
         <div class="cover-video-section">
             <video id="main-bg-video" autoplay muted loop playsinline disablepictureinpicture preload="metadata" poster="https://res.cloudinary.com/dsxrjmcxs/video/upload/w_700,q_auto,f_auto/v1777896277/zimedbjtjhpbcgxixvnr.jpg">
                 <source src="https://res.cloudinary.com/dsxrjmcxs/video/upload/w_700,q_auto:eco,f_auto/v1777896277/zimedbjtjhpbcgxixvnr.mp4" type="video/mp4">
             </video>
-            <img id="fallback-poster-img" src="https://res.cloudinary.com/dsxrjmcxs/video/upload/w_700,q_auto,f_auto/v1777896277/zimedbjtjhpbcgxixvnr.jpg" style="display: none; width: 100%; height: auto; max-height: 350px; object-fit: cover;">
+            <img id="fallback-poster-img" src="https://res.cloudinary.com/dsxrjmcxs/video/upload/w_700,q_auto,f_auto/v1777896277/zimedbjtjhpbcgxixvnr.jpg" style="display: none;">
         </div>
 
         <div class="slider-section">
@@ -119,7 +120,7 @@
             </div>
         </div>
 
-        <!-- شبكة الأقسام بنظام كرتين في السطر -->
+        <!-- شبكة الأقسام -->
         <div class="category-list-layout">
             <div class="category-card" onclick="openCategory('ملابس رجالي')">
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777897969/qi3lscagmdzbrkvup5vf.png" alt="قسم ملابس رجالي - Gam3a Store" loading="lazy">
@@ -280,7 +281,6 @@
         </div>
     </main>
 
-    <!-- الفوتر المحسن والمتوسط تماماً -->
     <footer id="main-footer" class="hidden">
         <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/w_600,h_600,c_fill,q_auto,f_auto/v1777862797/lbshj6jfcheyuehidf7l.jpg" class="footer-logo" alt="Logo" loading="lazy">
         <h2>gam3a store</h2>
