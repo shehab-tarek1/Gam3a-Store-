@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- التحديث النهائي 11.3 - فيديو بانورامي، بطاقات منتجات واضحة ومريحة للعين، نسبة صور مثالية -->
+<!-- التحديث النهائي 11.4 - الأقسام أولاً ثم السلايدر، نسبة 50/50 للبطاقات، عزل ثلاثي الأبعاد -->
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -86,7 +86,7 @@
 
     <!-- الصفحة الرئيسية -->
     <main id="home" class="hidden">
-        <!-- شريحة الفيديو البانورامية الرشيقة والمريحة للعين -->
+        <!-- 1. شريحة الفيديو البانورامية -->
         <div class="cover-video-section">
             <video id="main-bg-video" autoplay muted loop playsinline disablepictureinpicture preload="metadata" poster="https://res.cloudinary.com/dsxrjmcxs/video/upload/w_700,q_auto,f_auto/v1777896277/zimedbjtjhpbcgxixvnr.jpg">
                 <source src="https://res.cloudinary.com/dsxrjmcxs/video/upload/w_700,q_auto:eco,f_auto/v1777896277/zimedbjtjhpbcgxixvnr.mp4" type="video/mp4">
@@ -94,26 +94,7 @@
             <img id="fallback-poster-img" src="https://res.cloudinary.com/dsxrjmcxs/video/upload/w_700,q_auto,f_auto/v1777896277/zimedbjtjhpbcgxixvnr.jpg" style="display: none;">
         </div>
 
-        <div class="slider-section">
-            <div class="slider-header">
-                <h2 style="color: var(--text-primary);">أحدث الإضافات</h2>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <div class="slider-nav">
-                        <div class="slider-arrow" onclick="scrollSlider('right')"><i class="fa-solid fa-chevron-right"></i></div>
-                        <div class="slider-arrow" onclick="scrollSlider('left')"><i class="fa-solid fa-chevron-left"></i></div>
-                    </div>
-                    <button class="wishlist-page-btn" onclick="openWishlistPage()" style="background: var(--header-bg); color: #fff; border: var(--border-width) solid rgba(255,255,255,0.15); padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: bold; cursor: pointer; box-shadow: var(--shadow); transition: transform 0.15s;">
-                        المفضلة
-                    </button>
-                </div>
-            </div>
-
-            <!-- نقاط السلايدر -->
-            <div id="home-slider-dots" class="home-slider-dots"></div>
-
-            <div class="slider-container" id="latest-products-slider" onscroll="updateHomeSliderDots()"></div>
-        </div>
-
+        <!-- 2. الأقسام المتاحة أولاً لسهولة وسرعة تصفح المتجر -->
         <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 10px;">
             <div class="section-title-ribbon" style="display: inline-flex; align-items: center; gap: 6px; font-weight: bold; color: #fff; background: var(--header-bg); padding: 4px 16px; border-radius: 50px; font-size: 0.82rem; box-shadow: var(--shadow); border: var(--border-width) solid rgba(255,255,255,0.1);">
                 <i class="fa-solid fa-layer-group" style="color: #fff;"></i> الأقسام المتاحة
@@ -182,7 +163,28 @@
             </div>
         </div>
 
-        <!-- زر العروض والخصومات -->
+        <!-- 3. سلايدر أحدث الإضافات (موقعه الجديد بعد الأقسام مباشرة) -->
+        <div class="slider-section">
+            <div class="slider-header">
+                <h2 style="color: var(--text-primary);">أحدث الإضافات</h2>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div class="slider-nav">
+                        <div class="slider-arrow" onclick="scrollSlider('right')"><i class="fa-solid fa-chevron-right"></i></div>
+                        <div class="slider-arrow" onclick="scrollSlider('left')"><i class="fa-solid fa-chevron-left"></i></div>
+                    </div>
+                    <button class="wishlist-page-btn" onclick="openWishlistPage()" style="background: var(--header-bg); color: #fff; border: var(--border-width) solid rgba(255,255,255,0.15); padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: bold; cursor: pointer; box-shadow: var(--shadow); transition: transform 0.15s;">
+                        المفضلة
+                    </button>
+                </div>
+            </div>
+
+            <!-- نقاط السلايدر -->
+            <div id="home-slider-dots" class="home-slider-dots"></div>
+
+            <div class="slider-container" id="latest-products-slider" onscroll="updateHomeSliderDots()"></div>
+        </div>
+
+        <!-- 4. زر العروض والخصومات -->
         <div class="offers-btn-container">
             <div onclick="openCategory('عروض')" class="offers-btn">
                 <i class="fa-solid fa-fire" style="font-size: 1.3rem;"></i>
