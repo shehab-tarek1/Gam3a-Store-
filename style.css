@@ -16,12 +16,14 @@
     --card-icon-color: #b87333; 
     --text-light: #ffffff; 
     --text-dark: #3e2723; 
-    --text-muted: #7c6156; /* درجة متباينة أوضح للقراءة المريحة */
+    --text-muted: #7c6156; 
     --border-light: #f5efe9; 
     --accent: #c48344; 
     --category-ribbon: #c48344; 
     --silver: #bcaaa0; 
     --radius: 16px; 
+    /* ظلال عزل ثلاثية الأبعاد ممتازة وخفيفة جداً */
+    --card-shadow: 0 4px 12px rgba(140, 83, 34, 0.09), 0 1px 3px rgba(0, 0, 0, 0.05);
     --shadow: 0 6px 18px rgba(140, 83, 34, 0.08); 
     --glass-bg: rgba(255, 255, 255, 0.9);
     --glass-icon: #4a2c11;
@@ -40,7 +42,7 @@
     --gender-ribbon-bg: rgba(9, 66, 41, 0.65); 
     --header-text: #ffffff;
     --text-primary: #ffffff; 
-    --card-border: #d1ecd9; 
+    --card-border: #2c4234; 
     --input-border: #4b5563;
     --border-width: 0.43px; 
     --line-accent: rgba(46, 204, 113, 0.45); 
@@ -53,6 +55,8 @@
     --silver: #9ca3af; 
     --accent: #9acd32; 
     --category-ribbon: linear-gradient(90deg, #094229 0%, #135c3a 25%, #094229 50%, #135c3a 75%, #094229 100%);
+    /* ظلال عزل ليلية واضحة تفصل البطاقات عن السلايدر والصفحة */
+    --card-shadow: 0 5px 15px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.3);
     --shadow: 0 6px 18px rgba(0,0,0,0.4); 
     --glass-bg: rgba(24, 36, 28, 0.85);
     --glass-icon: #cbd5e1;
@@ -106,12 +110,10 @@ header { width: 100%; display: flex; justify-content: space-between; align-items
 
 main { padding: 12px 10px; width: 100%; max-width: 800px; flex: 1; }
 
-/* ===================================================
-   1. تقليل وتنسيق ارتفاع شريحة الفيديو البانورامية في المقدمة
-   =================================================== */
+/* شريحة الفيديو البانورامية الرشيقة */
 .cover-video-section { 
     width: 100%; 
-    height: 170px; /* ارتفاع بانورامي مريح ومتناسق جداً مع الشاشة */
+    height: 170px; 
     max-height: 170px; 
     border-radius: var(--radius); 
     overflow: hidden; 
@@ -145,17 +147,20 @@ main { padding: 12px 10px; width: 100%; max-width: 800px; flex: 1; }
 .share-btn-top:active { transform: scale(0.9); }
 .share-btn-top.active-heart { color: #e74c3c; border-color: #e74c3c; background: #fff0f0;}
 
-/* شبكة المنتجات داخل الأقسام والمفضلة والبروفايل */
-.categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 11px; margin-bottom: 16px; }
+/* شبكة المنتجات (داخل القسم، المفضلة، وبروفايل المسوق) */
+.categories-grid { 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 12px; 
+    margin-bottom: 18px; 
+}
 
-/* ===================================================
-   2. شبكة الأقسام (مستطيل العنوان الهادئ المريح للعين)
-   =================================================== */
+/* شبكة الأقسام */
 .category-list-layout { 
     display: grid; 
     grid-template-columns: repeat(2, 1fr); 
     gap: 9px; 
-    margin-bottom: 16px; 
+    margin-bottom: 18px; 
 }
 
 .category-card { 
@@ -187,7 +192,7 @@ main { padding: 12px 10px; width: 100%; max-width: 800px; flex: 1; }
     height: 100%; 
     object-fit: cover; 
     object-position: center; 
-    display: block;
+    display: block; 
     margin: 0;
     border: none;
     border-radius: 0;
@@ -247,35 +252,37 @@ main { padding: 12px 10px; width: 100%; max-width: 800px; flex: 1; }
 }
 
 /* ===================================================
-   3. بطاقة المنتج المريحة للعين (صورة بارزة + خطوط واضحة وغير مرهقة)
+   عزل وتنسيق بطاقات المنتجات (تقسيم 50% للصورة و 50% للوصف + ظلال عزل)
    =================================================== */
 .inner-product-card { 
     position: relative; 
     background: var(--bg-surface); 
     border-radius: var(--radius); 
     overflow: hidden; 
-    box-shadow: var(--shadow); 
-    cursor: pointer; 
-    border: var(--border-width) solid var(--card-border); 
+    /* ظلال عزل ذكية تبرز البطاقة عن خلفية الموقع وتمنع اندماج البطاقات */
+    box-shadow: var(--card-shadow); 
+    border: 1px solid var(--card-border); 
     flex-shrink: 0; 
     transform: translateZ(0);
-    transition: transform 0.15s;
+    transition: transform 0.15s, box-shadow 0.15s;
     display: flex;
     flex-direction: column;
 }
 
-.inner-product-card:active { transform: scale(0.98); }
+.inner-product-card:active { 
+    transform: scale(0.97); 
+}
 
-/* إبراز الصورة بحيث تكون هي الجزء الأكبر المسيطر في الكارت */
-.inner-product-card .img-container { 
+/* تطبيق نسبة الـ 50% للصورة لتبقى متوازنة تماماً مع جزء الوصف في شبكة الأقسام */
+.categories-grid .inner-product-card .img-container { 
     position: relative; 
     width: 100%; 
-    aspect-ratio: 1 / 1; 
+    aspect-ratio: 1 / 0.88; /* نسبة تجعل ارتفاع الصورة مساوياً لارتفاع منطقة الوصف تقريباً */
     background: var(--bg-surface); 
     overflow: hidden;
 }
 
-.inner-product-card img { 
+.categories-grid .inner-product-card img { 
     width: 100%; 
     height: 100%; 
     object-fit: cover; 
@@ -285,16 +292,17 @@ main { padding: 12px 10px; width: 100%; max-width: 800px; flex: 1; }
     transition: opacity 0.15s;
 }
 
-/* منطقة البيانات: مدمجة تماماً وخطوطها كبيرة ومريحة للعين */
+/* منطقة البيانات (50% من الكارت): مريحة للعين وتستوعب كل التفاصيل */
 .card-info { 
-    padding: 7px 9px 8px 9px; 
+    padding: 8px 9px 9px 9px; 
     text-align: right; 
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 3px;
+    flex: 1; /* تأخذ النصف المتبقي بتناسق تام */
 }
 
-/* سطر الاسم والسعر - خط واضح وكبير ومريح */
 .title-price-row { 
     display: flex; 
     justify-content: space-between; 
@@ -303,7 +311,7 @@ main { padding: 12px 10px; width: 100%; max-width: 800px; flex: 1; }
 }
 
 .title-price-row h3 { 
-    font-size: 0.84rem; /* تكبير الخط ليكون مريحاً ومقروءاً بوضوح */
+    font-size: 0.84rem; 
     color: var(--text-dark); 
     margin: 0; 
     white-space: nowrap; 
@@ -316,7 +324,7 @@ main { padding: 12px 10px; width: 100%; max-width: 800px; flex: 1; }
 }
 
 .product-price-badge { 
-    font-size: 0.88rem; /* سعر بارز وواضح */
+    font-size: 0.88rem; 
     font-weight: bold; 
     color: var(--price-color); 
     margin: 0; 
@@ -324,7 +332,6 @@ main { padding: 12px 10px; width: 100%; max-width: 800px; flex: 1; }
     line-height: 1.25;
 }
 
-/* سطر التصنيف والنوع */
 .card-type-row { 
     display: flex; 
     justify-content: space-between; 
@@ -332,7 +339,7 @@ main { padding: 12px 10px; width: 100%; max-width: 800px; flex: 1; }
 }
 
 .card-type-text { 
-    font-size: 0.7rem; /* خط مقروء */
+    font-size: 0.7rem; 
     color: var(--text-muted); 
     font-weight: 600; 
     line-height: 1.1;
@@ -349,7 +356,6 @@ main { padding: 12px 10px; width: 100%; max-width: 800px; flex: 1; }
     line-height: 1.1;
 }
 
-/* سطر دوائر الألوان */
 .card-color-circles { 
     display: flex; 
     align-items: center; 
@@ -375,32 +381,34 @@ main { padding: 12px 10px; width: 100%; max-width: 800px; flex: 1; }
     flex-shrink: 0; 
 }
 
-/* نبذة الوصف: سطر واحد فقط لمنع تطويل الكارت + خط مريح وواضح */
+/* سطرين من الوصف مع خط مريح لقراءة واضحة */
 .card-desc-snippet { 
-    font-size: 0.74rem; /* تكبير الخط لقراءة مريحة */
+    font-size: 0.74rem; 
     color: var(--text-muted); 
     margin: 0; 
     text-align: start; 
     display: -webkit-box; 
-    -webkit-line-clamp: 1; /* سطر واحد فقط يجعل الصورة أكبر بكثير من الوصف */
+    -webkit-line-clamp: 2; 
     -webkit-box-orient: vertical; 
     overflow: hidden; 
-    line-height: 1.3; 
+    line-height: 1.35; 
     border-top: 1px dashed var(--line-accent); 
-    padding-top: 3px; 
+    padding-top: 4px; 
 }
 
 .badge-discount { position: absolute; top: 6px; left: 6px; background-color: #e74c3c; color: white; padding: 2px 6px; border-radius: 6px; font-size: 0.58rem; font-weight: bold; z-index: 5;}
 .badge-outofstock { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); background-color: #e74c3c; color: white; padding: 3px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: bold; z-index: 5; white-space: nowrap; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); border: none; pointer-events: none; letter-spacing: 0.5px; }
 .img-outofstock { opacity: 0.85; }
 
-/* السلايدر */
+/* ===================================================
+   تحديث حاوية السلايدر (عزل بطاقات السلايدر ومنع اندماجها)
+   =================================================== */
 .slider-section { 
     background-color: var(--bg-surface); 
-    padding: 7px 10px 8px 10px; 
+    padding: 8px 10px 10px 10px; 
     border-radius: var(--radius); 
     box-shadow: var(--shadow); 
-    margin-bottom: 14px; 
+    margin-bottom: 16px; 
     border: var(--border-width) solid var(--card-border);
 }
 
@@ -410,20 +418,22 @@ main { padding: 12px 10px; width: 100%; max-width: 800px; flex: 1; }
 .slider-arrow { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-main); color: var(--text-primary); display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 0.65rem; border: var(--border-width) solid var(--card-border); transition: transform 0.15s;}
 .slider-arrow:active { transform: scale(0.9); }
 
-.home-slider-dots { display: flex; justify-content: center; gap: 4px; margin-bottom: 6px; }
+.home-slider-dots { display: flex; justify-content: center; gap: 4px; margin-bottom: 7px; }
 .home-slider-dots .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--silver); transition: 0.3s; }
 .home-slider-dots .dot.active { background: var(--accent); transform: scale(1.25); }
 
+/* إعطاء مسافة padding مخصصة حتى تظهر ظلال العزل ولا تنقص أثناء السحب */
 .slider-container { 
     display: flex; 
     overflow-x: auto; 
-    gap: 9px; 
-    padding-bottom: 3px; 
+    gap: 11px; 
+    padding: 5px 4px 8px 4px; /* مسافة حماية لظلال العزل */
     -webkit-overflow-scrolling: touch; 
     scroll-snap-type: x mandatory; 
 }
 .slider-container::-webkit-scrollbar { display: none; } 
 
+/* بطاقة السلايدر المنعزلة بدقة */
 .slider-container .inner-product-card { 
     width: 135px; 
     flex: 0 0 135px; 
@@ -431,8 +441,29 @@ main { padding: 12px 10px; width: 100%; max-width: 800px; flex: 1; }
     scroll-snap-stop: normal; 
 } 
 
+.slider-container .inner-product-card .img-container { 
+    position: relative; 
+    width: 100%; 
+    aspect-ratio: 1 / 1; 
+    background: var(--bg-surface); 
+    overflow: hidden;
+}
+
+.slider-container .inner-product-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border-bottom: 1px solid var(--line-accent);
+}
+
+.slider-container .inner-product-card .card-desc-snippet {
+    -webkit-line-clamp: 1; /* سطر واحد في السلايدر ليكون الكارت رشيقاً */
+}
+
 /* زر العروض */
-.offers-btn-container { display: flex; justify-content: center; width: 100%; margin-top: 4px; margin-bottom: 4px; }
+.offers-btn-container { display: flex; justify-content: center; width: 100%; margin-top: 4px; margin-bottom: 8px; }
 .offers-btn {
     display: flex; align-items: center; justify-content: center; gap: 10px;
     color: #fff; background: var(--header-bg); padding: 5px 18px;
@@ -444,7 +475,7 @@ main { padding: 12px 10px; width: 100%; max-width: 800px; flex: 1; }
 .offers-title { font-size: 0.98rem; font-weight: bold; }
 .offers-subtitle { font-size: 0.65rem; opacity: 0.9; font-weight: normal; margin-top: 1px; }
 
-/* الفوتر المضغوط والأنيق */
+/* الفوتر */
 footer { 
     background: var(--header-bg); 
     color: var(--text-light); 
@@ -552,7 +583,7 @@ footer h2 {
 .online-dot { position: absolute; top: -2px; right: -4px; width: 9px; height: 9px; background: #2ecc71; border-radius: 50%; border: var(--border-width) solid var(--bg-dark-blue); }
 .online-dot::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 50%; background: #2ecc71; animation: pulse-green 1.5s infinite; }
 
-/* شاشات التابلت والكمبيوتر */
+/* شاشات الأجهزة الكبيرة */
 @media (min-width: 600px) {
     .cover-video-section,
     .cover-video-section video,
@@ -576,7 +607,7 @@ footer h2 {
 
 .inner-product-card {
     content-visibility: auto;
-    contain-intrinsic-size: 220px; 
+    contain-intrinsic-size: 230px; 
 }
 .category-card {
     content-visibility: auto;
