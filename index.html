@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- التحديث النهائي 11.0 - أداء صاروخي، إطارات 1px، تأثير السلة المحسن، تصميم الأقسام الأفقي، ونقاط السلايدر -->
+<!-- التحديث النهائي 11.0 - أداء صاروخي، شبكة أقسام 2 أعمدة، ضغط مساحات الكروت -->
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -106,21 +106,20 @@
                     </button>
                 </div>
             </div>
-            
-            <!-- نقاط السلايدر الجديدة -->
+
+            <!-- نقاط السلايدر -->
             <div id="home-slider-dots" class="home-slider-dots"></div>
-            
-            <!-- تمت إضافة onscroll لتحديث النقاط -->
+
             <div class="slider-container" id="latest-products-slider" onscroll="updateHomeSliderDots()"></div>
         </div>
 
-        <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 15px;">
+        <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 12px;">
             <div class="section-title-ribbon" style="display: inline-flex; align-items: center; gap: 6px; font-weight: bold; color: #fff; background: var(--header-bg); padding: 5px 18px; border-radius: 50px; font-size: 0.85rem; box-shadow: var(--shadow); border: var(--border-width) solid rgba(255,255,255,0.1);">
                 <i class="fa-solid fa-layer-group" style="color: #fff;"></i> الأقسام المتاحة
             </div>
         </div>
 
-        <!-- استخدام الكلاس الجديد للأقسام المستطيلة -->
+        <!-- شبكة الأقسام بنظام كرتين في السطر -->
         <div class="category-list-layout">
             <div class="category-card" onclick="openCategory('ملابس رجالي')">
                 <img src="https://res.cloudinary.com/dsxrjmcxs/image/upload/c_limit,w_400,q_auto,f_auto/v1777897969/qi3lscagmdzbrkvup5vf.png" alt="قسم ملابس رجالي - Gam3a Store" loading="lazy">
@@ -182,7 +181,7 @@
             </div>
         </div>
 
-        <!-- زر العروض والخصومات بالأسفل -->
+        <!-- زر العروض والخصومات -->
         <div class="offers-btn-container">
             <div onclick="openCategory('عروض')" class="offers-btn">
                 <i class="fa-solid fa-fire" style="font-size: 1.5rem;"></i>
@@ -201,7 +200,7 @@
                 <div class="back-arrow" onclick="goBackSafe()"><i class="fa-solid fa-arrow-right"></i> رجوع</div>
                 <span id="category-title" class="top-title-text">القسم</span>
             </div>
-            
+
             <div class="custom-select-wrapper" style="margin: 0;">
                 <div class="share-btn-top" onclick="toggleSortDropdown(event)" title="تصفية وترتيب"><i class="fa-solid fa-filter"></i></div>
                 <div class="custom-select-list" id="sort-dropdown" style="width: 220px; left: 0; right: auto; top: 120%;">
@@ -213,9 +212,8 @@
             </div>
         </div>
 
-        <!-- هنا تم إرجاع كلاس categories-grid ليحافظ على حجم المنتجات المربع -->
         <div class="categories-grid" id="category-products"></div>
-        
+
         <div id="category-loader" style="display:none; width: 100%; padding: 15px 0;">
             <div class="categories-grid">
                 <div class="skeleton"></div><div class="skeleton"></div>
@@ -238,7 +236,7 @@
         </div>
         <div id="product-details-content"></div>
     </main>
-    
+
     <!-- صفحة المفضلة المستقلة -->
     <main id="wishlist-page" class="hidden">
         <div class="top-bar">
@@ -319,7 +317,7 @@
         </div>
     </footer>
 
-    <!-- ربط ملف الجافاسكريبت الخارجي (كـ module كما كان تماماً) -->
+    <!-- ربط ملف الجافاسكريبت الخارجي -->
     <script type="module" src="script.js"></script>
 
 </body>
